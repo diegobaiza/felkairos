@@ -1,0 +1,704 @@
+<div class="page-content-inner">
+
+  <div class="account-wrapper">
+    <div class="account-box is-form is-footerless">
+
+      <br>
+      <div class="columns is-multiline">
+        <div class="column is-6">
+          <div class="field has-addons">
+            <div class="control is-expanded has-icon">
+              <input [(ngModel)]="date" [ngModelOptions]="{standalone: true}" class="md-input"
+                [ngClass]="{'input': true}" type="datetime-local" [readonly]="true">
+              <div class="form-icon">
+                <i class="fal fa-calendar"></i>
+              </div>
+            </div>
+            <div class="control">
+              <a class="button is-primary" (click)="panelDate()">
+                <i class="fas fa-search"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-3">
+          <div class="field has-addons">
+            <div class="control is-expanded has-icon">
+              <input (click)="panelProduct()" [(ngModel)]="product.name" [ngModelOptions]="{standalone: true}"
+                class="input" type="text" placeholder="Producto" readonly>
+              <div class="form-icon">
+                <i class="fal fa-box-full"></i>
+              </div>
+            </div>
+            <div class="control">
+              <a class="button is-primary" (click)="panelProduct()">
+                <i class="fas fa-search"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-3" [ngClass]="{'is-disabled': variations.length == 0}">
+          <div class="field has-addons">
+            <div class="control is-expanded has-icon">
+              <input (click)="panelVariation()" [(ngModel)]="variation.attribute.name"
+                [ngModelOptions]="{standalone: true}" class="input" type="text" placeholder="Variacion" readonly>
+              <div class="form-icon">
+                <i class="fal fa-box-full"></i>
+              </div>
+            </div>
+            <div class="control">
+              <a class="button is-primary" (click)="panelVariation()">
+                <i class="fas fa-search"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-6">
+          <div class="field has-addons">
+            <div class="control is-expanded has-icon">
+              <input (click)="panelBranch()" [(ngModel)]="branch.name" [ngModelOptions]="{standalone: true}"
+                class="input" type="text" placeholder="Sucursal" readonly>
+              <div class="form-icon">
+                <i class="fal fa-store"></i>
+              </div>
+            </div>
+            <div class="control">
+              <a class="button is-primary" (click)="panelBranch()">
+                <i class="fas fa-search"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-6" [ngClass]="{'is-disabled': warehouses.length == 0}">
+          <div class="field has-addons">
+            <div class="control is-expanded has-icon">
+              <input (click)="panelWarehouse()" [(ngModel)]="warehouse.name" [ngModelOptions]="{standalone: true}"
+                class="input" type="text" placeholder="Bodega" readonly>
+              <div class="form-icon">
+                <i class="fal fa-warehouse"></i>
+              </div>
+            </div>
+            <div class="control">
+              <a class="button is-primary" (click)="panelWarehouse()">
+                <i class="fas fa-search"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-12">
+          <div class="form-head stuck-header">
+            <div class="form-head-inner">
+              <div class="right">
+                <div class="column">
+                  <div class="buttons">
+                    <button id="bt-search-stocks" (click)="getStocks()" class="button h-button is-primary">
+                      <span class="icon">
+                        <i class="fas fa-search"></i>
+                      </span>
+                      <span>Buscar</span>
+                    </button>
+                    <button id="bt-report-stocks" (click)="reportStocks()"
+                      class="button h-button is-primary is-hidden-desktop">
+                      <span class="icon">
+                        <i class="fas fa-file-pdf"></i>
+                      </span>
+                      <span>Generar Reporte</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="left">
+                <div class="column">
+                  <button id="bt-report-stocks2" (click)="reportStocks()" class="button h-button is-primary">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>Generar Reporte</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="row">
+
+        <div class="flex-table">
+
+          <table *ngIf="stocks.length > 0" class="table is-striped is-fullwidth">
+            <tbody>
+              <tr>
+                <th>Total de Productos</th>
+                <th>Total de Sucursales</th>
+                <th class="is-end">Total de Bodegas</th>
+              </tr>
+              <tr>
+                <td>{{total_products}}</td>
+                <td>{{total_branches}}</td>
+                <td class="is-end">{{total_warehouses}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div *ngFor="let b of stocks">
+            <h1 class="light-text branch" style="font-size: 30px;"><i class="fad fa-store"></i> {{b.branch.name}}</h1>
+            <br>
+
+            <div *ngFor="let w of b.warehouses">
+              <div style="margin-left: 30px;">
+                <h1 class="light-text" style="font-size: 20px;">
+                  <i class="fad fa-warehouse"></i>
+                  {{w.warehouse.name}}
+                </h1>
+              </div>
+
+              <div *ngFor="let p of w.products">
+
+                <!-- <div *ngIf="p.product.id" class="inner-content">
+                  <div class="section-placeholder">
+                    <div class="placeholder-content">
+
+                      <div class="form-body">
+                        <div class="fieldset">
+                          <div id="edit-profile" class="h-avatar profile-h-avatar is-xl">
+                            <div *ngIf="p.product.image">
+                              <div class="h-avatar avatar">
+                                <img id="uploaded" class="avatar" [src]="apiUrl + p.product.image">
+                              </div>
+                            </div>
+                            <div *ngIf="!p.product.image">
+                              <div class="h-avatar avatar">
+                                <span class="avatar is-fake is-primary">
+                                  <span>
+                                    {{getFakeAvatar(p.product.name)}}
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="fieldset">
+                          <div class="h-avatar profile-h-avatar">
+                            <h3 class="dark-inverted">
+                              {{p.product.name}}
+                            </h3>
+                            <p>
+                              <b>SKU:</b> {{p.product.sku}} <br>
+                              <b *ngIf="variation.id">{{variation.attribute.name}}</b>
+                              <b *ngIf="total_stock"> Existencia:</b>
+                              <span style="font-style:oblique">
+                                {{stockProduct(p.data)}} {{p.product.unit.symbol}}
+                              </span> <br>
+                              <b *ngIf="total_stock"> Costo Promedio:</b>
+                              <span style="font-style:oblique">
+                                Q{{p.product.cost}}
+                              </span> <br>
+                              <b *ngIf="total_stock"> Costo Total:</b>
+                              <span style="font-style:oblique">
+                                Q{{stockProduct(p.data) * p.product.cost}}
+                              </span>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div> -->
+
+                <div class="flex-table-header">
+                  <span class="is-grow">Producto</span>
+                  <span>SKU</span>
+                  <span>Existencias</span>
+                  <span>Costo Promedio</span>
+                  <span>Costo Total</span>
+                </div>
+
+                <div *ngIf="loader == false" class="flex-list-inner">
+
+                  <div *ngFor="let i of p.data">
+
+                    <a class="flex-table-item products">
+                      <div class="flex-table-cell is-media is-grow" data-th="">
+                        <div>
+                          <div class="h-avatar" *ngIf="p.product.image">
+                            <img class="avatar" [src]="apiUrl + p.product.image">
+                          </div>
+                          <div class="h-avatar avatar" *ngIf="!p.product.image">
+                            <span class="avatar is-fake is-primary">
+                              <span>
+                                {{getFakeAvatar(p.product.name)}}
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                        <div>
+                          <span class="item-meta">
+                            <span class="dark-text stocks-text" *ngIf="p.product.name" data-filter-match>
+                              <b>{{p.product.name}}</b>
+                            </span>
+                            <br>
+                            <span class="light-text" *ngIf="i.variationId">
+                              <i class="fad fa-network-wired"></i> {{i.variation.attribute.name}}
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="flex-table-cell" data-th="SKU">
+                        <span class="light-text">{{p.product.sku}}</span>
+                      </div>
+                      <div class="flex-table-cell" data-th="Stock">
+                        <span [ngClass]="{'success-text': i.stock > 0, 'danger-text': i.stock <= 0}">
+                          <b>{{i.stock}}</b>
+                          <span style="font-style:oblique">
+                            {{p.product.unit.symbol}}
+                          </span>
+                        </span>
+                      </div>
+                      <div class="flex-table-cell" data-th="Costo Promedio">
+                        <span *ngIf="p.costProm" class="light-text">Q{{p.costProm.cost}}</span>
+                      </div>
+                      <div class="flex-table-cell" data-th="Costo Total">
+                        <span class="light-text">Q{{getCost(p.costProm.cost, i.stock)}}</span>
+                      </div>
+                    </a>
+
+                  </div>
+
+                </div>
+
+                <br><br><br>
+
+              </div>
+            </div>
+
+            <br><br>
+          </div>
+
+          <div class="flex-table-header">
+            <span class="is-grow"></span>
+            <span></span>
+            <span>Existencias</span>
+            <span></span>
+            <span>Costo Total</span>
+          </div>
+          <a *ngIf="stocks.length > 0" class="flex-table-item products">
+            <div class="flex-table-cell is-media is-grow" data-th="">
+              <div>
+                <span class="item-meta">
+                  <span class="dark-text stocks-text" data-filter-match>
+                    <b>TOTALES</b>
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div class="flex-table-cell" data-th="SKU"></div>
+            <div class="flex-table-cell" data-th="Existencias">
+              <span class="primary">
+                <b>{{total_stock}}</b>
+              </span>
+            </div>
+            <div class="flex-table-cell" data-th="Costo Promedio"></div>
+            <div class="flex-table-cell" data-th="Costo Total">
+              <span class="light-text">
+                <b>Q{{getTotalCost()}}</b>
+              </span>
+            </div>
+          </a>
+
+          <div *ngIf="loader == true" class="flex-list-inner">
+            <h1 class="light-text" style="font-size: 30px; text-align: center;">Buscando Existencias...</h1>
+            <br>
+            <div *ngFor="let p of placeloader" class="flex-table-item placeload-wrap">
+              <div class="flex-table-cell is-media is-grow">
+                <div class="placeload-avatar is-medium is-rounded-full loads"></div>
+                <div class="content-shape-group mx-2">
+                  <div class="content-shape is-grow-1 mw-80 loads"></div>
+                  <div class="content-shape mw-60 loads"></div>
+                </div>
+              </div>
+              <div class="flex-table-cell" data-th="Variacion">
+                <div class="content-shape is-grow-1 mx-1 loads"></div>
+              </div>
+              <div class="flex-table-cell" data-th="Fecha">
+                <div class="content-shape is-grow-1 mx-1 loads"></div>
+              </div>
+              <div class="flex-table-cell" data-th="Existencias">
+                <div class="content-shape is-grow-1 mx-1 loads"></div>
+              </div>
+              <!-- <div class="flex-table-cell" data-th="Relations">
+                <div class="avatar-stack is-pushed-mobile">
+                  <div class="placeload-avatar is-small is-rounded-full loads mx-1"></div>
+                  <div class="placeload-avatar is-small is-rounded-full loads mx-1"></div>
+                  <div class="placeload-avatar is-small is-rounded-full loads mx-1"></div>
+                </div>
+              </div> -->
+              <div class="flex-table-cell cell-end" data-th="Costo Promedio">
+                <div class="content-shape is-grow-1 mx-1 loads"></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div id="select-branch-panel" class="right-panel-wrapper is-languages is-rigth">
+  <div class="panel-overlay" style="z-index: 200 !important;"></div>
+
+  <div class="right-panel" style="z-index: 200 !important;">
+    <div class="right-panel-head">
+      <h3>Selecciona una Sucursal</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <div class="buttons">
+              <div class="control search has-icon" style="width: 100% !important;">
+                <input class="input custom-text-filter" placeholder="Buscar..." data-filter-target=".branches">
+                <div class="form-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-table">
+
+              <a class="flex-table-item" (click)="setBranch()">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div class="h-avatar is-medium">
+                    <span class="avatar is-fake is-danger">
+                      <span>
+                        <i class="fas fa-ban"></i>
+                      </span>
+                    </span>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>Todas las sucursales</span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>Sin seleccion</span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+              <a *ngFor="let i of branches" class="flex-table-item branches" (click)="setBranch(i)">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div class="h-avatar is-medium">
+                    <span class="avatar is-fake is-primary">
+                      <span>
+                        {{getFakeAvatar(i.name)}}
+                      </span>
+                    </span>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>{{i.name}}
+                      (#{{i.number}})</span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>{{i.address}}</span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="select-warehouse-panel" class="right-panel-wrapper is-languages is-rigth">
+  <div class="panel-overlay" style="z-index: 200 !important;"></div>
+
+  <div class="right-panel" style="z-index: 200 !important;">
+    <div class="right-panel-head">
+      <h3>Selecciona una Bodega</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <div class="buttons">
+              <div class="control search has-icon" style="width: 100% !important;">
+                <input class="input custom-text-filter" placeholder="Buscar..." data-filter-target=".warehouses">
+                <div class="form-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-table">
+
+              <a class="flex-table-item" (click)="setWarehouse()">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div class="h-avatar is-medium">
+                    <span class="avatar is-fake is-danger">
+                      <span>
+                        <i class="fas fa-ban"></i>
+                      </span>
+                    </span>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>Todas las bodegas</span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>Sin seleccion</span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+              <a *ngFor="let i of warehouses" class="flex-table-item warehouses" (click)="setWarehouse(i)">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div class="h-avatar is-medium">
+                    <span class="avatar is-fake is-primary">
+                      <span>
+                        {{getFakeAvatar(i.name)}}
+                      </span>
+                    </span>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>{{i.name}}
+                      (#{{i.number}})</span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>{{i.address}}</span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="select-product-panel" class="right-panel-wrapper is-languages is-rigth">
+  <div class="panel-overlay" style="z-index: 200 !important;"></div>
+
+  <div class="right-panel" style="z-index: 200 !important;">
+    <div class="right-panel-head">
+      <h3>Selecciona un Producto</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <div class="buttons">
+              <div class="control search has-icon" style="width: 100% !important;">
+                <input id="prod" class="input custom-text-filter" placeholder="Buscar..."
+                  data-filter-target=".products">
+                <div class="form-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-table">
+
+              <a class="flex-table-item" (click)="setProduct()">
+                <div class="flex-table-cell is-media is-grow">
+                  <div class="h-avatar is-medium">
+                    <span class="avatar is-fake is-danger">
+                      <span>
+                        <i class="fas fa-ban"></i>
+                      </span>
+                    </span>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>Todos los productos</span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>Sin seleccion</span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+              <a *ngFor="let i of products" class="flex-table-item products">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div *ngIf="!i.image" (click)="setProduct(i)">
+                    <div class="h-avatar is-medium">
+                      <span class="avatar is-fake is-primary">
+                        <span>
+                          {{getFakeAvatar(i.name)}}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div *ngIf="i.image" (click)="setProduct(i)">
+                    <div class="h-avatar is-medium">
+                      <span class="avatar is-fake is-primary">
+                        <img class="avatar" [src]="apiUrl + i.image">
+                      </span>
+                    </div>
+                  </div>
+                  <div (click)="setProduct(i)">
+                    <span class="item-name dark-text" data-filter-match>{{i.name}}</span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>SKU: {{i.sku}} Costo: {{i.costo}}
+                        | Precio
+                        {{i.price}}</span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="select-variation-panel" class="right-panel-wrapper is-languages is-rigth">
+  <div class="panel-overlay" style="z-index: 200 !important;"></div>
+
+  <div class="right-panel" style="z-index: 200 !important;">
+    <div class="right-panel-head">
+      <h3>Selecciona una Variacion</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <div class="buttons">
+              <div class="control search has-icon" style="width: 100% !important;">
+                <input id="prod" class="input custom-text-filter" placeholder="Buscar..."
+                  data-filter-target=".variations">
+                <div class="form-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-table">
+
+              <a class="flex-table-item" (click)="setVariation()">
+                <div class="flex-table-cell is-media is-grow">
+                  <div class="h-avatar is-medium">
+                    <span class="avatar is-fake is-danger">
+                      <span>
+                        <i class="fas fa-ban"></i>
+                      </span>
+                    </span>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>Todas las variaciones</span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>Sin seleccion</span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+              <a *ngFor="let i of variations" class="flex-table-item variations" (click)="setVariation(i)">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div>
+                    <div class="h-avatar is-medium">
+                      <span class="avatar is-fake is-primary">
+                        <span>
+                          {{i.attribute.symbol}}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>
+                      {{i.attribute.name}}
+                    </span>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="select-date-panel" class="right-panel-wrapper is-languages is-left">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3>Selecciona una Fecha</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <form>
+
+              <div class="field">
+                <div class="control item">
+                  <span class="light-text">Fecha Automática</span> <br>
+                  <label class="form-switch is-primary">
+                    <input [(ngModel)]="auto_date" [ngModelOptions]="{standalone: true}" type="checkbox"
+                      class="is-switch">
+                    <i></i>
+                  </label>
+                </div>
+              </div>
+
+              <div class="field" [ngClass]="{'is-disabled': auto_date}">
+                <div class="control has-icon">
+                  <input [(ngModel)]="date" [ngModelOptions]="{standalone: true}" class="input" type="datetime-local">
+                  <div class="form-icon">
+                    <i class="fal fa-calendar"></i>
+                  </div>
+                </div>
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

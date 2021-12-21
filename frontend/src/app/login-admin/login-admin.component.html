@@ -1,0 +1,106 @@
+<div class="auth-wrapper">
+
+  <div class="modern-login">
+
+    <div class="underlay h-hidden-mobile"></div>
+
+    <div class="columns is-gapless is-vcentered">
+      <div class="column is-relative is-8 h-hidden-mobile">
+        <div class="hero is-fullheight is-image">
+          <div class="hero-body">
+            <div class="container">
+              <div class="columns">
+                <div class="column">
+                  <img class="hero-image" src="assets/img/illustrations/login/station.svg" alt="">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="column is-4 is-relative top">
+        <a routerLink="/login" class="top-logo" href="/">
+          <img class="light-image" src="assets/img/logo.png" alt="">
+          <img class="dark-image" src="assets/img/logo-light.png" alt="">
+        </a>
+        <a>
+          <label class="dark-mode ml-auto">
+            <input (change)="changeTheme()" type="checkbox" checked>
+            <span></span>
+          </label>
+        </a>
+        <div class="is-form">
+          <div class="hero-body">
+            <div class="form-text">
+              <h2>Iniciar Sesión</h2>
+              <p>Bienvenido a <b>KairosSoft</b>.</p>
+            </div>
+            <div class="form-text is-hidden">
+              <h2>Recuperar Contraseña</h2>
+              <p>
+                Ingresa tu correo electrónico y haz clic en el botón confirmar.
+                Te enviaremos un correo electrónico detallando los pasos para completar el procedimiento.
+              </p>
+            </div>
+            <form [formGroup]="loginForm" id="login-form" class="login-wrapper">
+              <div class="control has-validation">
+                <input formControlName="username" type="text" class="input" placeholder="Usuario">
+                <div class="auth-label">Usuario</div>
+                <div class="auth-icon">
+                  <i class="lnil lnil-user"></i>
+                </div>
+              </div>
+              <div class="control has-validation">
+                <input formControlName="password" type="password" class="input" placeholder="Contraseña">
+                <div class="auth-label">Contraseña</div>
+                <div class="auth-icon">
+                  <i class="lnil lnil-lock-alt"></i>
+                </div>
+              </div>
+
+              <div class="control is-flex">
+                <label class="remember-toggle">
+                  <input (ngModel)="remember" [checked]="remember"
+                    type="checkbox">
+                  <span class="toggler">
+                    <span class="active">
+                      <i data-feather="check"></i>
+                    </span>
+                    <span class="inactive">
+                      <i data-feather="circle"></i>
+                    </span>
+                  </span>
+                </label>
+                <div class="remember-me">Recordar</div>
+                <a id="forgot-link">Recuperar Contraseña</a>
+              </div>
+              <div class="button-wrap has-help">
+                <button (click)="login()" id="login-submit" type="submit"
+                  class="button h-button is-big is-rounded is-primary is-bold is-raised">
+                  Acceder
+                </button>
+                <!-- <span>¿No tiene cuenta? <a href="/auth-signup.html">Registrate Aquí</a></span> -->
+              </div>
+            </form>
+
+            <form id="recover-form" class="login-wrapper is-hidden">
+              <div class="control has-validation">
+                <input type="text" class="input">
+                <div class="auth-label">Correo electrónico</div>
+                <div class="auth-icon">
+                  <i class="lnil lnil-envelope"></i>
+                </div>
+              </div>
+              <div class="button-wrap">
+                <button id="cancel-recover" type="button"
+                  class="button h-button is-white is-big is-rounded is-lower">Regresar</button>
+                <button (click)="restore()" id="restore-submit" type="button"
+                  class="button h-button is-primary is-solid is-big is-rounded is-lower is-raised is-colored">Confirmar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

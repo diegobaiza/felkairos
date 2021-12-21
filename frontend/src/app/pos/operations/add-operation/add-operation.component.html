@@ -1,0 +1,1911 @@
+<div class="page-content-inner" *ngIf="typedocument">
+
+  <div class="form-layout is-split">
+    <div class="form-outer">
+
+      <div class="form-header stuck-header">
+        <div class="form-header-inner">
+          <div *ngIf="document" class="left">
+            <h3>{{this.document.typedocument.name}} ({{document.serie}}-{{document.correlative}})</h3>
+          </div>
+          <div class="right">
+            <div class="buttons">
+              <a (click)="cancelOperation()" class="button h-button is-light is-dark-outlined">
+                <span class="icon">
+                  <i class="lnir lnir-arrow-left rem-100"></i>
+                </span>
+                <span>Cancelar</span>
+              </a>
+              <button (click)="nextOperation()" [ngClass]="{ 'is-disabled': operationForm.invalid }"
+                class="button h-button is-primary is-raised">
+                Liquidar
+              </button>
+              <!-- <button id="bt-add-operation" class="button h-button is-primary is-raised right-panel-trigger"
+                data-panel="add-operation-panel">
+                Liquidarf
+              </button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-body">
+
+        <div class="form-section" *ngIf="document && typedocument">
+
+          <div class="left fixed-parent">
+
+            <div class="item" [formGroup]="operationForm" *ngIf="company">
+
+              <div class="fieldset" style="text-align: center;">
+                <div id="edit-profile" class="h-avatar profile-h-avatar is-xl">
+                  <div class="h-avatar is-large avatar">
+                    <img class="avatar" [src]="apiUrl + document.image">
+                  </div>
+                </div>
+                <br><br>
+                <h3 class="dark-inverted">
+                  {{document.name}} ({{document.serie}}-{{document.correlative}})
+                </h3>
+              </div>
+
+              <div class="field has-addons">
+                <div class="control is-expanded has-icon">
+                  <input class="input" type="datetime-local" [value]="operationForm.controls['date'].value" readonly>
+                  <div class="form-icon">
+                    <i class="fal fa-calendar"></i>
+                  </div>
+                </div>
+                <div class="control">
+                  <a class="button is-primary" (click)="panelDate()">
+                    <i class="fas fa-search"></i>
+                  </a>
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="control">
+                  <textarea formControlName="observations" class="textarea is-primary-focus" rows="5"
+                    placeholder="Observaciones"></textarea>
+                </div>
+              </div>
+
+              <div *ngIf="typedocument.name != 'TRASLADO'">
+
+                <h3 style="text-transform: lowercase;">{{typedocument.inventory == 'SALIDA' ? 'Salida de': 'Entrada a'
+                  }}</h3>
+
+                <div [ngClass]="{ 'is-hidden': !document.typedocument.branch }" class="field has-addons">
+                  <div class="control is-expanded has-icon">
+                    <input (click)="panelBranch()" [(ngModel)]="branch.name" [ngModelOptions]="{standalone: true}"
+                      class="input is-disabled" type="text" placeholder="Sucursal" readonly>
+                    <div class="form-icon">
+                      <i class="fal fa-store"></i>
+                    </div>
+                  </div>
+                  <div class="control">
+                    <a class="button is-primary is-disabled" (click)="panelBranch()">
+                      <i class="fas fa-search"></i>
+                    </a>
+                  </div>
+                </div>
+
+                <div [ngClass]="{ 'is-hidden': !document.typedocument.warehouse }" class="field has-addons">
+                  <div class="control is-expanded has-icon">
+                    <input (click)="panelWarehouse()" [(ngModel)]="warehouse.name" [ngModelOptions]="{standalone: true}"
+                      class="input" type="text" placeholder="Bodega" readonly>
+                    <div class="form-icon">
+                      <i class="fal fa-warehouse"></i>
+                    </div>
+                  </div>
+                  <div class="control">
+                    <a class="button is-primary" (click)="panelWarehouse()">
+                      <i class="fas fa-search"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="item" [formGroup]="customerForm" [ngClass]="{ 'is-hidden': !document.typedocument.customer }">
+              <h3>Cliente</h3>
+
+              <div class="field has-addons">
+                <div class="control is-expanded has-icon">
+                  <input id="nit" formControlName="nit" (keydown.enter)="searchNIT()" class="input" type="text"
+                    placeholder="NIT o DPI">
+                  <div class="form-icon">
+                    <i class="fal fa-id-badge"></i>
+                  </div>
+                </div>
+                <div class="control">
+                  <a class="button is-primary" (click)="panelCustomer()">
+                    <i class="fas fa-search"></i>
+                  </a>
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="control has-icon">
+                  <input readonly formControlName="name" class="input" placeholder="Nombre">
+                  <div class="form-icon">
+                    <i class="fal fa-user"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="control has-icon">
+                  <input formControlName="email" class="input" placeholder="Correo Electronico">
+                  <div class="form-icon">
+                    <i class="fal fa-envelope"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="control">
+                  <label class="radio is-outlined is-primary">
+                    <input formControlName="doc" type="radio" name="doc" value="NIT">
+                    <span></span>
+                    NIT
+                  </label>
+
+                  <label class="radio is-outlined is-primary">
+                    <input formControlName="doc" type="radio" name="doc" value="DPI">
+                    <span></span>
+                    DPI
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="item" [formGroup]="supplierForm" [ngClass]="{ 'is-hidden': !document.typedocument.supplier }">
+              <h3>Proveedor</h3>
+
+              <div class="field has-addons">
+                <div class="control is-expanded has-icon">
+                  <input id="nitS" formControlName="nit" (keydown.enter)="searchNITS()" class="input" type="text"
+                    placeholder="NIT o DPI">
+                  <div class="form-icon">
+                    <i class="fal fa-id-badge"></i>
+                  </div>
+                </div>
+                <div class="control">
+                  <a class="button is-primary" (click)="panelSupplier()">
+                    <i class="fas fa-search"></i>
+                  </a>
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="control has-icon">
+                  <input formControlName="name" class="input" placeholder="Nombre">
+                  <div class="form-icon">
+                    <i class="fal fa-user"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="control has-icon">
+                  <input formControlName="email" class="input" placeholder="Correo Electronico">
+                  <div class="form-icon">
+                    <i class="fal fa-envelope"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="control">
+                  <label class="radio is-outlined is-primary">
+                    <input formControlName="doc" type="radio" name="doc" value="NIT">
+                    <span></span>
+                    NIT
+                  </label>
+
+                  <label class="radio is-outlined is-primary">
+                    <input formControlName="doc" type="radio" name="doc" value="DPI">
+                    <span></span>
+                    DPI
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="item" [formGroup]="operationForm" [ngClass]="{ 'is-hidden': !document.typedocument.currency }">
+              <div class="field">
+                <label>Moneda</label>
+                <div class="control">
+                  <label class="radio is-outlined is-primary">
+                    <input formControlName="currency" type="radio" name="currency" value="GTQ">
+                    <span></span>
+                    GTQ
+                  </label>
+
+                  <label class="radio is-outlined is-primary">
+                    <input formControlName="currency" type="radio" name="currency" value="USD">
+                    <span></span>
+                    USD
+                  </label>
+                </div>
+              </div>
+
+              <div class="field">
+                <label>Pago</label>
+                <div class="control">
+                  <label class="radio is-outlined is-primary">
+                    <input formControlName="payment" type="radio" name="payment" value="CONTADO">
+                    <span></span>
+                    CONTADO
+                  </label>
+
+                  <label class="radio is-outlined is-primary">
+                    <input formControlName="payment" type="radio" name="payment" value="CREDITO">
+                    <span></span>
+                    CREDITO
+                  </label>
+                </div>
+              </div>
+
+              <div class="field">
+                <label>Tipo de Cambio</label>
+                <div class="control">
+                  <input formControlName="exchange" class="input" type="number" placeholder="Tipo de Cambio">
+                </div>
+              </div>
+
+            </div>
+
+            <div class="item" [formGroup]="operationForm" [ngClass]="{ 'is-hidden': !document.typedocument.operation }">
+              <div class="field has-addons">
+                <div class="control is-expanded has-icon">
+                  <input [(ngModel)]="idFel" [ngModelOptions]="{standalone: true}" (keydown.enter)="searchOperation()"
+                    class="input" type="text" placeholder="Buscar por Serie o Numero FEL">
+                  <div class="form-icon">
+                    <i class="fal fa-file-invoice-dollar"></i>
+                  </div>
+                </div>
+                <div class="control">
+                  <a (click)="searchOperation()" class="button is-primary">
+                    <i class="fas fa-search"></i>
+                  </a>
+                </div>
+              </div>
+              <div class="field has-addons">
+                <div class="control is-expanded has-icon">
+                  <input (input)="calculationNote()" formControlName="total" class="input" type="number"
+                    placeholder="Total">
+                  <div class="form-icon">
+                    <i class="fal fa-sack-dollar"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="left" *ngIf="typedocument.name == 'TRASLADO'">
+
+            <div class="item" *ngIf="company">
+
+              <h3 style="text-transform: lowercase;">{{typedocument.inventory == 'SALIDA' ? 'Salida de': 'Entrada a' }}
+              </h3>
+
+              <div [ngClass]="{ 'is-hidden': !document.typedocument.branch }" class="field has-addons">
+                <div class="control is-expanded has-icon">
+                  <input (click)="panelBranch()" [(ngModel)]="branch.name" [ngModelOptions]="{standalone: true}"
+                    class="input is-disabled" type="text" placeholder="Sucursal" readonly>
+                  <div class="form-icon">
+                    <i class="fal fa-id-badge"></i>
+                  </div>
+                </div>
+                <div class="control">
+                  <a class="button is-primary is-disabled" (click)="panelBranch()">
+                    <i class="fas fa-search"></i>
+                  </a>
+                </div>
+              </div>
+
+              <div [ngClass]="{ 'is-hidden': !document.typedocument.warehouse }" class="field has-addons">
+                <div class="control is-expanded has-icon">
+                  <input (click)="panelWarehouse()" [(ngModel)]="warehouse.name" [ngModelOptions]="{standalone: true}"
+                    class="input" type="text" placeholder="Bodega" readonly>
+                  <div class="form-icon">
+                    <i class="fal fa-id-badge"></i>
+                  </div>
+                </div>
+                <div class="control">
+                  <a class="button is-primary" (click)="panelWarehouse()">
+                    <i class="fas fa-search"></i>
+                  </a>
+                </div>
+              </div>
+
+              <h3 style="text-transform: lowercase;">Entrada a</h3>
+
+              <div class="field has-addons">
+                <div class="control is-expanded has-icon">
+                  <input (click)="panelBranchEnd()" [(ngModel)]="branch_end.name" [ngModelOptions]="{standalone: true}"
+                    class="input" type="text" placeholder="Sucursal" readonly>
+                  <div class="form-icon">
+                    <i class="fal fa-id-badge"></i>
+                  </div>
+                </div>
+                <div class="control">
+                  <a class="button is-primary" (click)="panelBranchEnd()">
+                    <i class="fas fa-search"></i>
+                  </a>
+                </div>
+              </div>
+
+              <div class="field has-addons" [ngClass]="{'is-disabled': warehouses_end.length == 0}">
+                <div class="control is-expanded has-icon">
+                  <input (click)="panelWarehouseEnd()" [(ngModel)]="warehouse_end.name"
+                    [ngModelOptions]="{standalone: true}" class="input" type="text" placeholder="Bodega" readonly>
+                  <div class="form-icon">
+                    <i class="fal fa-id-badge"></i>
+                  </div>
+                </div>
+                <div class="control">
+                  <a class="button is-primary" (click)="panelWarehouseEnd()">
+                    <i class="fas fa-search"></i>
+                  </a>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="right fixed-parent">
+
+            <div class="item" [ngClass]="{ 'is-hidden': !this.typedocument.details }">
+              <div class="panel-form details">
+                <div class="columns">
+                  <div class="column is-12">
+
+                    <h3 style="text-align: center;">Lista de Productos</h3>
+                    <br>
+
+                    <div class="field has-addons">
+                      <div class="control is-expanded has-icon">
+                        <input id="sku" [(ngModel)]="sku" (keydown.enter)="searchSKU()" class="input" type="text"
+                          placeholder="Buscar por SKU">
+                        <div class="form-icon">
+                          <i class="fal fa-id-badge"></i>
+                        </div>
+                      </div>
+                      <div class="control">
+                        <a class="button is-primary" (click)="panelProduct()">
+                          <i class="fas fa-search"></i>
+                        </a>
+                      </div>
+                    </div>
+
+                    <div class="flex-table">
+
+                      <div class="flex-table-header">
+                        <span class="is-media is-grow">Nombre</span>
+                        <span class="cell-end">Cantidad</span>
+                        <span *ngIf="typedocument.inventory == 'SALIDA'" class="cell-end"
+                          [ngClass]="{'is-hidden': !typedocument.totals}">
+                          Precio
+                        </span>
+                        <span *ngIf="typedocument.inventory == 'ENTRADA'" class="cell-end"
+                          [ngClass]="{'is-hidden': !typedocument.totals}">
+                          Costo
+                        </span>
+                        <span class="cell-end" [ngClass]="{'is-hidden': !typedocument.totals}">Descuento</span>
+                        <span class="cell-end" [ngClass]="{'is-hidden': !typedocument.totals}">Descuento %</span>
+                        <span class="cell-end" [ngClass]="{'is-hidden': !typedocument.totals}">Sub Total</span>
+                        <span class="cell-end">Acciones</span>
+                      </div>
+
+                      <div *ngFor="let i of details; let u = index" class="flex-table-item">
+
+                        <div class="flex-table-cell is-media is-grow" data-th="">
+                          <div *ngIf="!i.image">
+                            <div class="h-avatar is-medium">
+                              <span class="avatar is-fake is-primary">
+                                <span>
+                                  {{getFakeAvatar(i.name)}}
+                                </span>
+                              </span>
+                            </div>
+                          </div>
+                          <div *ngIf="i.image">
+                            <div class="h-avatar is-medium">
+                              <span class="avatar is-fake is-primary">
+                                <img class="avatar" [src]="apiUrl + i.image">
+                              </span>
+                            </div>
+                          </div>
+                          <div>
+                            <span (click)="setDescription(i, u)" class="item-name dark-text">{{i.description}}</span>
+                            <!-- <textarea class="input" cols="30" rows="10" [(ngModel)]="i.description"></textarea> -->
+                            <!-- <input type="text" class="input quantity" [(ngModel)]="i.name"> -->
+                            <span class="item-meta">
+                              <span class="dark-text">SKU: {{i.sku}}
+                                <br>
+                                <div *ngIf="company.stock">
+                                  <span *ngIf="typedocument.inventory == 'ENTRADA'" class="text-success">
+                                    <span style="font-style: oblique;">
+                                      {{decimal(i.stock / i.product.equivalence)}}
+                                    </span>
+                                    <span style="font-style: oblique;">{{i.product.entryUnit.symbol}}</span>
+                                  </span>
+                                  <span *ngIf="typedocument.inventory == 'SALIDA'" class="text-success">
+                                    {{decimal(i.stock)}}
+                                    <!-- <span style="font-style: oblique;">{{i.product.entryUnit.symbol}}</span> -->
+                                    <span style="font-style: oblique;">{{i.product.unit.symbol}}</span>
+                                  </span>
+                                </div>
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+
+                        <div class="flex-table-cell cell-end" data-th="Cantidad">
+                          <span class="light-text">
+                            <input type="number" class="input quantity" [(ngModel)]="i.quantity" (input)="dis(u, i)"
+                              [max]="i.stock">
+                          </span>
+                        </div>
+
+                        <div *ngIf="typedocument.inventory == 'SALIDA'" class="flex-table-cell cell-end"
+                          data-th="Precio" [ngClass]="{'is-hidden': !typedocument.totals}">
+                          <span class="light-text">
+                            <label>{{getCurrency()}} </label>
+                            <input type="text" class="input quantity" [(ngModel)]="i.price" (input)="dis(u, i)">
+                          </span>
+                        </div>
+
+                        <div *ngIf="typedocument.inventory == 'ENTRADA'" class="flex-table-cell cell-end"
+                          data-th="Costo" [ngClass]="{'is-hidden': !typedocument.totals}">
+                          <span class="light-text">
+                            <label>{{getCurrency()}} </label>
+                            <input type="text" class="input quantity" [(ngModel)]="i.cost" (input)="dis(u, i)">
+                          </span>
+                        </div>
+
+                        <div class="flex-table-cell cell-end" data-th="Descuento"
+                          [ngClass]="{'is-hidden': !typedocument.totals}">
+                          <span class="light-text">
+                            <label>{{getCurrency()}} </label>
+                            <input type="text" class="input quantity" [(ngModel)]="i.discount"
+                              (input)="setPercentage(i, u)" (input)="calculation()">
+                          </span>
+                        </div>
+
+                        <div class="flex-table-cell cell-end" data-th="Descuento %"
+                          [ngClass]="{'is-hidden': !typedocument.totals}">
+                          <span class="light-text">
+                            <label>{{'%'}}</label>
+                            <input type="text" class="input quantity" [(ngModel)]="i.percentage"
+                              (input)="setDiscount(i, u)" (input)="calculation()">
+                          </span>
+                        </div>
+
+                        <div class="flex-table-cell cell-end" data-th="Sub Total"
+                          [ngClass]="{'is-hidden': !typedocument.totals}">
+                          <span class="light-text" *ngIf="typedocument.inventory == 'ENTRADA'">
+                            {{getCurrency()}}{{decimal((i.quantity * i.cost) -
+                            (i.discount))}}
+                          </span>
+                          <span class="light-text" *ngIf="typedocument.inventory == 'SALIDA'">
+                            {{getCurrency()}}{{decimal((i.quantity * i.price) -
+                            (i.discount))}}
+                          </span>
+                        </div>
+
+
+                        <div class="flex-table-cell cell-end" data-th="Acciones">
+                          <span class="light-text">
+                            <div class="buttons">
+                              <a (click)="removeProduct(i, u)" class="button is-danger">
+                                <i class="fal fa-trash"></i>
+                              </a>
+                            </div>
+                          </span>
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                    <br>
+                    <table class="table is-hoverable is-fullwidth" [ngClass]="{'is-hidden': !typedocument.totals}">
+                      <tbody>
+                        <tr class="flex-table-item">
+                          <td>SUB TOTAL</td>
+                          <td class="is-end" style="text-align: right;">
+                            {{subtotal}}
+                          </td>
+                        </tr>
+                        <tr class="flex-table-item">
+                          <td>IVA</td>
+                          <td class="is-end" style="text-align: right;">
+                            {{iva}}
+                          </td>
+                        </tr>
+                        <tr class="flex-table-item">
+                          <td>DESCUENTO</td>
+                          <td class="is-end" style="text-align: right;">
+                            {{discount}}
+                          </td>
+                        </tr>
+                        <tr class="flex-table-item">
+                          <td>TOTAL</td>
+                          <td class="is-end" style="text-align: right;">
+                            {{total}}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="item" [ngClass]="{ 'is-hidden': !this.typedocument.coupons }">
+              <div class="panel-form details">
+                <div class="columns">
+                  <div class="column is-12">
+
+                    <h3 style="text-align: center;">Cupones</h3>
+                    <br>
+
+                    <div class="field has-addons">
+                      <div class="control is-expanded has-icon">
+                        <input id="sku" [(ngModel)]="code" (keydown.enter)="searchCoupon()" class="input" type="text"
+                          placeholder="Buscar por Código">
+                        <div class="form-icon">
+                          <i class="fal fa-id-badge"></i>
+                        </div>
+                      </div>
+                      <div class="control">
+                        <a class="button is-primary" (click)="panelCoupon()">
+                          <i class="fas fa-search"></i>
+                        </a>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="item" [ngClass]="{ 'is-hidden': !this.typedocument.operation }">
+              <div *ngIf="operation" class="invoice-wrapper">
+                <div class="invoice-body">
+                  <div class="invoice-card">
+                    <div class="invoice-section is-flex is-bordered">
+
+                      <div *ngIf="company.image">
+                        <div class="h-avatar is-large">
+                          <img class="avatar" [src]="apiUrl + company.image">
+                        </div>
+                      </div>
+                      <div *ngIf="!company.image">
+                        <div class="h-avatar is-large">
+                          <span class="avatar is-fake is-primary">
+                            <span>{{getFakeAvatar(company.name)}}</span>
+                          </span>
+                        </div>
+                      </div>
+
+                      <div *ngIf="company" class="meta">
+                        <h3>{{company.name}}</h3>
+                        <span>NIT: {{company.nit}}</span>
+                        <span>{{company.address}}</span>
+                      </div>
+                      <div class="end">
+                        <span style="display: initial; color: white"
+                          class="tag is-primary">{{operation.document.typedocument.name}}
+                        </span>
+                        <h3>{{operation.serie}}-{{operation.correlative}}</h3>
+                        <span>{{operation.date | date: 'dd-MM-yyyy, HH:mm'}}</span>
+                        <p>
+                          <span *ngIf="operation.document.typedocument.certification"
+                            style="display: initial; color: white" class="tag"
+                            [ngClass]="{'is-success': operation.status == 'CERTIFICADA', 'is-danger': operation.status == 'ANULADA'}"
+                            data-filter-match>{{operation.status}}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <div class="invoice-section is-flex is-bordered">
+
+                      <div *ngIf="customer" class="meta">
+                        <h3>{{customer.name}}</h3>
+                        <span>{{customer.email}}</span>
+                        <span><i class="fal fa-fingerprint"></i> {{customer.doc}}:
+                          {{customer.nit}}</span>
+                      </div>
+                      <div *ngIf="supplier" class="meta">
+                        <h3>{{supplier.name}}</h3>
+                        <span>{{supplier.email}}</span>
+                        <span><i class="fal fa-fingerprint"></i> {{supplier.doc}}:
+                          {{supplier.nit}}</span>
+                      </div>
+                      <div *ngIf="operation.observations" class="end is-left">
+                        <h3>Observaciones</h3>
+                        <span>{{operation.observations}}</span>
+                      </div>
+                      <div *ngIf="operation.branchId" class="end is-left">
+                        <h3>Sucursal</h3>
+                        <span>{{operation.branch.name}}</span>
+                      </div>
+                      <div *ngIf="operation.warehouseId" class="end is-left">
+                        <h3>Bodega</h3>
+                        <span>{{operation.warehouse.name}}</span>
+                      </div>
+                    </div>
+                    <div *ngIf="details2.length" class="invoice-section">
+                      <div class="flex-table">
+
+                        <div class="flex-table-header">
+                          <span class="is-grow">Producto</span>
+                          <span class="cell-end">Cantidad</span>
+                          <span>Precio</span>
+                          <span>Descuento</span>
+                          <span>Subtotal</span>
+                        </div>
+
+                        <div *ngFor="let i of details2; let u = index" class="flex-table-item">
+                          <div class="flex-table-cell is-media is-grow" data-th="">
+                            <div *ngIf="!i.product.image">
+                              <div class="h-avatar is-medium">
+                                <span class="avatar is-fake is-primary">
+                                  <span>
+                                    {{getFakeAvatar(i.product.name)}}
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                            <div *ngIf="i.product.image">
+                              <div class="h-avatar is-medium">
+                                <span class="avatar is-fake is-primary">
+                                  <img class="avatar" [src]="apiUrl + i.product.image">
+                                </span>
+                              </div>
+                            </div>
+                            <div>
+                              <span class="item-name dark-text">{{i.product.name}}</span>
+                              <span class="item-meta">
+                                <span class="dark-text">SKU: {{i.product.sku}}</span>
+                              </span>
+                            </div>
+                          </div>
+                          <div class="flex-table-cell cell-end" data-th="Cantidad">
+                            <span class="light-text">{{i.quantity}}</span>
+                          </div>
+                          <div class="flex-table-cell" data-th="Precio">
+                            <span class="light-text">{{getCurrency()}}{{i.price}}</span>
+                          </div>
+                          <div class="flex-table-cell" data-th="Descuento">
+                            <span class="dark-inverted">-
+                              {{getCurrency()}}{{i.discount}}</span>
+                          </div>
+                          <div class="flex-table-cell has-text-right" data-th="Subtotal">
+                            <span class="dark-inverted">{{getCurrency()}}{{i.subtotal}}</span>
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <div class="flex-table sub-table">
+
+                        <div class="flex-table-item">
+                          <div class="flex-table-cell is-grow is-vhidden" data-th=""></div>
+                          <div class="flex-table-cell cell-end is-vhidden" data-th=""></div>
+                          <div class="flex-table-cell is-vhidden" data-th=""></div>
+                          <div class="flex-table-cell" data-th="">
+                            <span class="table-label">Sub Total</span>
+                          </div>
+                          <div class="flex-table-cell has-text-right" data-th="">
+                            <span class="table-total dark-inverted">{{getCurrency()}}{{operation.subtotal}}</span>
+                          </div>
+                        </div>
+
+                        <div class="flex-table-item">
+                          <div class="flex-table-cell is-grow is-vhidden" data-th=""></div>
+                          <div class="flex-table-cell cell-end is-vhidden" data-th=""></div>
+                          <div class="flex-table-cell is-vhidden" data-th=""></div>
+                          <div class="flex-table-cell" data-th="">
+                            <span class="table-label">IVA</span>
+                          </div>
+                          <div class="flex-table-cell has-text-right" data-th="">
+                            <span class="table-total dark-inverted">{{getCurrency()}}{{operation.iva}}</span>
+                          </div>
+                        </div>
+
+                        <div class="flex-table-item">
+                          <div class="flex-table-cell is-grow is-vhidden" data-th=""></div>
+                          <div class="flex-table-cell cell-end is-vhidden" data-th=""></div>
+                          <div class="flex-table-cell is-vhidden" data-th=""></div>
+                          <div class="flex-table-cell" data-th="">
+                            <span class="table-label">Descuento</span>
+                          </div>
+                          <div class="flex-table-cell has-text-right" data-th="">
+                            <span class="table-total dark-inverted">-
+                              {{getCurrency()}}{{operation.discount}}</span>
+                          </div>
+                        </div>
+
+                        <div class="flex-table-item">
+                          <div class="flex-table-cell is-grow is-vhidden" data-th=""></div>
+                          <div class="flex-table-cell cell-end is-vhidden" data-th=""></div>
+                          <div class="flex-table-cell is-vhidden" data-th=""></div>
+                          <div class="flex-table-cell" data-th="">
+                            <span class="table-label">Total</span>
+                          </div>
+                          <div class="flex-table-cell has-text-right" data-th="">
+                            <span
+                              class="table-total is-bigger dark-inverted">{{getCurrency()}}{{operation.total}}</span>
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <div *ngIf="notes.length" class="flex-table">
+
+                        <hr>
+
+                        <div class="flex-table-header">
+                          <span class="is-grow">Referencia</span>
+                          <span>Tipo</span>
+                          <!-- <span>Subtotal</span>
+                          <span>IVA</span> -->
+                          <span>Total</span>
+                        </div>
+
+                        <div *ngFor="let i of notes; let u = index">
+                          <div class="flex-table-item">
+                            <div class="flex-table-cell is-media is-grow" data-th="">
+                              <div>
+                                <div *ngIf="i.document.typedocument.name" class="h-avatar is-medium avatar">
+                                  <img class="avatar" [src]="apiUrl + i.document.image">
+                                </div>
+                              </div>
+                              <div>
+                                <span class="item-name dark-text">
+                                  ({{i.serie}}-{{i.correlative}})</span>
+                                <span class="item-meta">
+                                  <span class="dark-text">{{i.date | date: 'dd-MM-yyyy, HH:mm'}}</span>
+                                </span>
+                              </div>
+                            </div>
+                            <div class="flex-table-cell" data-th="Tipo">
+                              <span class="light-text">{{i.document.typedocument.name}}</span>
+                            </div>
+                            <!-- <div class="flex-table-cell" data-th="Subtotal">
+                              <span class="light-text">{{getCurrency()}}{{i.subtotal}}</span>
+                            </div>
+                            <div class="flex-table-cell" data-th="IVA">
+                              <span class="dark-inverted">{{getCurrency()}}{{i.iva}}</span>
+                            </div> -->
+                            <div class="flex-table-cell has-text-right" data-th="Total">
+                              <span class="dark-inverted">
+                                <span *ngIf="i.document.typedocument.name == 'NOTA DE CREDITO'">-</span>
+                                <span *ngIf="i.document.typedocument.name == 'NOTA DE DEBITO'">+</span>
+                                <span *ngIf="i.document.typedocument.name == 'NOTA DE ABONO'">-</span>
+                                <span *ngIf="i.document.typedocument.name == 'ABONO'">-</span>
+                                {{getCurrency()}}{{i.total}}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div class="flex-table sub-table">
+                            <div class="flex-table-item">
+                              <div class="flex-table-cell is-grow" data-th=""></div>
+                              <div class="flex-table-cell" data-th="">
+                                <span class="table-label">Total</span>
+                              </div>
+                              <div class="flex-table-cell has-text-right" data-th="">
+                                <span
+                                  class="table-total is-bigger dark-inverted">{{getCurrency()}}{{totalNotes(u)}}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                    <div *ngIf="operation.document.typedocument.certification" class="invoice-section"
+                      style="text-align: center; color: #a2a5b9;">
+                      <span>Certificación: <b>{{operation.autorizacionFel}}</b></span>
+                      <br>
+                      <span>Serie: <b>{{operation.serieFel}}</b></span>
+                      <br>
+                      <span>Número: <b>{{operation.numberFel}}</b></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div id="select-date-panel" class="right-panel-wrapper is-languages is-left">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3>Selecciona una Fecha</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <form [formGroup]="operationForm">
+
+              <div class="field">
+                <div class="control item">
+                  <span class="light-text">Fecha Automática</span> <br>
+                  <label class="form-switch is-primary">
+                    <input [(ngModel)]="auto_date" [ngModelOptions]="{standalone: true}" type="checkbox"
+                      class="is-switch">
+                    <i></i>
+                  </label>
+                </div>
+              </div>
+
+              <div class="field" [ngClass]="{'is-disabled': auto_date}">
+                <div class="control has-icon">
+                  <input formControlName="date" class="input" type="datetime-local">
+                  <div class="form-icon">
+                    <i class="fal fa-calendar"></i>
+                  </div>
+                </div>
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="select-customer-panel" class="right-panel-wrapper is-languages is-left">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3>Selecciona un Cliente</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <div class="buttons">
+              <div class="control search has-icon" style="width: 100% !important;">
+                <input class="input custom-text-filter" placeholder="Buscar..." data-filter-target=".customers">
+                <div class="form-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-table">
+
+              <a *ngFor="let i of customers" class="flex-table-item customers" (click)="setCustomer(i)">
+
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div class="h-avatar is-medium">
+                    <span class="avatar is-fake is-primary">
+                      <span>
+                        {{getFakeAvatar(i.name)}}
+                      </span>
+                    </span>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>{{i.name}}</span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>{{i.doc}}: {{i.nit}}</span>
+                    </span>
+                  </div>
+                </div>
+
+              </a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="select-supplier-panel" class="right-panel-wrapper is-languages is-left">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3>Selecciona un Proveedor</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <div class="buttons">
+              <div class="control search has-icon" style="width: 100% !important;">
+                <input class="input custom-text-filter" placeholder="Buscar..." data-filter-target=".suppliers">
+                <div class="form-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-table">
+
+              <a *ngFor="let i of suppliers" class="flex-table-item suppliers" (click)="setSupplier(i)">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div class="h-avatar is-medium">
+                    <span class="avatar is-fake is-primary">
+                      <span>
+                        {{getFakeAvatar(i.name)}}
+                      </span>
+                    </span>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>{{i.name}}</span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>{{i.doc}}: {{i.nit}}</span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="select-branch-panel" class="right-panel-wrapper is-languages is-left">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3>Selecciona una Sucursal</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <div class="buttons">
+              <div class="control search has-icon" style="width: 100% !important;">
+                <input class="input custom-text-filter" placeholder="Buscar..." data-filter-target=".branches">
+                <div class="form-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-table" *ngIf="branches.length > 0">
+
+              <a *ngFor="let i of branches" class="flex-table-item branches" (click)="setBranch(i)">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div class="h-avatar is-medium">
+                    <span class="avatar is-fake is-primary">
+                      <span>
+                        {{getFakeAvatar(i.name)}}
+                      </span>
+                    </span>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>{{i.name}}
+                      (#{{i.number}})</span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>{{i.address}}</span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="select-branch-end-panel" class="right-panel-wrapper is-languages is-left">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3>Selecciona una Sucursal de Salida</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <div class="buttons">
+              <div class="control search has-icon" style="width: 100% !important;">
+                <input class="input custom-text-filter" placeholder="Buscar..." data-filter-target=".branches">
+                <div class="form-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-table" *ngIf="branches.length > 0">
+
+              <a *ngFor="let i of branches" class="flex-table-item branches" (click)="setBranchEnd(i)">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div class="h-avatar is-medium">
+                    <span class="avatar is-fake is-primary">
+                      <span>
+                        {{getFakeAvatar(i.name)}}
+                      </span>
+                    </span>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>{{i.name}}
+                      (#{{i.number}})</span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>{{i.address}}</span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="select-warehouse-panel" class="right-panel-wrapper is-languages is-left">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3>Selecciona una Bodega</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <div class="buttons">
+              <div class="control search has-icon" style="width: 100% !important;">
+                <input class="input custom-text-filter" placeholder="Buscar..." data-filter-target=".warehouses">
+                <div class="form-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-table" *ngIf="warehouses.length > 0">
+
+              <a *ngFor="let i of warehouses" class="flex-table-item warehouses" (click)="setWarehouse(i)">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div class="h-avatar is-medium">
+                    <span class="avatar is-fake is-primary">
+                      <span>
+                        {{getFakeAvatar(i.name)}}
+                      </span>
+                    </span>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>{{i.name}}
+                      (#{{i.number}})</span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>{{i.address}}</span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="select-warehouse-end-panel" class="right-panel-wrapper is-languages is-left">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3>Selecciona una Bodega de Salida</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <div class="buttons">
+              <div class="control search has-icon" style="width: 100% !important;">
+                <input class="input custom-text-filter" placeholder="Buscar..." data-filter-target=".warehouses">
+                <div class="form-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-table" *ngIf="warehouses_end.length > 0">
+
+              <!-- <a class="flex-table-item" (click)="setWarehouseEnd()">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div class="h-avatar is-medium">
+                    <span class="avatar is-fake is-danger">
+                      <span>
+                        <i class="fas fa-ban"></i>
+                      </span>
+                    </span>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>Sin seleccion</span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>Todas las bodegas</span>
+                    </span>
+                  </div>
+                </div>
+              </a> -->
+              <a *ngFor="let i of warehouses_end" class="flex-table-item warehouses" (click)="setWarehouseEnd(i)"
+                [ngClass]="{'is-disabled': i.id == warehouse.id}">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div class="h-avatar is-medium">
+                    <span class="avatar is-fake is-primary">
+                      <span>
+                        {{getFakeAvatar(i.name)}}
+                      </span>
+                    </span>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>{{i.name}}
+                      (#{{i.number}})</span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>{{i.address}}</span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="select-product-panel" class="right-panel-wrapper is-languages is-rigth">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3>Selecciona un Producto</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <div class="buttons">
+              <div class="control search has-icon" style="width: 100% !important;">
+                <input id="prod" class="input custom-text-filter" placeholder="Buscar..."
+                  data-filter-target=".products">
+                <div class="form-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-table">
+
+              <a *ngFor="let i of products" class="flex-table-item products"
+                [ngClass]="{'is-combo': i.type == 'COMBO'}">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div *ngIf="!i.image" (click)="setProduct(i, true)">
+                    <div class="h-avatar is-medium">
+                      <span class="avatar is-fake is-primary">
+                        <span>
+                          {{getFakeAvatar(i.name)}}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div *ngIf="i.image" (click)="setProduct(i, true)">
+                    <div class="h-avatar is-medium">
+                      <span class="avatar is-fake is-primary">
+                        <img class="avatar" [src]="apiUrl + i.image">
+                      </span>
+                    </div>
+                  </div>
+                  <div (click)="setProduct(i)">
+                    <span class="item-name dark-text" data-filter-match>
+                      {{i.name}} ({{i.type}})
+                    </span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>
+                        SKU: {{i.sku}}
+                        <span *ngIf="typedocument.inventory == 'ENTRADA'"> | Costo:
+                          {{i.cost}}</span>
+                        <span *ngIf="typedocument.inventory == 'SALIDA'"> | Precio
+                          {{i.price}}</span>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="add-payment-method-panel" class="right-panel-wrapper is-languages is-rigth">
+  <div class="panel-overlay" style="z-index: 200 !important;"></div>
+
+  <div class="right-panel" style="z-index: 200 !important;">
+    <div class="right-panel-head">
+      <h3>Agregar Método de Pago</h3>
+      <a class="close-panel">
+        <i data-feather="x"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns is-multiline">
+
+          <div class="column is-12">
+            <div class="field has-addons">
+              <p class="control" style="width: 35%">
+                <span class="select">
+                  <select [(ngModel)]="methodType" [ngModelOptions]="{standalone: true}">
+                    <option>EFECTIVO</option>
+                    <option>TARJETA</option>
+                    <option>VALE</option>
+                  </select>
+                </span>
+              </p>
+              <p class="control is-expanded">
+                <input id="methodTotal" (keydown.enter)="setMethod()" [(ngModel)]="methodTotal"
+                  [ngModelOptions]="{standalone: true}" class="input" type="number" placeholder="Monto">
+              </p>
+            </div>
+          </div>
+
+          <div *ngIf="methodType != 'EFECTIVO'" class="column is-6">
+            <div class="field">
+              <p class="control">
+                <input id="methodAuth" (keydown.enter)="setMethod()" [(ngModel)]="methodAuth"
+                  [ngModelOptions]="{standalone: true}" class="input" type="text" placeholder="Autorazación">
+              </p>
+            </div>
+          </div>
+
+          <div class="column is-12" *ngIf="typedocument">
+
+            <div [ngClass]="{ 'is-hidden': !this.typedocument.payment }" class="inner-content">
+              <table class="table is-hoverable is-fullwidth">
+                <tbody>
+                  <tr class="flex-table-item">
+                    <td>PAGADO</td>
+                    <td [ngClass]="{'is-hidden': methods.length == 0}"></td>
+                    <td class="is-end" style="text-align: right;">
+                      {{getCurrency()}}{{amount}}
+                    </td>
+                  </tr>
+                  <tr class="flex-table-item">
+                    <td style="font-size: 18px;" *ngIf="amount < operationForm.controls['total'].value">
+                      PENDIENTE</td>
+                    <td style="font-size: 18px;" *ngIf="amount >= operationForm.controls['total'].value">
+                      CAMBIO</td>
+                    <td [ngClass]="{'is-hidden': methods.length == 0}"></td>
+                    <td class="is-end" style="text-align: right; font-size: 18px">
+                      {{turned}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div [ngClass]="{ 'is-hidden': !this.typedocument.payment }" class="inner-content">
+              <table class="table is-hoverable is-fullwidth">
+                <tbody>
+                  <tr *ngFor="let i of methods; let u = index" [ngClass]="{'is-hidden': methods.length == 0}"
+                    class="flex-table-item">
+                    <td>{{i.type}} <span *ngIf="i.type != 'EFECTIVO'">({{i.auth}})</span> </td>
+                    <td class="is-end" style="text-align: right;">
+                      <a (click)="removeMethod(u)" class="button is-danger is-small">
+                        <i class="fal fa-trash"></i>
+                      </a>
+                    </td>
+                    <td class="is-end" style="text-align: right;">{{getCurrency()}}{{i.total}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+        <div class="buttons is-right">
+          <button *ngIf="methodType == 'EFECTIVO'" (click)="setMethod()" id="bt-add-document"
+            [ngClass]="{ 'is-disabled': methodTotal <= 0 || !methodType }"
+            class="button h-button is-primary is-elevated">
+            <span class="icon">
+              <i class="fal fa-credit-card"></i>
+            </span>
+            <span>Agregar</span>
+          </button>
+          <button *ngIf="methodType != 'EFECTIVO'" (click)="setMethod()" id="bt-add-document"
+            [ngClass]="{ 'is-disabled': methodTotal <= 0 || !methodType || !methodAuth }"
+            class="button h-button is-primary is-elevated">
+            <span class="icon">
+              <i class="fal fa-credit-card"></i>
+            </span>
+            <span>Agregar</span>
+          </button>
+          <button id="bt-add-document" [ngClass]="{ 'is-disabled': amount < operationForm.controls['total'].value }"
+            class="button h-button is-primary is-elevated close-panel">
+            <span class="icon">
+              <i class="fal fa-check"></i>
+            </span>
+            <span>Terminar</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="add-abono-panel" class="right-panel-wrapper is-languages is-rigth">
+  <div class="panel-overlay" style="z-index: 200 !important;"></div>
+
+  <div class="right-panel" style="z-index: 200 !important;">
+    <div class="right-panel-head">
+      <h3>Agregar Abono</h3>
+      <a class="close-panel">
+        <i data-feather="x"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns is-multiline">
+
+          <div class="column is-12">
+            <div class="field has-addons">
+              <p class="control" style="width: 35%">
+                <input id="abonoDate" (keydown.enter)="setAbono()" [(ngModel)]="abonoDate"
+                  [ngModelOptions]="{standalone: true}" class="input" type="date" placeholder="Monto">
+              </p>
+              <p class="control is-expanded">
+                <input id="abonoTotal" (keydown.enter)="setAbono()" [(ngModel)]="abonoTotal"
+                  [ngModelOptions]="{standalone: true}" class="input" type="number" placeholder="Monto">
+              </p>
+            </div>
+          </div>
+
+          <div class="column is-12" *ngIf="typedocument">
+            <div [ngClass]="{ 'is-hidden': !this.typedocument.abonos }" class="inner-content">
+              <table class="table is-hoverable is-fullwidth">
+                <tbody>
+                  <tr *ngFor="let i of abonos; let u = index" [ngClass]="{'is-hidden': abonos.length == 0}"
+                    class="flex-table-item">
+                    <td>{{i.date | date: 'dd-MM-yyyy'}}</td>
+                    <td class="is-end" style="text-align: right;">
+                      <a (click)="removeAbono(u)" class="button is-danger is-small">
+                        <i class="fal fa-trash"></i>
+                      </a>
+                    </td>
+                    <td class="is-end" style="text-align: right;">{{getCurrency()}}{{i.total}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+        <div class="buttons is-right">
+          <button (click)="setAbono()" id="bt-add-document" [ngClass]="{ 'is-disabled': abonoTotal <= 0 || !abonoDate }"
+            class="button h-button is-primary is-elevated">
+            <span class="icon">
+              <i class="fal fa-credit-card"></i>
+            </span>
+            <span>Agregar</span>
+          </button>
+          <button id="bt-add-document" [ngClass]="{ 'is-disabled': abonos.length <= 0 }"
+            class="button h-button is-primary is-elevated close-panel">
+            <span class="icon">
+              <i class="fal fa-check"></i>
+            </span>
+            <span>Terminar</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="err-fel-panel" class="right-panel-wrapper is-languages is-rigth">
+  <div class="panel-overlay" style="z-index: 200 !important;"></div>
+
+  <div class="right-panel" style="z-index: 200 !important;">
+    <div class="right-panel-head">
+      <h3>Error FEL</h3>
+      <a class="close-panel">
+        <i data-feather="x"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <form class="panel-form">
+
+        <div class="inner-content">
+          <div class="section-placeholder">
+            <div class="placeholder-content">
+
+              <div *ngIf="felDetails" class="form-body">
+                <div class="fieldset">
+                  <div id="edit-profile" class="h-avatar profile-h-avatar is-xl">
+                    <div class="h-avatar is-large avatar">
+                      <img class="avatar" [src]="apiUrl + document.image">
+                    </div>
+                  </div>
+                  <h3 class="dark-inverted">
+                    {{felDetails.Mensaje}}
+                  </h3>
+                  <h3 class="dark-inverted" style="font-size: 12px">
+                    {{felDetails.ResponseDATA1}}
+                  </h3>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<div id="add-operation-panel" class="right-panel-wrapper is-languages is-rigth">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3 *ngIf="typedocument">Liquidar {{document.typedocument.name}}</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll" *ngIf="typedocument">
+
+      <form (ngSubmit)="postOperation($event)" class="panel-form">
+
+        <div class="inner-content">
+          <div class="section-placeholder">
+            <div class="placeholder-content">
+
+              <div *ngIf="document" class="form-body">
+                <div class="fieldset">
+                  <div id="edit-profile" class="h-avatar profile-h-avatar is-xl">
+                    <div class="h-avatar is-large avatar">
+                      <img class="avatar" [src]="apiUrl + document.image">
+                    </div>
+                  </div>
+                  <h3 class="dark-inverted">
+                    ({{document.serie}}-{{document.correlative}})
+                  </h3>
+                  <h3 class="dark-inverted">
+                    {{operationForm.controls['date'].value | date: 'dd-MM-yyyy, HH:mm'}}
+                  </h3>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="inner-content" [ngClass]="{'is-hidden': !typedocument.totals}">
+          <table class="table is-hoverable is-fullwidth">
+            <tbody>
+              <tr class="flex-table-item">
+                <td>SUB TOTAL</td>
+                <td class="is-end" style="text-align: right;">
+                  {{subtotal}}
+                </td>
+              </tr>
+              <tr class="flex-table-item">
+                <td>IVA</td>
+                <td class="is-end" style="text-align: right;">
+                  {{iva}}
+                </td>
+              </tr>
+              <tr class="flex-table-item">
+                <td>DESCUENTO</td>
+                <td class="is-end" style="text-align: right;">
+                  {{discount}}
+                </td>
+              </tr>
+              <tr class="flex-table-item">
+                <td style="font-size: 18px; color: white;">TOTAL</td>
+                <td class="is-end" style="text-align: right; font-size: 18px; color: white;">
+                  {{total}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3
+          [ngClass]="{ 'is-hidden': !this.typedocument.payment || operationForm.controls['payment'].value == 'CREDITO' }"
+          class="title" style="font-size: 1rem !important;">
+          Pago</h3>
+
+        <div
+          [ngClass]="{ 'is-hidden': !this.typedocument.payment || operationForm.controls['payment'].value == 'CREDITO' }"
+          class="columns is-multiline">
+
+          <div class="column is-12" style="text-align: right !important;">
+
+            <a (click)="methodTotalFocus()" class="button h-button is-primary" (click)="panelPaymentMethod()">
+              <span class="icon">
+                <i class="fal fa-credit-card"></i>
+              </span>
+              <span>Agregar Método de Pago</span>
+            </a>
+
+          </div>
+
+        </div>
+
+        <div [ngClass]="{ 'is-hidden': !this.typedocument.payment }" class="inner-content">
+          <table class="table is-hoverable is-fullwidth">
+            <tbody>
+              <tr *ngFor="let i of methods; let u = index" [ngClass]="{'is-hidden': methods.length == 0}"
+                class="flex-table-item">
+                <td>{{i.type}} <span *ngIf="i.type != 'EFECTIVO'">({{i.auth}})</span> </td>
+                <td class="is-end" style="text-align: right;">
+                  <a (click)="removeMethod(u)" class="button is-danger is-small">
+                    <i class="fal fa-trash"></i>
+                  </a>
+                </td>
+                <td class="is-end" style="text-align: right;">{{getCurrency()}}{{i.total}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div [ngClass]="{ 'is-hidden': !this.typedocument.abonos }" class="columns is-multiline">
+
+          <div class="column is-12" style="text-align: right !important;">
+
+            <a (click)="abonoTotalFocus()" class="button h-button is-primary" (click)="panelAbono()">
+              <span class="icon">
+                <i class="fal fa-credit-card"></i>
+              </span>
+              <span>Agregar Abonos</span>
+            </a>
+
+          </div>
+
+        </div>
+
+        <div [ngClass]="{ 'is-hidden': !this.typedocument.abonos }" class="inner-content">
+          <table class="table is-hoverable is-fullwidth">
+            <tbody>
+              <tr *ngFor="let i of abonos; let u = index" [ngClass]="{'is-hidden': abonos.length == 0}"
+                class="flex-table-item">
+                <td>{{i.date | date: 'dd-MM-yyyy'}}</td>
+                <td class="is-end" style="text-align: right;">
+                  <a (click)="removeAbono(u)" class="button is-danger is-small">
+                    <i class="fal fa-trash"></i>
+                  </a>
+                </td>
+                <td class="is-end" style="text-align: right;">{{getCurrency()}}{{i.total}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div [ngClass]="{ 'is-hidden': !this.typedocument.payment }" class="inner-content">
+          <table class="table is-hoverable is-fullwidth">
+            <tbody>
+              <tr class="flex-table-item">
+                <td>PAGADO</td>
+                <td [ngClass]="{'is-hidden': methods.length == 0}"></td>
+                <td class="is-end" style="text-align: right;">
+                  {{getCurrency()}}{{amount}}
+                </td>
+              </tr>
+              <tr class="flex-table-item">
+                <td *ngIf="amount < operationForm.controls['total'].value">PENDIENTE</td>
+                <td *ngIf="amount >= operationForm.controls['total'].value">CAMBIO</td>
+                <td [ngClass]="{'is-hidden': methods.length == 0}"></td>
+                <td class="is-end" style="text-align: right;">
+                  {{turned}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="buttons is-right">
+          <button id="bt-add-operation" [ngClass]="{ 'is-disabled': operationForm.invalid }"
+            class="button h-button is-primary is-elevated">
+            Imprimir
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<div id="select-variation-panel" class="right-panel-wrapper is-languages is-rigth">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3>Selecciona una Variaciones</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <div class="buttons">
+              <div class="control search has-icon" style="width: 100% !important;">
+                <input class="input custom-text-filter" placeholder="Buscar..." data-filter-target=".variations">
+                <div class="form-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-table">
+
+              <a *ngFor="let i of variations" class="flex-table-item variations" (click)="setVariation(i)"
+                [ngClass]="{'is-disabled': selectedVariation(i.id)}">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div>
+                    <div class="h-avatar is-medium">
+                      <span class="avatar is-fake is-primary">
+                        <span>
+                          {{i.attribute.symbol}}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>
+                      {{i.attribute.name}}
+                    </span>
+                    <!-- <span class="item-meta">
+                      <span class="dark-text" data-filter-match>
+                        {{i.symbol}}
+                      </span>
+                    </span> -->
+                  </div>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="select-coupon-panel" class="right-panel-wrapper is-languages is-rigth">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3>Selecciona un Cupón</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <div class="buttons">
+              <div class="control search has-icon" style="width: 100% !important;">
+                <input id="coup" class="input custom-text-filter" placeholder="Buscar..." data-filter-target=".coupons">
+                <div class="form-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-table">
+
+              <a class="flex-table-item" (click)="setCoupon()">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div class="h-avatar is-medium">
+                    <span class="avatar is-fake is-danger">
+                      <span>
+                        <i class="fas fa-ban"></i>
+                      </span>
+                    </span>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>NO aplicar Cupon</span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>Sin seleccion</span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+
+              <a *ngFor="let i of coupons" class="flex-table-item coupons" (click)="setCoupon(i)">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div>
+                    <div class="h-avatar is-medium">
+                      <span class="avatar is-fake is-primary">
+                        <span>
+                          <span data-filter-match>{{toFix(i.amount)}}%</span>
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>
+                      {{i.name}}
+                    </span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>
+                        {{i.code}}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="select-cambios-panel" class="right-panel-wrapper is-languages is-rigth">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3>Cambios de Existencias</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <div class="flex-table">
+
+              <a *ngFor="let i of cambios" class="flex-table-item products">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div *ngIf="!i.image">
+                    <div class="h-avatar is-medium">
+                      <span class="avatar is-fake is-primary">
+                        <span>
+                          {{getFakeAvatar(i.name)}}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div *ngIf="i.image">
+                    <div class="h-avatar is-medium">
+                      <span class="avatar is-fake is-primary">
+                        <img class="avatar" [src]="apiUrl + i.image">
+                      </span>
+                    </div>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>
+                      {{i.name}} cambio de {{i.quantity}} a {{i.stock}}
+                    </span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>
+                        SKU: {{i.sku}} Costo: {{i.cost}} | Precio {{i.price}}</span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

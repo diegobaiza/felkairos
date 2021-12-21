@@ -1,0 +1,113 @@
+<div class="page-content-inner">
+
+  <div class="account-wrapper">
+    <div class="columns">
+
+      <div class="column is-12">
+        <div class="account-box is-form is-footerless">
+          <div class="form-head stuck-header">
+
+            <div class="form-head-inner">
+              <div class="left">
+                <h3>Mi Cuenta</h3>
+                <p>Edita la informacion de tu perfil</p>
+              </div>
+              <div class="right">
+                <div class="buttons">
+                  <a routerLink="../dashboard" class="button h-button is-light is-dark-outlined">
+                    <span class="icon">
+                      <i class="lnir lnir-arrow-left rem-100"></i>
+                    </span>
+                    <span>Inicio</span>
+                  </a>
+                  <button (click)="updateProfile($event)" [ngClass]="{ 'is-disabled': profileForm.invalid }"
+                    id="update-button" class="button h-button is-primary is-raised">
+                    <span class="icon">
+                      <i class="fal fa-save"></i>
+                    </span>
+                    <span>Actualizar</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-body">
+
+            <div class="fieldset">
+              <div class="felavatar">
+                <svg viewBox="0 0 1000 1000">
+                  <g [attr.fill]="profileForm.controls['color'].value">
+                    <path
+                      d="M500,227.7c-70.9,0-128.6,57.7-128.6,128.6c0,70.9,57.7,128.6,128.6,128.6c70.9,0,128.6-57.7,128.6-128.6C628.6,285.4,570.9,227.7,500,227.7z" />
+                    <path
+                      d="M500,10C229.4,10,10,229.4,10,500c0,270.6,219.4,490,490,490c270.6,0,490-219.4,490-490C990,229.4,770.6,10,500,10z M727.7,756.6c-13.4,0-24.2-10.8-24.2-24.2c0-111-89.4-197.9-203.5-197.9c-114.1,0-203.5,86.9-203.5,197.9c0,13.4-10.8,24.2-24.2,24.2c-13.4,0-24.2-10.8-24.2-24.2c0-67.1,26.3-129.5,74.1-175.7c23.5-22.7,50.9-40.3,80.8-52.3c-10-6.6-19.5-14.3-28.1-22.9c-33.4-33.4-51.8-77.9-51.8-125.2c0-47.3,18.4-91.7,51.8-125.2c33.4-33.4,77.9-51.8,125.2-51.8c47.3,0,91.7,18.4,125.2,51.8C658.6,264.6,677,309,677,356.3c0,47.3-18.4,91.7-51.8,125.2c-8.7,8.7-18.1,16.3-28.2,22.9c29.9,12,57.4,29.6,80.8,52.3c47.8,46.2,74.1,108.6,74.1,175.7C751.9,745.7,741.1,756.6,727.7,756.6z" />
+                  </g>
+                </svg>
+              </div>
+
+              <div class="media-flex-center" style="display: block;">
+                <div class="flex-meta">
+                  <span style="text-align: center; font-size: 18px;">
+                    {{profileForm.controls['name'].value}}
+                  </span>
+                  <span style="text-align: center;">
+                    Usuario: {{profileForm.controls['username'].value}}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <form [formGroup]="profileForm" (ngSubmit)="updateProfile($event)" class="fieldset">
+
+              <!-- <div class="fieldset-heading">
+                <h4>Información Personal</h4>
+                <p>Actualiza tus datos</p>
+              </div> -->
+
+              <div class="columns is-multiline">
+
+                <div class="column is-6">
+                  <div class="field">
+                    <label>Nombre <span class="req">*</span></label>
+                    <div class="control has-icon">
+                      <input formControlName="name" type="text" class="input" placeholder="Nombre">
+                      <div class="form-icon">
+                        <i data-feather="user"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="column is-6">
+                  <div class="field">
+                    <label>Color <span class="req">*</span></label>
+                    <div class="control has-icon">
+                      <input formControlName="color" type="color" class="input">
+                      <div class="form-icon">
+                        <i data-feather="user"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="has-text-right">
+                <button [ngClass]="{ 'is-disabled': profileForm.invalid }" id="profile-button"
+                  class="button h-button is-primary">
+                  <span class="icon">
+                    <i class="fal fa-save"></i>
+                  </span>
+                  <span>Actualizar</span>
+                </button>
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

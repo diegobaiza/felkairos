@@ -1,0 +1,12 @@
+@media only screen and (max-width: 767px) {
+    .buttons .button:not(:last-child):not(.is-fullwidth) {
+        margin-right: 0rem;
+    }
+}
+
+.felavatar {
+    text-align: center;
+    margin: auto;
+    max-width: 120px;
+    margin-bottom: 5px;
+}

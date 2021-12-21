@@ -1,0 +1,60 @@
+@media only screen and (min-width: 767px) {
+    .right-panel-wrapper .right-panel {
+        width: 30%;
+    }
+    .details {
+        width: 100% !important;
+        margin-bottom: 20px
+    }
+
+    .form-layout.is-split .form-outer .form-body .form-section .left {
+        width: 30%
+    }
+    
+    .form-layout.is-split .form-outer .form-body .form-section .right {
+        width: 70%
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .right-panel-wrapper .right-panel {
+        width: 100%;
+    }
+    .details {
+        width: auto !important;
+    }
+}
+
+.quantity {
+    width: 70px !important;
+    height: 25px  !important;
+}
+
+.title h3 {
+    font-size: 1rem !important;
+}
+
+.inner-content {
+    margin-bottom: 20px;
+}
+
+.item {
+    margin-bottom: 20px;
+}
+
+.right h3 {
+    margin-bottom: 0 !important;
+    text-transform: lowercase;
+}
+
+h3:first-letter {
+  text-transform: uppercase;
+}
+
+.success-text {
+  color: var(--color);
+}
+
+.is-combo {
+  background-color: #525354 !important;
+}

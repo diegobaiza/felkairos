@@ -1,0 +1,312 @@
+<div class="page-content-inner">
+
+  <div *ngIf="company" class="ecommerce-dashboard ecommerce-dashboard-v1">
+
+    <div class="dashboard-header">
+      <div *ngIf="company.image">
+        <div class="h-avatar is-large">
+          <img class="avatar" [src]="apiUrl + company.image">
+        </div>
+      </div>
+      <div *ngIf="!company.image">
+        <div class="h-avatar is-large">
+          <span class="avatar is-fake is-primary">
+            <span>{{getFakeAvatar(company.name)}}</span>
+          </span>
+        </div>
+      </div>
+      <div class="start">
+        <h3 class="dark-inverted">{{company.name}}</h3>
+        <p>Genera reportes en base a tus operaciones</p>
+      </div>
+      <div class="end">
+        <button (click)="generate()" class="button h-button is-primary is-elevated">Generar Reporte</button>
+      </div>
+    </div>
+
+    <div class="columns is-multiline">
+      <div class="column is-6">
+        <div class="field">
+          <div class="control">
+            <input ngxDaterangepickerMd [locale]="{applyLabel: 'Filtrar', format: 'YYYY-MM-DD'}" [(ngModel)]="range"
+              [showCustomRangeLabel]="true" [alwaysShowCalendars]="true" [autoApply]="true" [closeOnAutoApply]="true"
+              [linkedCalendars]="true" [ranges]="ranges" class="md-input" (change)="getDashboardOperations()"
+              (change)="getDashboard()" [ngClass]="{'input': true}">
+          </div>
+        </div>
+      </div>
+      <div class="column is-3">
+
+      </div>
+      <div class="column is-3">
+
+      </div>
+    </div>
+
+    <div class="columns is-multiline">
+
+      <div *ngIf="counters" class="column is-2">
+        <div class="dashboard-tile">
+          <div class="tile-head">
+            <div class="h-avatar is-large avatar">
+              <span class="avatar is-fake" style="background: var(--color); color: #fff;">
+                <i class="fal fa-user fa-2x"></i>
+              </span>
+            </div>
+            <p>Usuarios</p>
+            <br>
+            <h3 style="font-size: 2em;" class="dark-inverted">{{counters.users}}</h3>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="counters" class="column is-2">
+        <div class="dashboard-tile">
+          <div class="tile-head">
+            <div class="h-avatar is-large avatar">
+              <span class="avatar is-fake" style="background: var(--color); color: #fff;">
+                <i class="fal fa-user-tag fa-2x"></i>
+              </span>
+            </div>
+            <p>Clientes</p>
+            <br>
+            <h3 style="font-size: 2em;" class="dark-inverted">{{counters.customers}}</h3>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="counters" class="column is-2">
+        <div class="dashboard-tile">
+          <div class="tile-head">
+            <div class="h-avatar is-large avatar">
+              <span class="avatar is-fake" style="background: var(--color); color: #fff;">
+                <i class="fal fa-truck-loading fa-2x"></i>
+              </span>
+            </div>
+            <p>Proveedores</p>
+            <br>
+            <h3 style="font-size: 2em;" class="dark-inverted">{{counters.suppliers}}</h3>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="counters" class="column is-2">
+        <div class="dashboard-tile">
+          <div class="tile-head">
+            <div class="h-avatar is-large avatar">
+              <span class="avatar is-fake" style="background: var(--color); color: #fff;">
+                <i class="fal fa-warehouse fa-2x"></i>
+              </span>
+            </div>
+            <p>Sucursales</p>
+            <br>
+            <h3 style="font-size: 2em;" class="dark-inverted">{{counters.branches}}</h3>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="counters" class="column is-2">
+        <div class="dashboard-tile">
+          <div class="tile-head">
+            <div class="h-avatar is-large avatar">
+              <span class="avatar is-fake" style="background: var(--color); color: #fff;">
+                <i class="fal fa-box-full fa-2x"></i>
+              </span>
+            </div>
+            <p>Productos</p>
+            <br>
+            <h3 style="font-size: 2em;" class="dark-inverted">{{counters.products}}</h3>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="counters" class="column is-2">
+        <div class="dashboard-tile">
+          <div class="tile-head">
+            <div class="h-avatar is-large avatar">
+              <span class="avatar is-fake" style="background: var(--color); color: #fff;">
+                <i class="fal fa-id-card fa-2x"></i>
+              </span>
+            </div>
+            <p>Documentos</p>
+            <br>
+            <h3 style="font-size: 2em;" class="dark-inverted">{{counters.documents}}</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="column is-6">
+        <div class="stat-widget line-stats-widget is-straight" style="height: 100%">
+          <div class="widget-head">
+            <h3 class="dark-inverted">{{dashboard.length}} operaciones</h3>
+            <div class="dropdown is-spaced is-dots is-right dropdown-trigger">
+              <div class="is-trigger" aria-haspopup="true">
+                <i data-feather="more-vertical"></i>
+              </div>
+            </div>
+          </div>
+
+          <canvas id="pieChart"></canvas>
+
+        </div>
+      </div>
+
+      <div class="column is-6">
+        <div class="stat-widget line-stats-widget is-straight" style="height: 100%">
+          <div class="widget-head">
+            <h3 class="dark-inverted">{{dashboard.length}} operaciones</h3>
+            <div class="dropdown is-spaced is-dots is-right dropdown-trigger">
+              <div class="is-trigger" aria-haspopup="true">
+                <i data-feather="more-vertical"></i>
+              </div>
+            </div>
+          </div>
+
+          <canvas id="barChart"></canvas>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div id="select-document-panel" class="right-panel-wrapper is-languages is-rigth">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3>{{operations.length}} Operaciones Encontradas</h3>
+      <a class="close-panel">
+        <i data-feather="x"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <div class="buttons">
+              <div class="field has-addons" style="width: 100% !important;">
+                <div class="control search has-icon" style="width: 100% !important;">
+                  <input class="input custom-text-filter" placeholder="Buscar..." data-filter-target=".operations">
+                  <div class="form-icon">
+                    <i data-feather="search"></i>
+                  </div>
+                </div>
+                <div class="control">
+                  <button id="rep-button" (click)="report()" class="button h-button is-primary is-elevated">
+                    Generar Reporte
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-list-wrapper flex-list-v2">
+
+              <div id="active-items-tab" class="tab-content is-active">
+
+                <div class="flex-table">
+                  <div class="flex-table-header" data-filter-hide>
+                    <span class="is-grow">Operacion</span>
+                    <span class="is-grow">Cliente / Proveedor</span>
+                    <!-- <span>Sub Total</span>
+                    <span>IVA</span>
+                    <span>Descuento</span> -->
+                    <!-- <span>ID</span> -->
+                    <span>Total</span>
+                    <span>Tipo</span>
+                    <span>Estado</span>
+                  </div>
+
+                  <div class="flex-list-inner">
+
+                    <div *ngFor="let i of operations; let u = index"
+                      [ngClass]="{'is-hidden': i.document.typedocument.name != filterType && filterType}"
+                      class="flex-table-item operations" [ngClass]="{'is-disabled': i.status == 'ANULADA'}">
+                      <a [routerLink]="['../operations/invoice', i.id]" target="_blank"
+                        class="flex-table-cell is-media is-grow">
+                        <div class="h-avatar">
+                          <img class="avatar" [src]="apiUrl + i.document.image">
+                          <!-- <img class="avatar" [src]="apiUrl + company.image"> -->
+                        </div>
+                        <div>
+                          <span class="item-name dark-inverted" data-filter-match>{{i.serie}}-{{i.correlative}}</span>
+                          <span class="item-meta">
+                            <span data-filter-match>
+                              <i class="fal fa-calendar"></i> {{i.date | date: 'dd-MM-yyyy, HH:mm'}}
+                            </span>
+                          </span>
+                        </div>
+                      </a>
+                      <div class="flex-table-cell is-media is-grow">
+                        <div *ngIf="i.customer">
+                          <span class="item-name dark-inverted" data-filter-match>{{i.customer.name}}</span>
+                          <span class="item-meta">
+                            <span data-filter-match>
+                              <i class="fal fa-fingerprint"></i> {{i.customer.doc}}: {{i.customer.nit}}
+                            </span>
+                          </span>
+                        </div>
+                        <div *ngIf="i.supplier">
+                          <span class="item-name dark-inverted" data-filter-match>{{i.supplier.name}}</span>
+                          <span class="item-meta">
+                            <span data-filter-match>
+                              <i class="fal fa-fingerprint"></i> {{i.supplier.doc}}: {{i.supplier.nit}}
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                      <!-- <div class="flex-table-cell" data-th="Sub Total">
+                        <span class="light-text" data-filter-match>{{getCurrency(i.currency)}}{{i.subtotal}}</span>
+                      </div>
+                      <div class="flex-table-cell" data-th="IVA">
+                        <span class="light-text" data-filter-match>{{getCurrency(i.currency)}}{{i.iva}}</span>
+                      </div>
+                      <div class="flex-table-cell" data-th="Descuento">
+                        <span class="light-text" data-filter-match>- {{getCurrency(i.currency)}}{{i.discount}}</span>
+                      </div> -->
+                      <!-- <div class="flex-table-cell" data-th="ID">
+                        <span class="light-text" data-filter-match>{{i.id}}</span>
+                      </div> -->
+                      <div class="flex-table-cell" data-th="Total">
+                        <span class="light-text" data-filter-match>{{getCurrency(i.currency)}}{{i.total}}</span>
+                      </div>
+                      <div class="flex-table-cell" data-th="Tipo">
+                        <span style="display: initial; color: white" class="tag is-primary"
+                          data-filter-match>{{i.document.typedocument.name}}</span>
+                      </div>
+                      <div class="flex-table-cell" data-th="Estado">
+                        <span style="display: initial; color: white" class="tag"
+                          [ngClass]="{'is-success': i.status == 'CERTIFICADA', 'is-danger': i.status == 'ANULADA'}"
+                          data-filter-match>{{i.status}}</span>
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div class="page-placeholder custom-text-filter-placeholder is-hidden">
+                <div class="placeholder-content">
+                  <img class="light-image" src="assets/img/illustrations/placeholders/search-6.svg" alt="" />
+                  <img class="dark-image" src="assets/img/illustrations/placeholders/search-6-dark.svg" alt="" />
+                  <h3>¡Oh Vaya!</h3>
+                  <p class="is-larger">No hemos encontrado registros de tu busqueda.</p>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

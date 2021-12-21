@@ -1,0 +1,9 @@
+@media only screen and (min-width: 767px) {
+    .right-panel-wrapper .right-panel {
+        width: 60%;
+    }
+}
+
+.flex-table-item.is-disabled {
+    pointer-events: auto;
+}

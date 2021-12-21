@@ -1,0 +1,35 @@
+.primary-bg {
+    background: var(--primaryColor) !important;
+}
+
+.primary-color {
+    color: var(--primaryColor) !important;
+}
+
+.secondary-bg {
+    background: var(--secondaryColor) !important;
+}
+
+.secondary-color {
+    color: var(--secondaryColor) !important;
+}
+
+/* .button.is-loading::after, .loader, .select.is-loading::after, .control.is-loading::after, .huro-demo-wrapper:after {
+    color: var(--primaryColor) !important;
+} */
+
+/* .meta span, .end span {
+    color: var(--secondaryColor) !important;
+}
+
+.meta h3, .end h3 {
+    color: var(--primaryColor) !important;
+}
+
+.flex-table-header span, .table-label {
+    color: var(--primaryColor) !important;
+} */
+
+.light-text {
+    color: #fff !important;
+}

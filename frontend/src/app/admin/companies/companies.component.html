@@ -1,0 +1,423 @@
+<div class="page-content-inner">
+
+  <div class="account-wrapper">
+    <div class="account-box is-form is-footerless">
+      <div class="form-head stuck-header">
+        <div class="form-head-inner">
+          <div class="left">
+            <button routerLink="add" class="button add h-button is-primary">
+              <span class="icon">
+                <i class="fal fa-plus"></i>
+              </span>
+              <span>Agregar</span>
+            </button>
+          </div>
+          <div class="right">
+            <div class="buttons">
+              <button routerLink="add" class="button add h-button is-primary is-hidden-desktop">
+                <span class="icon">
+                  <i class="fal fa-plus"></i>
+                </span>
+              </button>
+              <div class="control search has-icon">
+                <input class="input custom-text-filter" placeholder="Buscar..." data-filter-target=".list-view-item">
+                <div class="form-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="page-content-inner">
+
+  <div class="list-view list-view-v3">
+
+    <div id="active-items-tab" class="tab-content is-active">
+
+      <div class="list-view-inner">
+
+        <div *ngFor="let i of companies; let u = index" class="list-view-item">
+          <div class="list-view-item-inner">
+            <img *ngIf="!i.image" class="avatar" src="assets/img/photo/demo/abstracts/{{u+1}}.png" alt="">
+            <img *ngIf="i.image" class="avatar" [src]="apiUrl + i.image" alt="">
+
+            <div class="meta-left is-hidden-mobile">
+              <h3 data-filter-match>{{i.name}}</h3>
+              <span class="avatar">
+                <i data-feather="file-text"></i>
+                <b> Nit: </b> <span data-filter-match> {{i.nit}} </span>
+                <i data-feather="phone"></i>
+                <b> Teléfono: </b> <span data-filter-match><a href="tel:{{i.phone}}"> {{i.phone}} </a></span>
+                <i data-feather="mail"></i>
+                <b> Correo: </b> <span data-filter-match><a href="mailto:{{i.email}}">{{i.email}} </a></span>
+                <i data-feather="map-pin"></i>
+                <b> Dirección: </b> <span data-filter-match>{{i.address}} </span>
+              </span>
+            </div>
+            <div class="meta-left is-hidden-desktop">
+              <h3 data-filter-match>{{i.name}}</h3>
+              <p style="text-align: center;">
+
+                <b><i class="icon-mob" data-feather="file-text"></i> Nit: </b>
+                <span data-filter-match> {{i.nit}} </span>
+                <br>
+
+                <b><i class="icon-mob" data-feather="phone"></i> Teléfono: </b>
+                <span data-filter-match>
+                  <a href="tel:{{i.phone}}"> {{i.phone}} </a>
+                </span>
+                <br>
+
+                <b><i class="icon-mob" data-feather="mail"></i> Correo: </b>
+                <span data-filter-match>
+                  <a href="mailto:{{i.email}}">{{i.email}}</a>
+                </span>
+                <br>
+
+                <b><i class="icon-mob" data-feather="map-pin"></i> Dirección: </b>
+                <span data-filter-match>{{i.address}}</span>
+              </p>
+            </div>
+
+            <div class="meta-right is-hidden-mobile">
+              <div class="buttons">
+                <a (click)="login(i, u)" data-hint="Acceder" class="button is-success is-elevated">
+                  <i style="color: white;" class="fal fa-sign-in-alt"></i>
+                </a>
+                <a (click)="generateToken(i, u)" data-hint="Generar Token" class="button is-info is-elevated">
+                  <i style="color: white;" class="fal fa-key"></i>
+                </a>
+                <a (click)="setData(i, u)" data-hint="Editar" data-panel="edit-company-panel"
+                  class="button is-warning is-elevated right-panel-trigger">
+                  <i style="color: white;" class="fal fa-pencil-alt"></i>
+                </a>
+                <a (click)="setData(i, u)" data-hint="Eliminar" data-panel="delete-company-panel"
+                  class="button is-danger is-elevated right-panel-trigger">
+                  <i style="color: white;" class="fal fa-trash-alt"></i>
+                </a>
+              </div>
+            </div>
+            <div class="meta-right is-hidden-desktop" style="width: 100%">
+              <div class="buttons">
+                <a (click)="login(i, u)" data-hint="Acceder" class="button is-success is-elevated" style="width: 30%;">
+                  <i style="color: white;" class="fal fa-sign-in-alt"></i>
+                </a>
+                <a (click)="generateToken(i, u)" data-hint="Generar Token" class="button is-info is-elevated"
+                  style="width: 30%;">
+                  <i style="color: white;" class="fal fa-key"></i>
+                </a>
+                <a (click)="setData(i, u)" data-panel="edit-company-panel" style="width: 30%;"
+                  class="button is-warning is-elevated right-panel-trigger">
+                  <i style="color: white;" class="fal fa-pencil-alt"></i>
+                </a>
+                <a (click)="setData(i, u)" data-panel="delete-company-panel" style="width: 30%;"
+                  class="button is-danger is-elevated right-panel-trigger">
+                  <i style="color: white;" class="fal fa-trash-alt"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="list-view-item has-loader loader-list">
+          <div class="list-view-item-inner">
+            <div class="h-loader-wrapper">
+              <div class="loader is-big is-loading"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="page-placeholder custom-text-filter-placeholder is-hidden">
+      <div class="placeholder-content">
+        <img class="light-image" src="assets/img/illustrations/placeholders/search-6.svg" alt="" />
+        <img class="dark-image" src="assets/img/illustrations/placeholders/search-6-dark.svg" alt="" />
+        <h3>¡Oh Vaya!</h3>
+        <p class="is-larger">No hemos encontrado registros de tu busqueda.</p>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div id="edit-company-panel" class="right-panel-wrapper is-languages">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3>Editar Empresa</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <form [formGroup]="companyForm" (ngSubmit)="putCompany($event)" class="panel-form">
+        <div class="inner-content">
+          <div class="section-placeholder">
+            <div class="placeholder-content">
+
+              <div class="form-body">
+                <div class="fieldset">
+                  <div (change)="postImage()" id="edit-profile" class="h-avatar profile-h-avatar is-xl">
+                    <div *ngIf="companyForm.controls['image'].value">
+                      <img class="avatar" [src]="apiUrl + companyForm.controls['image'].value">
+                    </div>
+                    <div *ngIf="!companyForm.controls['image'].value">
+                      <div class="h-avatar is-large avatar">
+                        <span class="avatar is-fake is-primary">
+                          <span>{{getFakeAvatar(companyForm.controls['name'].value)}}</span>
+                        </span>
+                      </div>
+                    </div>
+                    <div id="upload" class="filepond-profile-wrap is-hidden">
+                      <input (change)="postImage()" type="file" class="profile-filepond"
+                        accept="image/png, image/jpeg, image/gif">
+                    </div>
+                    <a id="uploaded-btn" class="button is-circle edit-button is-edit">
+                      <span class="icon is-small">
+                        <i class="fal fa-pencil"></i>
+                      </span>
+                    </a>
+                    <a id="upload-btn" class="button is-circle edit-button is-back is-hidden">
+                      <span class="icon is-small">
+                        <i data-feather="arrow-left"></i>
+                      </span>
+                    </a>
+                    <a (click)="deleteImage()" class="button is-circle edit-button2 is-edit">
+                      <span class="icon is-small">
+                        <i class="fal fa-trash"></i>
+                      </span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="columns is-multiline">
+          <div class="column is-12">
+            <div class="field">
+              <label>Nombre <span class="req">*</span></label>
+              <div class="control">
+                <input formControlName="name" type="text" class="input" placeholder="Nombre">
+              </div>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="field">
+              <label>Nit <span class="req">*</span></label>
+              <div class="control">
+                <input formControlName="nit" type="text" class="input" placeholder="Nit">
+              </div>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="field">
+              <label>Dirección <span class="req">*</span></label>
+              <div class="control">
+                <input formControlName="address" type="text" class="input" placeholder="Dirección">
+              </div>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="field">
+              <label>Teléfono <span class="req">*</span></label>
+              <div class="control">
+                <input formControlName="phone" type="tel" class="input" placeholder="Teléfono">
+              </div>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="field">
+              <label>Correo Electronico <span class="req">*</span></label>
+              <div class="control">
+                <input formControlName="email" type="email" class="input" placeholder="Correo Electronico">
+              </div>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="field">
+              <label>Incluye IVA <span class="req">*</span></label>
+              <div class="control">
+                <label class="form-switch is-primary">
+                  <input formControlName="tax" type="checkbox" class="is-switch">
+                  <i></i>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="field">
+              <label>IVA <span class="req">*</span></label>
+              <div class="control">
+                <input formControlName="iva" type="number" class="input" placeholder="Teléfono">
+              </div>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="field">
+              <label>No. Documentos <span class="req">*</span></label>
+              <div class="control">
+                <input formControlName="iva" type="number" class="input" placeholder="Teléfono">
+              </div>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="field">
+              <label>Cobro Extra <span class="req">*</span></label>
+              <div class="control">
+                <input formControlName="iva" type="number" class="input" placeholder="Teléfono">
+              </div>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="field">
+              <label>Base de Datos <span class="req">*</span></label>
+              <div class="control">
+                <input formControlName="database" type="text" class="input" placeholder="Base de Datos" [disabled]="true">
+              </div>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="field">
+              <label>Usuario Digifact <span class="req">*</span></label>
+              <div class="control">
+                <input formControlName="username" type="text" class="input" placeholder="Usuario Digifact">
+              </div>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="field">
+              <label>Contraseña Digifact <span class="req">*</span></label>
+              <div class="control">
+                <input formControlName="password" type="text" class="input" placeholder="Contraseña Digifact">
+              </div>
+            </div>
+          </div>
+          <div *ngIf="companyForm.controls['printer'].value" class="column is-6">
+            <div class="field">
+              <label>Tabulaciones <span class="req">*</span></label>
+              <div class="control has-icon">
+                <input formControlName="tabs" type="number" class="input" placeholder="Tabulaciones">
+                <div class="form-icon">
+                  <i data-feather="user"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="field">
+              <label>Duración de Token <span class="req">*</span></label>
+              <div class="control has-icon">
+                <input formControlName="exp" type="text" class="input" placeholder="Duración de Token">
+                <div class="form-icon">
+                  <i data-feather="user"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="field">
+              <label>Kardex <span class="req">*</span></label>
+              <div class="control">
+                <label class="form-switch is-primary">
+                  <input formControlName="kardex" type="checkbox" class="is-switch">
+                  <i></i>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="field">
+              <label>Acceso <span class="req">*</span></label>
+              <div class="control">
+                <label class="form-switch is-primary">
+                  <input formControlName="access" type="checkbox" class="is-switch">
+                  <i></i>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="field">
+              <label>Impresora <span class="req">*</span></label>
+              <div class="control">
+                <label class="form-switch is-primary">
+                  <input formControlName="printer" type="checkbox" class="is-switch">
+                  <i></i>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="column is-12">
+            <div class="field">
+              <label>Token <span class="req">*</span></label>
+              <div class="control">
+                <textarea formControlName="token" class="textarea"
+                  rows="5">{{companyForm.controls['token'].value}}</textarea>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="buttons is-right">
+          <button id="bt-edit-company" [ngClass]="{ 'is-disabled': companyForm.invalid }" type="submit"
+            class="button h-button is-warning is-elevated">
+            Actualizar
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<div id="delete-company-panel" class="right-panel-wrapper is-languages">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3>Eliminar Empresa</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <form [formGroup]="companyForm" (ngSubmit)="deleteCompany($event)" class="panel-form">
+        <div class="inner-content">
+          <div class="section-placeholder">
+            <div class="placeholder-content">
+              <img *ngIf="!companyForm.controls['image'].value" src="assets/img/photo/demo/abstracts/{{index+1}}.png"
+                alt="">
+              <img *ngIf="companyForm.controls['image'].value" class="avatar"
+                [src]="apiUrl + companyForm.controls['image'].value">
+              <h3 class="dark-inverted">{{companyForm.controls['name'].value}}</h3>
+              <p>¿Estas seguro de eliminarla?</p>
+            </div>
+          </div>
+        </div>
+        <div class="buttons is-centered">
+          <button id="bt-delete-company" [ngClass]="{ 'is-disabled': companyForm.invalid }"
+            class="button h-button is-danger is-elevated">
+            Eliminar
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>

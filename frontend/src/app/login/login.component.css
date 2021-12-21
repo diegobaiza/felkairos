@@ -1,0 +1,11 @@
+.modern-login .is-form .login-wrapper .button-wrap.has-help {
+    display: block;
+}
+
+.modern-login .is-form .login-wrapper .button-wrap .button {
+    margin-left: 0;
+}
+
+.h-avatar img {
+    display: initial;
+}

@@ -1,0 +1,484 @@
+<div class="minimal-wrapper darker">
+
+  <progress id="wizard-progress" class="progress is-smaller is-primary wizard-progress" value="10" max="100"></progress>
+
+  <div class="wizard-v1-wrapper" [formGroup]="companyForm">
+
+    <div id="wizard-step-0" class="inner-wrapper is-active" data-step-title="Selecciona el tipo de Empresa">
+      <div class="step-content">
+
+        <div class="step-title">
+          <h2 class="dark-inverted">Selecciona el tipo de Empresa</h2>
+        </div>
+
+        <div class="wizard-types">
+          <div class="columns">
+            <div class="column is-4">
+              <div class="wizard-card">
+                <img src="assets/img/illustrations/wizard/type-1.svg" alt="" />
+                <h3 class="dark-inverted">POS</h3>
+                <p>Some short explanation about the type goes here.</p>
+                <div class="button-wrap">
+                  <a class="button h-button is-primary is-rounded is-elevated is-bold type-select-button">Continue</a>
+                </div>
+              </div>
+            </div>
+            <div class="column is-4 is-disabled">
+              <div class="wizard-card">
+                <img src="assets/img/illustrations/wizard/type-2.svg" alt="" />
+                <h3 class="dark-inverted">EXPRESS</h3>
+                <p>Some short explanation about the type goes here.</p>
+                <div class="button-wrap">
+                  <a class="button h-button is-primary is-rounded is-elevated is-bold type-select-button">Continue</a>
+                </div>
+              </div>
+            </div>
+            <div class="column is-4 is-disabled">
+              <div class="wizard-card">
+                <img src="assets/img/illustrations/wizard/type-3.svg" alt="" />
+                <h3 class="dark-inverted">VIP</h3>
+                <p>Some short explanation about the type goes here.</p>
+                <div class="button-wrap">
+                  <a class="button h-button is-primary is-rounded is-elevated is-bold type-select-button">Continue</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="wizard-step-1" class="inner-wrapper" data-step-title="Información de la empresa">
+      <div class="step-content">
+
+        <div class="step-title">
+          <h2 class="dark-inverted">Información de la empresa</h2>
+        </div>
+
+        <div class="project-info">
+          <div class="project-info-head">
+            <div class="project-avatar-upload">
+              <div (change)="postImage()" class="filepond-profile-wrap">
+                <input type="file" class="profile-filepond" accept="image/png, image/jpeg, image/gif">
+              </div>
+              <p>
+                <span>Subir logo de empresa</span>
+                <span>Tamaño Máximo 2MB</span>
+              </p>
+            </div>
+            <br>
+            <div class="project-info">
+              <div class="project-name">
+
+                <div class="columns">
+                  <div class="column is-12">
+                    <div class="field">
+                      <div class="control">
+                        <input formControlName="name" class="input" placeholder="Nombre de la Empresa">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="columns">
+                  <div class="column is-6">
+                    <div class="field">
+                      <div class="control">
+                        <input formControlName="address" class="input" placeholder="Direccion">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="column is-6">
+                    <div class="field">
+                      <div class="control">
+                        <input formControlName="email" type="email" class="input" placeholder="Correo Electronico">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="columns">
+                  <div class="column is-6">
+                    <div class="field">
+                      <div class="control">
+                        <input formControlName="nit" class="input" placeholder="NIT">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="column is-6">
+                    <div class="field">
+                      <div class="control">
+                        <input formControlName="phone" class="input" placeholder="Telefono">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="wizard-step-2" class="inner-wrapper" data-step-title="Configuraciones">
+
+      <div class="step-content">
+        <div class="step-title">
+          <h2 class="dark-inverted">Impuestos</h2>
+        </div>
+
+        <div class="project-info">
+          <div class="project-info-head">
+
+            <div class="project-info">
+              <div class="project-name">
+
+                <div class="columns">
+
+                  <div class="column is-6">
+                    <div class="field">
+                      <label>No. Documentos <span class="req">*</span></label>
+                      <div class="control">
+                        <input formControlName="documents" type="number" class="input" placeholder="No. Documentos">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="column is-6">
+                    <div class="field">
+                      <label>Cobro por Doc. Extra <span class="req">*</span></label>
+                      <div class="control">
+                        <input formControlName="extra" type="number" class="input" placeholder="Cobro por Doc Extra">
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="columns">
+
+                  <div class="column is-6">
+                    <div class="field">
+                      <label>IVA <span class="req">*</span></label>
+                      <div class="control" [ngClass]="{'is-disabled': !companyForm.controls['tax'].value}">
+                        <input formControlName="iva" class="input" placeholder="IVA">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="column is-6">
+                    <div class="field">
+                      <label>Genera IVA <span class="req">*</span></label>
+                      <div class="control">
+                        <label class="form-switch is-primary">
+                          <input formControlName="tax" type="checkbox" class="is-switch">
+                          <i></i>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="columns">
+                  <div class="column is-6">
+                    <div class="field">
+                      <label>Tipo de Cambio <span class="req">*</span></label>
+                      <div class="control">
+                        <input formControlName="exchange" type="number" class="input" placeholder="Tipo de Cambio">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="wizard-step-3" class="inner-wrapper" data-step-title="Accesos">
+
+      <div class="step-content">
+        <div class="step-title">
+          <h2 class="dark-inverted">Accesos</h2>
+        </div>
+
+        <div class="project-info">
+          <div class="project-info-head">
+
+            <div class="project-info">
+              <div class="project-name">
+
+                <div class="columns">
+
+                  <div class="column is-6">
+                    <div class="field">
+                      <label>Base de Datos <span class="req">*</span></label>
+                      <div class="control">
+                        <input formControlName="database" class="input" placeholder="Base de Datos">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="column is-6">
+                    <div class="field">
+                      <label>Usuario Digifact<span class="req">*</span></label>
+                      <div class="control">
+                        <input formControlName="username" class="input" placeholder="Usuario Digifact">
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="columns">
+
+                  <div class="column is-6">
+                    <div class="field">
+                      <label>Contraseña Digifact<span class="req">*</span></label>
+                      <div class="control">
+                        <input formControlName="password" class="input" placeholder="Contraseña Digifact">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="column is-6">
+                    <div class="field">
+                      <label>Duración de Token <span class="req">*</span></label>
+                      <div class="control has-icon">
+                        <input formControlName="exp" type="text" class="input" placeholder="Duración de Token">
+                        <div class="form-icon">
+                          <i data-feather="user"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="columns">
+                  <div class="column is-6">
+                    <div class="field">
+                      <label>Tabulaciones <span class="req">*</span></label>
+                      <div class="control has-icon">
+                        <input formControlName="tabs" [ngClass]="{'is-disabled': !companyForm.controls['printer'].value}"
+                          type="number" class="input" placeholder="Tabulaciones">
+                        <div class="form-icon">
+                          <i data-feather="user"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="column is-6">
+                    <div class="field">
+                      <label>Acceso <span class="req">*</span></label>
+                      <div class="control">
+                        <label class="form-switch is-primary">
+                          <input formControlName="access" type="checkbox" class="is-switch">
+                          <i></i>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="columns">
+
+                  <div class="column is-6">
+                    <div class="field">
+                      <label>Impresora <span class="req">*</span></label>
+                      <div class="control">
+                        <label class="form-switch is-primary">
+                          <input formControlName="printer" type="checkbox" class="is-switch">
+                          <i></i>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="wizard-step-4" class="inner-wrapper" data-step-title="Preview">
+      <div class="step-content">
+        <div class="step-title">
+          <h2 class="dark-inverted">Asegurate de que la Información este correcta</h2>
+        </div>
+
+        <div class="project-preview-wrapper">
+
+          <div class="project-preview-header">
+            <div class="h-avatar is-big">
+              <div *ngIf="!file && companyForm.controls['name'].value" id="project-preview-fake-logo"
+                class="avatar is-fake is-h-green">
+                <span>{{companyForm.controls['name'].value[0]}}</span>
+              </div>
+              <!-- <div *ngIf="file && companyForm.controls['name'].value">
+                <img id="project-preview-logo" class="avatar" src="" alt="">
+              </div> -->
+              <!-- <a class="edit-icon" data-step-edit="1">
+                <i class="lnil lnil-pencil"></i>
+              </a> -->
+            </div>
+            <h3 id="project-preview-title" class="title is-4 is-narrow is-thin">
+              <span>{{companyForm.controls['name'].value}}</span>
+              <a class="edit-icon">
+                <i class="lnil lnil-pencil" data-step-edit="1"></i>
+              </a>
+            </h3>
+          </div>
+
+          <div class="project-preview-body">
+            <div class="columns is-multiline">
+
+              <div class="column is-6 is-tablet-100">
+                <div class="edit-box">
+                  <div class="edit-icon" data-step-edit="1">
+                    <i class="lnil lnil-pencil"></i>
+                  </div>
+
+                  <h4 style="margin-bottom: 5px;">Direccion</h4>
+                  <p>
+                    {{companyForm.controls['address'].value}}
+                  </p>
+                  <br>
+
+                  <h4 style="margin-bottom: 5px;">Correo Electronico</h4>
+                  <p>
+                    {{companyForm.controls['email'].value}}
+                  </p>
+                  <br>
+
+                  <h4 style="margin-bottom: 5px;">Telefono</h4>
+                  <p>
+                    {{companyForm.controls['phone'].value}}
+                  </p>
+                  <br>
+
+                  <h4 style="margin-bottom: 5px;">NIT</h4>
+                  <p>
+                    {{companyForm.controls['nit'].value}}
+                  </p>
+                  <br>
+
+                </div>
+              </div>
+
+              <div class="column is-6 is-tablet-100">
+                <div class="edit-box">
+                  <div class="edit-icon" data-step-edit="3">
+                    <i class="lnil lnil-pencil"></i>
+                  </div>
+
+                  <h4 style="margin-bottom: 5px;">Base de Datos</h4>
+                  <p>
+                    {{companyForm.controls['database'].value}}
+                  </p>
+                  <br>
+
+                  <h4 style="margin-bottom: 5px;">Usuario Digifact</h4>
+                  <p>
+                    {{companyForm.controls['username'].value}}
+                  </p>
+                  <br>
+
+                  <h4 style="margin-bottom: 5px;">Acceso</h4>
+                  <p *ngIf="companyForm.controls['access'].value">SI</p>
+                  <p *ngIf="!companyForm.controls['access'].value">NO</p>
+                  <br>
+
+                  <h4 style="margin-bottom: 5px;">Genera IVA</h4>
+                  <p *ngIf="companyForm.controls['tax'].value">SI</p>
+                  <p *ngIf="!companyForm.controls['tax'].value">NO</p>
+                  <br>
+
+                </div>
+              </div>
+
+              <div class="column is-4 is-tablet-33">
+                <div class="edit-box">
+                  <div class="edit-icon" data-step-edit="2">
+                    <i class="lnil lnil-pencil"></i>
+                  </div>
+                  <div class="estimated-budget">
+                    <div class="inner-block">
+                      <div id="project-preview-budget" class="budget">
+                        <span>{{companyForm.controls['iva'].value}}%</span>
+                      </div>
+                      <p>IVA</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="column is-4 is-tablet-33">
+                <div class="edit-box">
+                  <div class="edit-icon" data-step-edit="2">
+                    <i class="lnil lnil-pencil"></i>
+                  </div>
+                  <div class="estimated-due-date">
+                    <div class="inner-block">
+                      <div id="project-preview-date" class="budget">
+                        <span>{{companyForm.controls['documents'].value}}</span>
+                      </div>
+                      <p>Docs</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="column is-4 is-tablet-33">
+                <div class="edit-box">
+                  <div class="edit-icon" data-step-edit="2">
+                    <i class="lnil lnil-pencil"></i>
+                  </div>
+                  <div class="attachments-count">
+                    <div class="inner-block">
+                      <div id="project-preview-attachments" class="budget">
+                        <span>Q{{companyForm.controls['extra'].value}}</span>
+                      </div>
+                      <p>Cobro Extra</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="column is-6 is-tablet-100">
+                <div class="button-wrap" style="text-align: center;">
+                  <br>
+                  <a (click)="postCompany($event)" id="bt-add-company"
+                    class="button h-button is-rounded is-bold is-elevated is-primary">
+                    CREAR EMPRESA
+                  </a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="wizard-buttons">
+      <div class="wizard-buttons-inner">
+        <button class="button h-button is-light is-bold wizard-button-previous">Anterior</button>
+        <button id="next" class="button h-button is-primary is-bold is-elevated wizard-button-next">Siguiente</button>
+      </div>
+    </div>
+
+  </div>
+
+</div>

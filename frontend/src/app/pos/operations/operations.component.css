@@ -1,0 +1,64 @@
+@media only screen and (min-width: 767px) {
+    .right-panel-wrapper .right-panel {
+        width: 30%;
+    }
+    .button {
+        padding: 5px 35px;
+        margin-right: 2rem;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .button {
+        padding: 5px 20px;
+    }
+    .buttons2 .button:not(:last-child):not(.is-fullwidth) {
+        margin-right: 1rem !important;
+    }
+}
+
+@media only screen and (max-width: 1780px) and (min-width: 600px) {
+    .products {
+        display: none !important;
+    }
+}
+
+.account-wrapper .account-box.is-form.is-footerless {
+    padding-bottom: 0px;
+}
+
+.form-head, .stuck-header {
+    padding: 0 !important;
+}
+
+.account-box .is-stuck {
+    padding: 15px 12px !important;
+}
+
+.account-box {
+    background: transparent !important;
+    border-color: transparent !important;
+}
+
+.account-wrapper .account-box.is-form .form-head, .account-wrapper .account-box.is-form .form-foot {
+    border-color: transparent !important;
+}
+
+.badge {
+    border-radius: 50%;
+    border-color: transparent !important
+}
+
+.status-success {
+    color: #05a449;
+    background: transparent;
+}
+
+.status-danger {
+    color: #e62965;
+    background: transparent;
+}
+
+.flex-table-item.is-disabled {
+    pointer-events: auto;
+}

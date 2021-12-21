@@ -1,0 +1,745 @@
+<div class="page-content-inner">
+
+  <div class="account-wrapper" *ngIf="company">
+    <div class="account-box is-form is-footerless">
+      <div class="form-head stuck-header">
+        <div class="form-head-inner">
+          <div class="left">
+            <button class="button add h-button is-primary right-panel-trigger" data-panel="select-document-panel"
+              [ngClass]="{'is-disabled': getOperacionesRealizadas() >= company.documents }">
+              <span class="icon">
+                <i class="fal fa-plus"></i>
+              </span>
+              <span>Agregar</span>
+            </button>
+          </div>
+          <div class="right">
+            <div class="buttons">
+              <button class="button add h-button is-primary is-hidden-desktop right-panel-trigger"
+                data-panel="select-document-panel">
+                <span class="icon">
+                  <i class="fal fa-plus"></i>
+                </span>
+              </button>
+              <div (click)="openComboDesktop()" class="control is-combo is-hidden-mobile" style="width: 200px;">
+                <div id="comboType" class="image-combo-box has-rounded-images">
+                  <div class="box-inner">
+                    <div *ngIf="company" class="combo-item">
+                      <img *ngIf="company.image" [src]="apiUrl + company.image" alt="">
+                      <img *ngIf="!company.image" src="assets/img/favicon.png" alt="">
+                      <span class="selected-item">Todos</span>
+                    </div>
+                  </div>
+                  <div class="box-chevron">
+                    <i data-feather="chevron-down"></i>
+                  </div>
+                  <div class="box-dropdown">
+                    <div class="dropdown-inner has-slimscroll">
+                      <ul>
+                        <li data-skill="javascript-skill" (click)="setType(null)">
+                          <span *ngIf="company" class="item-icon">
+                            <img *ngIf="company.image" [src]="apiUrl + company.image" alt="">
+                            <img *ngIf="!company.image" src="assets/img/favicon.png" alt="">
+                          </span>
+                          <span class="item-name">TODAS</span>
+                          <span class="checkmark">
+                            <i data-feather="check"></i>
+                          </span>
+                        </li>
+                        <li *ngFor="let i of types" data-skill="javascript-skill" (click)="setType(i)">
+                          <span class="item-name">{{i}}</span>
+                          <span class="checkmark">
+                            <i data-feather="check"></i>
+                          </span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="control search has-icon">
+                <input class="input custom-text-filter" placeholder="Buscar..." data-filter-target=".flex-table-item">
+                <div class="form-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <br>
+      <div class="columns is-multiline">
+        <div class="column is-6">
+          <div class="control is-expanded has-icon">
+            <input ngxDaterangepickerMd [locale]="{applyLabel: 'Filtrar', format: 'YYYY-MM-DD'}" [(ngModel)]="range"
+              [showCustomRangeLabel]="true" [alwaysShowCalendars]="true" [autoApply]="true" [closeOnAutoApply]="true"
+              [linkedCalendars]="true" [ranges]="ranges" class="md-input" (change)="getOperationsRange()"
+              [ngClass]="{'input': true}">
+            <div class="form-icon">
+              <i class="fal fa-calendar"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-2">
+          <div class="control is-expanded has-icon">
+            <input [(ngModel)]="nit" [ngModelOptions]="{standalone: true}" class="input" type="search"
+              placeholder="Buscar por NIT o DPI">
+            <div class="form-icon">
+              <i class="fal fa-fingerprint"></i>
+            </div>
+          </div>
+        </div>
+        <div class="column is-2">
+          <div class="control is-expanded has-icon">
+            <input (input)="getOperationSerieFel($event)" class="input" type="text" placeholder="Buscar por Serie FEL">
+            <div class="form-icon">
+              <i class="fal fa-file-invoice"></i>
+            </div>
+          </div>
+        </div>
+        <div class="column is-2">
+          <div class="control is-expanded has-icon">
+            <input (input)="getOperationNumberFel($event)" class="input" type="text"
+              placeholder="Buscar por Número Fel">
+            <div class="form-icon">
+              <i class="fal fa-receipt"></i>
+            </div>
+          </div>
+        </div>
+        <div class="column is-2">
+          <div (click)="openComboMobile()" class="control is-combo is-hidden-desktop">
+            <div id="comboTypeMobile" class="image-combo-box has-rounded-images">
+              <div class="box-inner">
+                <div *ngIf="company" class="combo-item">
+                  <img *ngIf="company.image" [src]="apiUrl + company.image" alt="">
+                  <img *ngIf="!company.image" src="assets/img/favicon.png" alt="">
+                  <span class="selected-item">Todos</span>
+                </div>
+              </div>
+              <div class="box-chevron">
+                <i data-feather="chevron-down"></i>
+              </div>
+              <div class="box-dropdown">
+                <div class="dropdown-inner has-slimscroll">
+                  <ul>
+                    <li data-skill="javascript-skill" (click)="setType(null)">
+                      <span *ngIf="company" class="item-icon">
+                        <img *ngIf="company.image" [src]="apiUrl + company.image" alt="">
+                        <img *ngIf="!company.image" src="assets/img/favicon.png" alt="">
+                      </span>
+                      <span class="item-name">TODAS</span>
+                      <span class="checkmark">
+                        <i data-feather="check"></i>
+                      </span>
+                    </li>
+                    <li *ngFor="let i of types" data-skill="javascript-skill" (click)="setType(i)">
+                      <span class="item-name">{{i}}</span>
+                      <span class="checkmark">
+                        <i data-feather="check"></i>
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="page-content-inner">
+
+  <h3 class="dark-inverted">{{operations.length}} operaciones encontradas</h3>
+  <h3 *ngIf="company" class="dark-inverted">{{getOperacionesRealizadas()}}/{{company.documents}} documentos</h3>
+  <br>
+
+  <div class="flex-list-wrapper flex-list-v2">
+
+    <div id="active-items-tab" class="tab-content is-active">
+
+      <div class="flex-table">
+        <div class="flex-table-header" data-filter-hide>
+          <span class="is-grow">Operacion</span>
+          <span class="is-grow">Cliente / Proveedor</span>
+          <span>Tipo</span>
+          <!-- <span>Sub Total</span>
+          <span>IVA</span>
+          <span>Descuento</span> -->
+          <!-- <span>ID</span> -->
+          <span>Total</span>
+          <span class="products">Productos</span>
+          <!-- <span>Estado</span> -->
+          <span class="cell-end">Acciones</span>
+        </div>
+
+        <div *ngIf="!loader" class="flex-list-inner">
+
+          <div *ngFor="let i of operations; let u = index"
+            [ngClass]="{'is-hidden': i.document.typedocument.name != filterType && filterType || i.nit != upper(nit) && nit}"
+            [ngClass]="{'is-disabled': i.status == 'ANULADA'}" class="flex-table-item">
+            <div [routerLink]="['invoice', i.id]" class="flex-table-cell is-media is-grow">
+              <div class="h-avatar">
+                <img class="avatar" [src]="apiUrl + i.document.image">
+                <!-- <div class="badge" *ngIf="i.status == 'CERTIFICADA'">
+                  <i class="fas fa-check-circle status-success"></i>
+                </div>
+                <div class="badge" *ngIf="i.status == 'ANULADA'">
+                  <i class="fas fa-times-circle status-danger"></i>
+                </div> -->
+              </div>
+              <div>
+                <span class="item-name dark-inverted" data-filter-match>{{i.serie}}-{{i.correlative}}</span>
+                <span class="item-meta">
+                  <span data-filter-match>
+                    <i class="fal fa-calendar"></i> {{i.date | date: 'dd-MM-yyyy, HH:mm'}}
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div class="flex-table-cell is-media is-grow">
+              <div *ngIf="i.customer">
+                <span class="item-name dark-inverted" data-filter-match>{{i.customer.name}}</span>
+                <span class="item-meta">
+                  <span data-filter-match>
+                    <i class="fal fa-fingerprint"></i> {{i.customer.doc}}: {{i.customer.nit}}
+                  </span>
+                </span>
+              </div>
+              <div *ngIf="i.supplier">
+                <span class="item-name dark-inverted" data-filter-match>{{i.supplier.name}}</span>
+                <span class="item-meta">
+                  <span data-filter-match>
+                    <i class="fal fa-fingerprint"></i> {{i.supplier.doc}}: {{i.supplier.nit}}
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div class="flex-table-cell" data-th="Tipo">
+              <span style="display: initial; color: white" class="tag"
+                [ngStyle]="{'background': i.document.primaryColor}"
+                data-filter-match>{{i.document.typedocument.name}}</span>
+            </div>
+            <!-- <div class="flex-table-cell" data-th="Sub Total" [ngClass]="{'is-disabled': i.status == 'ANULADA'}">
+              <span class="light-text" data-filter-match>{{getCurrency(i.currency)}}{{i.subtotal}}</span>
+            </div>
+            <div class="flex-table-cell" data-th="IVA" [ngClass]="{'is-disabled': i.status == 'ANULADA'}">
+              <span class="light-text" data-filter-match>{{getCurrency(i.currency)}}{{i.iva}}</span>
+            </div>
+            <div class="flex-table-cell" data-th="Descuento" [ngClass]="{'is-disabled': i.status == 'ANULADA'}">
+              <span class="light-text" data-filter-match>- {{getCurrency(i.currency)}}{{i.discount}}</span>
+            </div> -->
+            <!-- <div class="flex-table-cell" data-th="ID" [ngClass]="{'is-disabled': i.status == 'ANULADA'}">
+              <span class="light-text" data-filter-match>{{i.id}}</span>
+            </div> -->
+            <div class="flex-table-cell" data-th="Total"
+              [ngClass]="{'is-hidden-mobile': !i.document.typedocument.totals}">
+              <span class="light-text" data-filter-match
+                [ngClass]="{'is-hidden': !i.document.typedocument.totals}">{{getCurrency(i.currency)}}{{i.total}}</span>
+            </div>
+            <div class="flex-table-cell avatar-stack products" data-th="Productos">
+              <span>
+                <div *ngFor="let p of i.detailoperations; let o = index" [ngClass]="{'is-hidden': o >= 3}"
+                  class="h-avatar">
+                  <div *ngIf="!p.product.image">
+                    <div class="h-avatar">
+                      <span class="avatar is-fake is-primary">
+                        <span>
+                          {{getFakeAvatar(p.product.name)}}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div *ngIf="p.product.image">
+                    <div class="h-avatar">
+                      <span class="avatar is-fake is-primary">
+                        <img class="avatar" [src]="apiUrl + p.product.image">
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="i.detailoperations.length > 3" class="h-avatar is-small">
+                  <span class="avatar is-more">
+                    <span class="inner">
+                      <span>+{{i.detailoperations.length - 3}}</span>
+                    </span>
+                  </span>
+                </div>
+              </span>
+            </div>
+            <!-- <div class="flex-table-cell" data-th="Estado">
+              <span style="display: initial; color: white" class="tag"
+                [ngClass]="{'is-success': i.status == 'CERTIFICADA', 'is-danger': i.status == 'ANULADA'}"
+                data-filter-match>{{i.status}}</span>
+            </div> -->
+            <div class="flex-table-cell cell-end" data-th="Acciones">
+              <div (click)="openDrop(u)" id="drop-actions-{{u}}"
+                class="dropdown is-spaced is-dots is-right dropdown-trigger is-pushed-mobile">
+                <div class="is-trigger" aria-haspopup="true">
+                  <i data-feather="more-vertical"></i>
+                </div>
+                <div class="dropdown-menu" role="menu">
+                  <div class="dropdown-content">
+                    <a [routerLink]="['invoice', i.id]" class="dropdown-item is-media">
+                      <div class="icon">
+                        <i class="lnil fal fa-receipt"></i>
+                      </div>
+                      <div class="meta">
+                        <span>Factura</span>
+                        <span>Ver detalles de Operación</span>
+                      </div>
+                    </a>
+                    <a *ngIf="validNota(i)" (click)="setData(i, u)" data-panel="select-document-notes-panel"
+                      class="dropdown-item is-media right-panel-trigger">
+                      <div class="icon">
+                        <i class="lnil fal fa-file-invoice-dollar"></i>
+                      </div>
+                      <div class="meta">
+                        <span>Agregar Nota</span>
+                        <span>Debito - Credito - Abono</span>
+                      </div>
+                    </a>
+                    <a *ngIf="validAbono(i)" (click)="setData(i, u)" data-panel="select-document-abono-panel"
+                      class="dropdown-item is-media right-panel-trigger">
+                      <div class="icon">
+                        <i class="lnil fal fa-file-invoice-dollar"></i>
+                      </div>
+                      <div class="meta">
+                        <span>Agregar Abono</span>
+                        <span>Abonar Operación</span>
+                      </div>
+                    </a>
+                    <hr class="dropdown-divider">
+                    <a *ngIf="validAnulacion(i)" (click)="setData(i, u)" data-panel="anular-operation-panel"
+                      class="dropdown-item is-media right-panel-trigger">
+                      <div class="icon">
+                        <i class="lnil fal fa-ban"></i>
+                      </div>
+                      <div class="meta">
+                        <span>Anular</span>
+                        <span class="is-danger">Anular Operación</span>
+                      </div>
+                    </a>
+                    <a (click)="setData(i, u)" data-panel="delete-operation-panel"
+                      class="dropdown-item is-media right-panel-trigger">
+                      <div class="icon">
+                        <i class="lnil fal fa-trash-alt"></i>
+                      </div>
+                      <div class="meta">
+                        <span>Eliminar</span>
+                        <span class="is-danger">Eliminar Operación</span>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div *ngIf="loader" class="flex-list-inner">
+          <div *ngFor="let p of placeloader" class="flex-table-item placeload-wrap">
+            <div class="flex-table-cell is-media is-grow">
+              <div class="placeload-avatar is-medium is-rounded-full loads"></div>
+              <div class="content-shape-group mx-2">
+                <div class="content-shape is-grow-1 mw-80 loads"></div>
+                <div class="content-shape mw-60 loads"></div>
+              </div>
+            </div>
+            <div class="flex-table-cell" data-th="Location">
+              <div class="content-shape is-grow-1 mx-1 loads"></div>
+            </div>
+            <div class="flex-table-cell" data-th="Industry">
+              <div class="content-shape is-grow-1 mx-1 loads"></div>
+            </div>
+            <div class="flex-table-cell" data-th="Status">
+              <div class="content-shape is-grow-1 mx-1 loads"></div>
+            </div>
+            <div class="flex-table-cell" data-th="Relations">
+              <div class="avatar-stack is-pushed-mobile">
+                <div class="placeload-avatar is-small is-rounded-full loads mx-1"></div>
+                <div class="placeload-avatar is-small is-rounded-full loads mx-1"></div>
+                <div class="placeload-avatar is-small is-rounded-full loads mx-1"></div>
+              </div>
+            </div>
+            <div class="flex-table-cell cell-end" data-th="Actions">
+              <div class="content-shape is-grow-1 mx-1 loads"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="page-placeholder custom-text-filter-placeholder is-hidden">
+      <div class="placeholder-content">
+        <img class="light-image" src="assets/img/illustrations/placeholders/search-6.svg" alt="" />
+        <img class="dark-image" src="assets/img/illustrations/placeholders/search-6-dark.svg" alt="" />
+        <h3>¡Oh Vaya!</h3>
+        <p class="is-larger">No hemos encontrado registros de tu busqueda.</p>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div id="select-document-panel" class="right-panel-wrapper is-languages is-rigth">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3>Selecciona un Documento</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <div class="buttons">
+              <div class="control search has-icon" style="width: 100% !important;">
+                <input class="input custom-text-filter" placeholder="Buscar..." data-filter-target=".documents">
+                <div class="form-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-table">
+
+              <a *ngFor="let i of documents" class="flex-table-item documents" [routerLink]="['add', i.id]">
+
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div class="h-avatar is-medium" *ngIf="company">
+                    <img class="avatar" [src]="apiUrl + i.image">
+                    <!-- <img class="avatar" [src]="apiUrl + company.image"> -->
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>
+                      <b>{{i.name}} {{i.serie}}-{{i.correlative}}</b>
+                    </span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>
+                        <span *ngIf="i.branchId"><i class="fal fa-store"></i> {{i.branch.name}}
+                        </span>
+                        <span style="margin-right: 10px;"></span>
+                        <span *ngIf="i.warehouseId"> <i class="fal fa-warehouse"></i>
+                          {{i.warehouse.name}}</span>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="select-document-notes-panel" class="right-panel-wrapper is-languages is-rigth">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3>Selecciona un Documento</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <div class="buttons">
+              <div class="control search has-icon" style="width: 100% !important;">
+                <input class="input custom-text-filter" placeholder="Buscar..." data-filter-target=".documentsNote">
+                <div class="form-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-table">
+
+              <a *ngFor="let i of documentsNotes" class="flex-table-item documentsNote"
+                [routerLink]="['add', i.id, 'op', id]">
+
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div class="h-avatar is-medium">
+                    <img class="avatar" [src]="apiUrl + i.image">
+                    <!-- <img class="avatar" [src]="apiUrl + company.image"> -->
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>
+                      <b>{{i.name}} {{i.serie}}-{{i.correlative}}</b>
+                    </span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>
+                        <span *ngIf="i.branchId"><i class="fal fa-store"></i> {{i.branch.name}}
+                        </span>
+                        <span style="margin-right: 10px;"></span>
+                        <span *ngIf="i.warehouseId"> <i class="fal fa-warehouse"></i>
+                          {{i.warehouse.name}}</span>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="select-document-abono-panel" class="right-panel-wrapper is-languages is-rigth">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3>Selecciona un Documento</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <div class="buttons">
+              <div class="control search has-icon" style="width: 100% !important;">
+                <input class="input custom-text-filter" placeholder="Buscar..." data-filter-target=".documentsAbono">
+                <div class="form-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-table">
+
+              <a *ngFor="let i of documentsAbonos" class="flex-table-item documentsAbono"
+                [routerLink]="['add', i.id, 'op', id]">
+
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div class="h-avatar is-medium">
+                    <img class="avatar" [src]="apiUrl + i.image">
+                    <!-- <img class="avatar" [src]="apiUrl + company.image"> -->
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>
+                      <b>{{i.name}} {{i.serie}}-{{i.correlative}}</b>
+                    </span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>
+                        <span *ngIf="i.branchId"><i class="fal fa-store"></i> {{i.branch.name}}
+                        </span>
+                        <span style="margin-right: 10px;"></span>
+                        <span *ngIf="i.warehouseId"> <i class="fal fa-warehouse"></i>
+                          {{i.warehouse.name}}</span>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="delete-operation-panel" class="right-panel-wrapper is-languages">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3>Eliminar Operacion</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <form [formGroup]="operationForm" (ngSubmit)="deleteOperation($event)" class="panel-form">
+        <div class="inner-content">
+          <div class="section-placeholder">
+            <div class="placeholder-content">
+
+              <div class="form-body">
+                <div class="fieldset">
+                  <div id="edit-profile" class="h-avatar profile-h-avatar is-xl">
+                    <!-- <img *ngIf="image" class="avatar delete-img" [src]="apiUrl +  '/media/documents/' + userId + '/' + image"
+                    alt=""> -->
+                    <div class="h-avatar is-large avatar">
+                      <span class="avatar is-fake is-primary">
+                        <span>
+                          {{getFakeAvatar(operationForm.controls['serie'].value)}}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="fieldset">
+                  <h3 class="dark-inverted">
+                    {{operationForm.controls['serie'].value}}-{{operationForm.controls['correlative'].value}}
+                  </h3>
+                  <h3 class="dark-inverted">
+                    Fecha: {{operationForm.controls['date'].value | date: 'dd-MM-yyyy, HH:mm' }}
+                  </h3>
+                  <h3 class="dark-inverted">
+                    Total:
+                    {{getCurrency(operationForm.controls['currency'].value)}}{{operationForm.controls['total'].value}}
+                  </h3>
+                  <p>¿Estas seguro de eliminarlo?</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="buttons is-centered">
+          <button id="bt-delete-operation" [ngClass]="{ 'is-disabled': operationForm.invalid }"
+            class="button h-button is-danger is-elevated">
+            Eliminar
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<div id="anular-operation-panel" class="right-panel-wrapper is-languages">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3>Anular Operacion</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <form [formGroup]="operationForm" (ngSubmit)="anulacionOperation($event)" class="panel-form">
+        <div class="inner-content">
+          <div class="section-placeholder">
+            <div class="placeholder-content">
+
+              <div class="form-body">
+                <div class="fieldset">
+                  <div id="edit-profile" class="h-avatar profile-h-avatar is-xl">
+                    <div *ngIf="document" class="h-avatar is-large avatar">
+                      <img class="avatar" [src]="apiUrl + document.image">
+                    </div>
+                  </div>
+                </div>
+                <div class="fieldset">
+                  <h3 class="dark-inverted">
+                    {{operationForm.controls['serie'].value}}-{{operationForm.controls['correlative'].value}}
+                  </h3>
+                  <h3 class="dark-inverted">
+                    Fecha: {{operationForm.controls['date'].value | date: 'dd-MM-yyyy, HH:mm' }}
+                  </h3>
+                  <!-- <h3 class="dark-inverted">
+                    Autorizacion FEL: {{operationForm.controls.autorizacionFel.value }}
+                  </h3>
+                  <h3 class="dark-inverted">
+                    Serie FEL: {{operationForm.controls['serie']Fel.value }}
+                  </h3>
+                  <h3 class="dark-inverted">
+                    Numero FEL: {{operationForm.controls.numberFel.value }}
+                  </h3> -->
+                  <h3 class="dark-inverted">
+                    Total:
+                    {{getCurrency(operationForm.controls['currency'].value)}}{{operationForm.controls['total'].value}}
+                  </h3>
+                  <p>¿Estas seguro de anularla?</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="buttons is-centered">
+          <button id="bt-anular-operation" [ngClass]="{ 'is-disabled': operationForm.invalid }"
+            class="button h-button is-danger is-elevated">
+            Anular
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<div id="err-fel-panel" class="right-panel-wrapper is-languages is-rigth">
+  <div class="panel-overlay" style="z-index: 200 !important;"></div>
+
+  <div class="right-panel" style="z-index: 200 !important;">
+    <div class="right-panel-head">
+      <h3>Error FEL</h3>
+      <a class="close-panel">
+        <i data-feather="x"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <form class="panel-form">
+
+        <div class="inner-content">
+          <div class="section-placeholder">
+            <div class="placeholder-content">
+
+              <div *ngIf="felDetails" class="form-body">
+                <div class="fieldset">
+                  <div id="edit-profile" class="h-avatar profile-h-avatar is-xl">
+                    <div *ngIf="document" class="h-avatar is-large avatar">
+                      <img class="avatar" [src]="apiUrl + document.image">
+                    </div>
+                  </div>
+                  <h3 class="dark-inverted">
+                    {{felDetails.Mensaje}}
+                  </h3>
+                  <h3 class="dark-inverted" style="font-size: 12px">
+                    {{felDetails.ResponseDATA1}}
+                  </h3>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>

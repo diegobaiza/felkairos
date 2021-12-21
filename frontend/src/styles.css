@@ -1,0 +1,74 @@
+/* You can add global styles to this file, and also import other style files */
+
+body {
+  --color: blue;
+}
+
+html {
+  scroll-behavior: smooth !important;
+}
+
+.req {
+  color: red;
+}
+
+.panel-form {
+  margin: 10px 20px;
+}
+
+a {
+  color: var(--color);
+}
+
+.icon-mob {
+  width: 12px;
+  height: 12px;
+}
+
+.loader-list {
+  padding: 45px !important;
+}
+
+circle {
+  fill: var(--color);
+}
+
+@media only screen and (min-width: 767px) {
+  .avatar {
+      width: 60%;
+  }
+  .buttons .control:not(:last-child):not(.is-fullwidth) {
+      margin-right: 1rem;
+      width: 180px;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  /* .h-avatar {
+      margin-bottom: 1rem;;
+  } */
+  .buttons .button:not(:last-child):not(.is-fullwidth) {
+      margin-right: 0rem;
+  }
+
+  .search {
+      width: calc(80% - 6px) !important;
+  }
+
+  .add {
+      width: calc(20% - 6px) !important;
+  }
+}
+
+.avatar {
+  border-radius: 50% !important;
+}
+
+.delete-img {
+  width: 150px !important;
+  height: 150px !important;
+}
+
+label {
+  font-size: 14px !important;
+}

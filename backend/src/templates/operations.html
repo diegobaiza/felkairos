@@ -1,0 +1,263 @@
+<html>
+
+<head>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+  <style>
+    html,
+    body {
+      margin: 0px;
+      padding: 0px;
+      font-family: Segoe UI, Helvetica, Arial, sans-serif;
+      font-size: 32px;
+    }
+
+    .title {
+      flex: 1;
+      font-size: 32px;
+    }
+
+    .header {
+      position: relative;
+      display: flex;
+      color: white;
+      background-color: #3573B0;
+    }
+
+    .header::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+
+    .logo>img {
+      margin: 8px;
+    }
+
+    .main {
+      display: flex;
+      width: 100%;
+      height: 860px;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+    .charts {
+      display: flex;
+      flex-direction: column;
+      width: 55%;
+      height: 100%;
+      min-height: auto;
+    }
+
+    .tasks {
+      width: 100%;
+      height: 100%;
+      padding-right: 10px;
+      min-height: auto;
+    }
+
+    .chart-container {
+      position: relative;
+    }
+
+    .chart-canvas-full {
+      width: 100%;
+      height: 100%;
+    }
+
+    .chart-primary-group {
+      display: flex;
+      width: 100%;
+      height: 50%;
+      min-height: auto;
+      justify-content: center;
+    }
+
+    .chart-secondary-group {
+      display: flex;
+      width: 100%;
+      height: 50%;
+      min-height: auto;
+    }
+
+    .chart-secondary-item {
+      display: flex;
+      width: 50%;
+      height: 100%;
+      min-height: auto;
+      justify-content: center;
+    }
+
+    .tasks-table {
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+
+    .tasks-table th {
+      border-bottom: 1px solid #BCE2ED;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+
+    .tasks-table td {
+      padding-top: 5px;
+      padding-bottom: 5px;
+      font-size: 12px;
+    }
+
+    .tasks-table tr td:not(:last-child),
+    .tasks-table tr th:not(:last-child) {
+      border-right: 4px solid #BCE2ED;
+
+    }
+
+    .tasks-table tbody tr:not(:last-child) {
+      border-bottom: 2px solid #F5F3F6;
+    }
+
+    .tasks-table tr td:last-child {
+      text-align: left;
+    }
+
+    .tasks-table tr td:last-child>i {
+      font-style: normal;
+      margin-right: 5px;
+      color: #3573B0;
+      width: 18px;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .tasks-table tr td:nth-child(3) {
+      text-align: left;
+    }
+
+    .tasks-table tr td:nth-child(3)>i {
+      font-style: normal;
+      margin-right: 5px;
+      width: 18px;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .status-certificada:before {
+      font-family: FontAwesome;
+      content: "\f058";
+      color: green;
+    }
+
+    .status-anulada:before {
+      font-family: FontAwesome;
+      content: "\f057";
+      color: red;
+    }
+
+    .left {
+      text-align: left;
+      margin: 10px;
+    }
+
+    .right {
+      text-align: right;
+      margin: 10px;
+    }
+
+    .center {
+      text-align: center;
+      margin: 10px;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+  <header class="header">
+    <table style="width: 100%">
+      <thead>
+        <tr>
+          <td class="left" style="width: 10%; color: white;">
+            <div class="logo">
+              <img src="{{image}}" style="width: 50px; height: 50px !important" />
+            </div>
+          </td>
+          <td class="center" style="width: 30%; color: white; font-size: 14px">
+            Total de Operaciones
+            <br />
+            <span class="summary-count"><b>{{totalOperations operations}}</b></span>
+          </td>
+          <td class="center" style="width: 30%; color: white; font-size: 14px">
+            <div class="summary">
+              Total Certificadas
+              <br />
+              <span class="summary-count"><b>{{totalCertificadas operations}}</b></span>
+            </div>
+          </td>
+          <td class="center" style="width: 30%; color: white; font-size: 14px">
+            <div class="summary">
+              Total Anuladas
+              <br />
+              <span class="summary-count"><b>{{totalAnuladas operations}}</b></span>
+            </div>
+          </td>
+        </tr>
+      </thead>
+    </table>
+  </header>
+  <main class="main">
+    <div class="tasks">
+      <table class="tasks-table" style="white-space: nowrap;">
+        <thead>
+          <tr style="font-size: 9px">
+            <th class="left">Operacion</th>
+            <th class="left" style="padding-left: 10px;">Cliente / Proveedor</th>
+            <th class="left" style="padding-left: 10px;">Total</th>
+            <th class="left" style="padding-left: 10px;">Tipo</th>
+            <th class="left" style="padding-left: 10px;">Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each operations}}
+          <tr style="page-break-inside: avoid; page-break-after: auto; height: 20px !important">
+            <td class="left" style="font-size: 9px">
+              {{serie}}-{{correlative}}<br>
+              {{date}}
+            </td>
+            <td class="left" style="font-size: 9px; padding-left: 10px;">
+              {{#if customer}}
+              {{customer.name}}<br>
+              {{customer.doc}}: {{customer.nit}}
+              {{/if}}
+              {{#if supplier}}
+              {{supplier.name}}<br>
+              {{supplier.doc}}: {{supplier.nit}}
+              {{/if}}
+            </td>
+            <td class="right" style="font-size: 9px; padding-left: 10px;">
+              {{getCurrency currency}}{{getTotalCond status total}}
+            </td>
+            <td class="left" style="font-size: 9px; padding-left: 10px;">
+              {{type}}
+            </td>
+            <td class="left" style="font-size: 9px; padding-left: 10px;">
+              <i class="{{iconByStatus status}}"></i>
+              {{status}}
+            </td>
+          </tr>
+          {{/each}}
+          <tr>
+            <td></td>
+            <td style="font-size: 9px; padding-left: 10px;"><b>TOTAL</b></td>
+            <td style="font-size: 9px; padding-left: 10px;"><b>Q{{getTotal operations}}</b></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
+  <script src="https://unpkg.com/chart.js@2.7.3/dist/Chart.min.js"></script>
+</body>
+
+</html>

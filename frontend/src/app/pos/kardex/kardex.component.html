@@ -1,0 +1,647 @@
+<div class="page-content-inner">
+
+  <div class="account-wrapper">
+    <div class="account-box is-form is-footerless">
+
+      <br>
+      <div class="columns is-multiline">
+        <div class="column is-6">
+          <div class="control is-expanded has-icon">
+            <input ngxDaterangepickerMd [locale]="{applyLabel: 'Filtrar', format: 'YYYY-MM-DD'}" [(ngModel)]="range"
+              [showCustomRangeLabel]="true" [alwaysShowCalendars]="true" [autoApply]="true" [closeOnAutoApply]="true"
+              [linkedCalendars]="true" [ranges]="ranges" class="md-input" [ngClass]="{'input': true}">
+            <div class="form-icon">
+              <i class="fal fa-calendar"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-3">
+          <div class="field has-addons">
+            <div class="control is-expanded has-icon">
+              <input (click)="panelProduct()" [(ngModel)]="product.name" [ngModelOptions]="{standalone: true}"
+                class="input" type="text" placeholder="Producto" readonly>
+              <div class="form-icon">
+                <i class="fal fa-box-full"></i>
+              </div>
+            </div>
+            <div class="control">
+              <a class="button is-primary" (click)="panelProduct()">
+                <i class="fas fa-search"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-3" [ngClass]="{'is-disabled': variations.length == 0}">
+          <div class="field has-addons">
+            <div class="control is-expanded has-icon">
+              <input (click)="panelVariation()" [(ngModel)]="variation.attribute.name"
+                [ngModelOptions]="{standalone: true}" class="input" type="text" placeholder="Variacion" readonly>
+              <div class="form-icon">
+                <i class="fal fa-box-full"></i>
+              </div>
+            </div>
+            <div class="control">
+              <a class="button is-primary" (click)="panelVariation()">
+                <i class="fas fa-search"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-6">
+          <div class="field has-addons">
+            <div class="control is-expanded has-icon">
+              <input (click)="panelBranch()" [(ngModel)]="branch.name" [ngModelOptions]="{standalone: true}"
+                class="input" type="text" placeholder="Sucursal" readonly>
+              <div class="form-icon">
+                <i class="fal fa-store"></i>
+              </div>
+            </div>
+            <div class="control">
+              <a class="button is-primary" (click)="panelBranch()">
+                <i class="fas fa-search"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-6" [ngClass]="{'is-disabled': warehouses.length == 0}">
+          <div class="field has-addons">
+            <div class="control is-expanded has-icon">
+              <input (click)="panelWarehouse()" [(ngModel)]="warehouse.name" [ngModelOptions]="{standalone: true}"
+                class="input" type="text" placeholder="Bodega" readonly>
+              <div class="form-icon">
+                <i class="fal fa-warehouse"></i>
+              </div>
+            </div>
+            <div class="control">
+              <a class="button is-primary" (click)="panelWarehouse()">
+                <i class="fas fa-search"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-12">
+          <div class="form-head stuck-header">
+            <div class="form-head-inner">
+              <div class="right">
+                <div class="column">
+                  <div class="buttons">
+                    <button id="bt-search-stocks" (click)="getKardex()" class="button h-button is-primary">
+                      <span class="icon">
+                        <i class="fas fa-search"></i>
+                      </span>
+                      <span>Buscar</span>
+                    </button>
+                    <!-- <button id="bt-report-stocks" (click)="reportStocks()"
+                      class="button h-button is-primary is-hidden-desktop">
+                      <span class="icon">
+                        <i class="fas fa-file-pdf"></i>
+                      </span>
+                      <span>Generar Reporte</span>
+                    </button> -->
+                  </div>
+                </div>
+              </div>
+
+              <div class="left">
+                <div class="column">
+                  <!-- <button id="bt-report-stocks2" (click)="reportStocks()" class="button h-button is-primary">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>Generar Reporte</span>
+                  </button> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="row">
+
+        <div class="flex-table">
+
+          <div *ngFor="let k of kardex"
+            [ngClass]="{'is-hidden': this.warehouse.id != null && this.warehouse.id != k.warehouse.id}">
+            <h1 class="light-text" style="font-size: 20px;"><i class="fad fa-warehouse"></i> {{k.warehouse.name}}</h1>
+            <h3 class="dark-inverted">{{k.data.length}} movimientos</h3>
+            <br>
+
+            <div *ngIf="!product.variations || product.variations.length == 0 || this.variation.id">
+
+              <div class="page-content-inner">
+
+                <div class="timeline-wrapper">
+                  <div class="timeline-header"></div>
+                  <div class="timeline-wrapper-inner">
+                    <div class="timeline-container">
+
+                      <div *ngFor="let i of k.data" class="timeline-item is-unread">
+                        <div class="date">
+                          <span>{{formatDate(i.date)}}</span>
+                        </div>
+                        <div class="dot" [ngStyle]="{'background-color': i.operation.document.primaryColor}"></div>
+                        <div class="content-wrap">
+                          <div class="content-box">
+                            <div class="h-avatar" *ngIf="i.operationId">
+                              <img class="avatar" [src]="apiUrl + i.operation.document.image">
+                            </div>
+                            <div class="h-avatar" *ngIf="!i.operationId">
+                              <img class="avatar kardex" src="assets/img/kardex/{{i.type}}.png">
+                            </div>
+                            <div class="box-text">
+                              <span class="meta-text">
+                                <span class="dark-text kardex-text" *ngIf="i.operationId" data-filter-match>
+                                  {{i.type}}
+                                  <b
+                                    [ngClass]="{'success-text': i.type == 'Entrada', 'danger-text': i.type == 'Salida'}">
+                                    <span *ngIf="i.type == 'Entrada'">+</span><span
+                                      *ngIf="i.type == 'Salida'">-</span>{{i.quantity}}
+                                    <span style="font-style:oblique">
+                                      {{i.product.unit.symbol}}
+                                    </span>
+                                  </b> de {{i.product.name}}
+                                  <span *ngIf="this.variation.id">
+                                    <i class="fad fa-network-wired"></i> {{i.variation.attribute.symbol}}
+                                  </span>
+                                </span>
+                                <span class="dark-text kardex-text" *ngIf="!i.operationId" data-filter-match>
+                                  {{i.type}} de
+                                  <b>{{i.quantity}}</b> articulo<span *ngIf="i.quantity > 1">s</span>
+                                </span>
+                              </span>
+                            </div>
+                            <!-- <div class="box-text">
+                              <span
+                                [ngClass]="{'success-text': i.type == 'Entrada', 'danger-text': i.type == 'Salida'}">
+                                <span *ngIf="i.type == 'Entrada'">+</span><span
+                                  *ngIf="i.type == 'Salida'">-</span>{{i.quantity}}
+                                <span style="font-style:oblique">
+                                  {{i.product.unit.symbol}}
+                                </span>
+                              </span>
+                            </div> -->
+                            <div class="box-text">
+                              <span class="light-text kardex-text" *ngIf="i.operationId" data-filter-match>
+                                <b>{{i.stock}}</b>
+                                <span style="font-style:oblique">
+                                  {{i.product.unit.symbol}}
+                                </span>
+                              </span>
+                            </div>
+                            <div class="box-end">
+                              <span class="light-text" *ngIf="i.operationId">
+                                <a [href]="'/pos/operations/invoice/' + i.operation.id" target="_blank"
+                                  class="light-text">
+                                  <span [ngStyle]="{'background-color': i.operation.document.primaryColor}"
+                                    class="kardex-text tag">
+                                    {{i.operation.document.name}}
+                                    {{i.operation.serie}}-{{i.operation.correlative}}
+                                    <!-- <br>
+                                    <i class="fas fa-calendar"></i> {{formatDate(i.operation.date)}} -->
+                                  </span>
+                                </a>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <!-- <div class="load-more-wrap has-text-centered">
+                      <button class="button h-button is-dark-outlined">Load More</button>
+                    </div> -->
+
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div *ngIf="product.variations && product.variations.length > 0 && this.variation.id == null">
+
+              <div *ngFor="let v of k.variations">
+                <h1 class="light-text" style="font-size: 20px; margin-left: 15px;">
+                  <i class="fad fa-network-wired"></i>
+                  {{v.attribute.name}}
+                </h1>
+                <div *ngIf="v.data">
+                  <h3 class="dark-inverted" style="margin-left: 15px;">{{v.data.length}} movimientos</h3>
+                </div>
+
+                <div class="page-content-inner">
+
+                  <div class="timeline-wrapper">
+                    <div class="timeline-header"></div>
+                    <div class="timeline-wrapper-inner">
+                      <div class="timeline-container">
+
+                        <div *ngFor="let i of v.data" class="timeline-item is-unread">
+                          <div class="date">
+                            <span>{{formatDate(i.date)}}</span>
+                          </div>
+                          <div class="dot" [ngStyle]="{'background-color': i.operation.document.primaryColor}"></div>
+                          <div class="content-wrap">
+                            <div class="content-box">
+                              <div class="h-avatar" *ngIf="i.operationId">
+                                <img class="avatar" [src]="apiUrl + i.operation.document.image">
+                              </div>
+                              <div class="h-avatar" *ngIf="!i.operationId">
+                                <img class="avatar kardex" src="assets/img/kardex/{{i.type}}.png">
+                              </div>
+                              <div class="box-text">
+                                <span class="dark-text kardex-text" *ngIf="i.operationId" data-filter-match>
+                                  {{i.type}}
+                                  <b
+                                    [ngClass]="{'success-text': i.type == 'Entrada', 'danger-text': i.type == 'Salida'}">
+                                    <span *ngIf="i.type == 'Entrada'">+</span><span
+                                      *ngIf="i.type == 'Salida'">-</span>{{i.quantity}}
+                                    <span style="font-style:oblique">
+                                      {{i.product.unit.symbol}}
+                                    </span>
+                                  </b> de {{i.product.name}}
+                                  <span *ngIf="this.variation.id">
+                                    <i class="fad fa-network-wired"></i> {{i.variation.attribute.symbol}}
+                                  </span>
+                                </span>
+                                <span class="dark-text kardex-text" *ngIf="!i.operationId" data-filter-match>
+                                  {{i.type}} de
+                                  <b>{{i.quantity}}</b> articulo<span *ngIf="i.quantity > 1">s</span>
+                                </span>
+                              </div>
+                              <!-- <div class="box-text">
+                                <span
+                                  [ngClass]="{'success-text': i.type == 'Entrada', 'danger-text': i.type == 'Salida'}">
+                                  <span *ngIf="i.type == 'Entrada'">+</span><span
+                                    *ngIf="i.type == 'Salida'">-</span>{{i.quantity}}
+                                  <span style="font-style:oblique">
+                                    {{i.product.unit.symbol}}
+                                  </span>
+                                </span>
+                              </div> -->
+                              <div class="box-text">
+                                <span class="light-text kardex-text" *ngIf="i.operationId" data-filter-match>
+                                  <b>{{i.stock}}</b>
+                                  <span style="font-style:oblique">
+                                    {{i.product.unit.symbol}}
+                                  </span>
+                                </span>
+                              </div>
+                              <div class="box-end">
+                                <span class="light-text" *ngIf="i.operationId">
+                                  <a [href]="'/pos/operations/invoice/' + i.operation.id" target="_blank"
+                                    class="light-text">
+                                    <span [ngStyle]="{'background-color': i.operation.document.primaryColor}"
+                                      class="kardex-text tag">
+                                      {{i.operation.document.name}}
+                                      {{i.operation.serie}}-{{i.operation.correlative}}
+                                      <!-- <br>
+                                      <i class="fas fa-calendar"></i> {{formatDate(i.operation.date)}} -->
+                                    </span>
+                                  </a>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <!-- <div class="load-more-wrap has-text-centered">
+                        <button class="button h-button is-dark-outlined">Load More</button>
+                      </div> -->
+
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="center" *ngIf="v.data && v.data.length == 0">
+                  <h3 class="light-text">No existen movimientos</h3>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div id="select-branch-panel" class="right-panel-wrapper is-languages is-rigth">
+  <div class="panel-overlay" style="z-index: 200 !important;"></div>
+
+  <div class="right-panel" style="z-index: 200 !important;">
+    <div class="right-panel-head">
+      <h3>Selecciona una Sucursal</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <div class="buttons">
+              <div class="control search has-icon" style="width: 100% !important;">
+                <input class="input custom-text-filter" placeholder="Buscar..." data-filter-target=".branches">
+                <div class="form-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-table">
+
+              <!-- <a class="flex-table-item" (click)="setBranch()">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div class="h-avatar is-medium">
+                    <span class="avatar is-fake is-danger">
+                      <span>
+                        <i class="fas fa-ban"></i>
+                      </span>
+                    </span>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>Todas las sucursales</span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>Sin seleccion</span>
+                    </span>
+                  </div>
+                </div>
+              </a> -->
+              <a *ngFor="let i of branches" class="flex-table-item branches" (click)="setBranch(i)">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div class="h-avatar is-medium">
+                    <span class="avatar is-fake is-primary">
+                      <span>
+                        {{getFakeAvatar(i.name)}}
+                      </span>
+                    </span>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>{{i.name}}
+                      (#{{i.number}})</span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>{{i.address}}</span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="select-warehouse-panel" class="right-panel-wrapper is-languages is-rigth">
+  <div class="panel-overlay" style="z-index: 200 !important;"></div>
+
+  <div class="right-panel" style="z-index: 200 !important;">
+    <div class="right-panel-head">
+      <h3>Selecciona una Bodega</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <div class="buttons">
+              <div class="control search has-icon" style="width: 100% !important;">
+                <input class="input custom-text-filter" placeholder="Buscar..." data-filter-target=".warehouses">
+                <div class="form-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-table">
+
+              <!-- <a class="flex-table-item" (click)="setWarehouse()">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div class="h-avatar is-medium">
+                    <span class="avatar is-fake is-danger">
+                      <span>
+                        <i class="fas fa-ban"></i>
+                      </span>
+                    </span>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>Todas las bodegas</span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>Sin seleccion</span>
+                    </span>
+                  </div>
+                </div>
+              </a> -->
+              <a *ngFor="let i of warehouses" class="flex-table-item warehouses" (click)="setWarehouse(i)">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div class="h-avatar is-medium">
+                    <span class="avatar is-fake is-primary">
+                      <span>
+                        {{getFakeAvatar(i.name)}}
+                      </span>
+                    </span>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>{{i.name}}
+                      (#{{i.number}})</span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>{{i.address}}</span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="select-product-panel" class="right-panel-wrapper is-languages is-rigth">
+  <div class="panel-overlay" style="z-index: 200 !important;"></div>
+
+  <div class="right-panel" style="z-index: 200 !important;">
+    <div class="right-panel-head">
+      <h3>Selecciona un Producto</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <div class="buttons">
+              <div class="control search has-icon" style="width: 100% !important;">
+                <input id="prod" class="input custom-text-filter" placeholder="Buscar..."
+                  data-filter-target=".products">
+                <div class="form-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-table">
+
+              <!-- <a class="flex-table-item" (click)="setProduct()">
+                <div class="flex-table-cell is-media is-grow">
+                  <div class="h-avatar is-medium">
+                    <span class="avatar is-fake is-danger">
+                      <span>
+                        <i class="fas fa-ban"></i>
+                      </span>
+                    </span>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>Todas los productos</span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>Sin seleccion</span>
+                    </span>
+                  </div>
+                </div>
+              </a> -->
+              <a *ngFor="let i of products" class="flex-table-item products">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div *ngIf="!i.image" (click)="setProduct(i)">
+                    <div class="h-avatar is-medium">
+                      <span class="avatar is-fake is-primary">
+                        <span>
+                          {{getFakeAvatar(i.name)}}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div *ngIf="i.image" (click)="setProduct(i)">
+                    <div class="h-avatar is-medium">
+                      <span class="avatar is-fake is-primary">
+                        <img class="avatar" [src]="apiUrl + i.image">
+                      </span>
+                    </div>
+                  </div>
+                  <div (click)="setProduct(i)">
+                    <span class="item-name dark-text" data-filter-match>{{i.name}}
+                      ({{i.type}})</span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>SKU: {{i.sku}} Costo: {{i.costo}}
+                        | Precio
+                        {{i.price}}</span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="select-variation-panel" class="right-panel-wrapper is-languages is-rigth">
+  <div class="panel-overlay" style="z-index: 200 !important;"></div>
+
+  <div class="right-panel" style="z-index: 200 !important;">
+    <div class="right-panel-head">
+      <h3>Selecciona una Variacion</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <div class="panel-form">
+        <div class="columns">
+          <div class="column is-12">
+
+            <div class="buttons">
+              <div class="control search has-icon" style="width: 100% !important;">
+                <input id="prod" class="input custom-text-filter" placeholder="Buscar..."
+                  data-filter-target=".variations">
+                <div class="form-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex-table">
+
+              <a class="flex-table-item" (click)="setVariation()">
+                <div class="flex-table-cell is-media is-grow">
+                  <div class="h-avatar is-medium">
+                    <span class="avatar is-fake is-danger">
+                      <span>
+                        <i class="fas fa-ban"></i>
+                      </span>
+                    </span>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>Todas las variaciones</span>
+                    <span class="item-meta">
+                      <span class="dark-text" data-filter-match>Sin seleccion</span>
+                    </span>
+                  </div>
+                </div>
+              </a>
+              <a *ngFor="let i of variations" class="flex-table-item variations" (click)="setVariation(i)">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div>
+                    <div class="h-avatar is-medium">
+                      <span class="avatar is-fake is-primary">
+                        <span>
+                          {{i.attribute.symbol}}
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text" data-filter-match>
+                      {{i.attribute.name}}
+                    </span>
+                    <!-- <span class="item-meta">
+                      <span class="dark-text" data-filter-match>
+                        {{i.symbol}}
+                      </span>
+                    </span> -->
+                  </div>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

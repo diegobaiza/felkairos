@@ -1,0 +1,9 @@
+@media only screen and (max-width: 767px) {
+    .buttons .button:not(:last-child):not(.is-fullwidth) {
+        margin-right: 0rem;
+    }
+}
+
+.h-avatar.is-xl {
+    max-width: 100px;
+}

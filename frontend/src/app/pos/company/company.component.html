@@ -1,0 +1,218 @@
+<div class="page-content-inner">
+
+  <div class="account-wrapper">
+    <div class="columns">
+
+      <div class="column is-12">
+        <div class="account-box is-form is-footerless">
+          <div class="form-head stuck-header">
+
+            <div class="form-head-inner">
+              <div class="left">
+                <h3>Mi Empresa</h3>
+                <p>Edita la informacion de tu empresa</p>
+              </div>
+              <div class="right">
+                <div class="buttons">
+                  <a routerLink="../dashboard" class="button h-button is-light is-dark-outlined">
+                    <span class="icon">
+                      <i class="lnir lnir-arrow-left rem-100"></i>
+                    </span>
+                    <span>Inicio</span>
+                  </a>
+                  <button (click)="updateCompany($event)" [ngClass]="{ 'is-disabled': companyForm.invalid }"
+                    id="update-button" class="button h-button is-primary is-raised">
+                    <span class="icon">
+                      <i class="fal fa-save"></i>
+                    </span>
+                    <span>Actualizar</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="company" class="form-body">
+
+            <div class="fieldset">
+              <div (change)="postImage()" id="edit-profile" class="h-avatar profile-h-avatar is-xl">
+                <div *ngIf="companyForm.controls['image'].value">
+                  <img class="avatar" [src]="apiUrl + companyForm.controls['image'].value">
+                </div>
+                <div *ngIf="!companyForm.controls['image'].value">
+                  <div class="h-avatar is-large avatar">
+                    <span class="avatar is-fake is-primary">
+                      <span>{{getFakeAvatar(companyForm.controls['name'].value)}}</span>
+                    </span>
+                  </div>
+                </div>
+                <div id="upload" class="filepond-profile-wrap is-hidden">
+                  <input (change)="postImage()" type="file" class="profile-filepond"
+                    accept="image/png, image/jpeg, image/gif">
+                </div>
+                <a id="uploaded-btn" class="button is-circle edit-button is-edit">
+                  <span class="icon is-small">
+                    <i class="fal fa-pencil"></i>
+                  </span>
+                </a>
+                <a id="upload-btn" class="button is-circle edit-button is-back is-hidden">
+                  <span class="icon is-small">
+                    <i data-feather="arrow-left"></i>
+                  </span>
+                </a>
+                <a (click)="deleteImage()" class="button is-circle edit-button2 is-edit">
+                  <span class="icon is-small">
+                    <i class="fal fa-trash"></i>
+                  </span>
+                </a>
+              </div>
+
+              <br>
+              <div class="media-flex-center" style="display: block;">
+                <div class="flex-meta">
+                  <span style="text-align: center; font-size: 18px;">
+                    {{companyForm.controls['name'].value}}
+                  </span>
+                  <span style="text-align: center;">NIT: {{companyForm.controls['nit'].value}}</span>
+                </div>
+              </div>
+            </div>
+
+            <form [formGroup]="companyForm" (ngSubmit)="updateCompany($event)" class="fieldset">
+
+              <div class="columns is-multiline">
+
+                <div class="column is-6">
+                  <div class="field">
+                    <label>Nombre <span class="req">*</span></label>
+                    <div class="control has-icon">
+                      <input formControlName="name" type="text" class="input" placeholder="Nombre">
+                      <div class="form-icon">
+                        <i data-feather="user"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="column is-6">
+                  <div class="field">
+                    <label>Telefono <span class="req">*</span></label>
+                    <div class="control has-icon">
+                      <input formControlName="phone" type="text" class="input" placeholder="Telefono">
+                      <div class="form-icon">
+                        <i data-feather="user"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="column is-6">
+                  <div class="field">
+                    <label>Email <span class="req">*</span></label>
+                    <div class="control has-icon">
+                      <input formControlName="email" type="text" class="input" placeholder="Email">
+                      <div class="form-icon">
+                        <i data-feather="user"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="column is-6">
+                  <div class="field">
+                    <label>Tipo de Cambio <span class="req">*</span></label>
+                    <div class="control has-icon">
+                      <input formControlName="exchange" type="number" class="input" placeholder="Tipo de Cambio">
+                      <div class="form-icon">
+                        <i data-feather="user"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="column is-6">
+                  <div class="field">
+                    <label>Genera IVA <span class="req">*</span></label>
+                    <div class="control">
+                      <label class="form-switch is-primary">
+                        <input formControlName="tax" type="checkbox" class="is-switch">
+                        <i></i>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="column is-6">
+                  <div class="field">
+                    <label>IVA <span class="req">*</span></label>
+                    <div class="control has-icon">
+                      <input [ngClass]="{'is-disabled': !companyForm.controls['tax'].value}" formControlName="iva"
+                        type="text" class="input" placeholder="IVA">
+                      <div class="form-icon">
+                        <i data-feather="user"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="column is-6">
+                  <div class="field">
+                    <label>Impresora <span class="req">*</span></label>
+                    <div class="control">
+                      <label class="form-switch is-primary">
+                        <input formControlName="printer" type="checkbox" class="is-switch">
+                        <i></i>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="column is-6">
+                  <div class="field">
+                    <label>Tabulaciones <span class="req">*</span></label>
+                    <div class="control has-icon">
+                      <input [ngClass]="{'is-disabled': !companyForm.controls['printer'].value}" formControlName="tabs"
+                        type="number" class="input" placeholder="Tabulaciones">
+                      <div class="form-icon">
+                        <i data-feather="user"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="column is-6">
+                  <div class="field">
+                    <label>Existencias <span class="req">*</span></label>
+                    <div class="control">
+                      <label class="form-switch is-primary">
+                        <input formControlName="stock" type="checkbox" class="is-switch">
+                        <i></i>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="column is-6">
+                  <div class="field">
+                    <label>Duración de Token <span class="req">*</span></label>
+                    <div class="control has-icon">
+                      <input formControlName="exp" type="text" class="input" placeholder="Duración de Token">
+                      <div class="form-icon">
+                        <i data-feather="user"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="has-text-right">
+                <button [ngClass]="{ 'is-disabled': companyForm.invalid }" id="profile-button"
+                  class="button h-button is-primary">
+                  <span class="icon">
+                    <i class="fal fa-save"></i>
+                  </span>
+                  <span>Actualizar</span>
+                </button>
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

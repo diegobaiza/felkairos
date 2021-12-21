@@ -1,0 +1,290 @@
+<div class="page-content-inner">
+
+  <div *ngIf="operation" class="invoice-wrapper">
+    <div class="invoice-header">
+      <div class="left">
+        <h3 *ngIf="operation" class="" style="font-size: 1.4rem">
+          <div class="h-avatar">
+            <img class="" style="width: 30px;" [src]="apiUrl + operation.document.image">
+          </div>
+          <span class="is-hidden-mobile"> {{operation.document.name}}</span>
+        </h3>
+      </div>
+      <div class="right">
+        <div class="controls">
+          <a class="button" (click)="printInvoice()" id="printInvoice">
+            <i class="fal fa-print fa-2x"></i>
+          </a>
+          <a class="button" (click)="pdfInvoice()" id="pdfInvoice">
+            <i class="fal fa-file-pdf fa-2x"></i>
+          </a>
+          <a class="button" (click)="emailInvoice()" id="emailInvoice">
+            <i class="fal fa-envelope fa-2x"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div id="invoice" class="invoice-body">
+      <div class="invoice-card">
+        <div class="invoice-section is-flex is-bordered">
+          <!-- <div class="h-avatar is-large">
+            <img class="avatar" src="assets/img/avatars/photos/13.jpg" data-demo-src="assets/img/avatars/photos/13.jpg"
+              alt="" data-user-popover="6" data-target="webuiPopover3">
+          </div> -->
+
+          <div *ngIf="company.image">
+            <div class="h-avatar is-large">
+              <img class="avatar" [src]="apiUrl + company.image">
+            </div>
+          </div>
+          <div *ngIf="!company.image">
+            <div class="h-avatar is-large">
+              <span class="avatar is-fake primary-bg">
+                <span class="secondary-color">{{getFakeAvatar(company.name)}}</span>
+              </span>
+            </div>
+          </div>
+
+          <div *ngIf="company" class="meta">
+            <h3>{{company.name}}</h3>
+            <span>NIT: {{company.nit}}</span>
+            <span>{{company.address}}</span>
+          </div>
+          <div class="end">
+            <span style="display: initial; color: white" class="tag primary-bg">
+              {{operation.document.typedocument.name}}
+            </span>
+            <h3>{{operation.serie}}-{{operation.correlative}}</h3>
+            <span>{{operation.date | date: 'dd-MM-yyyy, HH:mm'}}</span>
+            <span *ngIf="operation.document.typedocument.certification" style="display: initial; color: white"
+              class="tag"
+              [ngClass]="{'is-success': operation.status == 'CERTIFICADA', 'is-danger': operation.status == 'ANULADA'}"
+              data-filter-match>
+              {{operation.status}}
+            </span>
+          </div>
+        </div>
+        <div class="invoice-section is-flex is-bordered">
+
+          <div *ngIf="customer" class="meta">
+            <h3>{{customer.name}}</h3>
+            <span>{{customer.email}}</span>
+            <span><i class="fal fa-fingerprint"></i> {{customer.doc}}: {{customer.nit}}</span>
+          </div>
+          <div *ngIf="supplier" class="meta">
+            <h3>{{supplier.name}}</h3>
+            <span>{{supplier.email}}</span>
+            <span><i class="fal fa-fingerprint"></i> {{supplier.doc}}: {{supplier.nit}}</span>
+          </div>
+          <div *ngIf="operation.observations" class="end is-left">
+            <h3>Observaciones</h3>
+            <span>{{operation.observations}}</span>
+          </div>
+          <div *ngIf="operation.branchId" class="end is-left">
+            <h3>Sucursal</h3>
+            <span>{{operation.branch.name}}</span>
+          </div>
+          <div *ngIf="operation.warehouseId" class="end is-left">
+            <h3>Bodega</h3>
+            <span>{{operation.warehouse.name}}</span>
+          </div>
+        </div>
+        <div class="invoice-section">
+          <div *ngIf="details.length" class="flex-table">
+
+            <div class="flex-table-header">
+              <span class="is-grow">Producto</span>
+              <span class="cell-end">Cantidad</span>
+              <span *ngIf="operation.document.typedocument.inventory == 'SALIDA'"
+                [ngClass]="{'is-hidden': !operation.document.typedocument.totals}">
+                Precio
+              </span>
+              <span *ngIf="operation.document.typedocument.inventory == 'ENTRADA'"
+                [ngClass]="{'is-hidden': !operation.document.typedocument.totals}">
+                Costo
+              </span>
+              <span *ngIf="operation.document.typedocument.totals">Descuento</span>
+              <span *ngIf="operation.document.typedocument.totals">Subtotal</span>
+            </div>
+
+            <div *ngFor="let i of details; let u = index" class="flex-table-item">
+              <div class="flex-table-cell is-media is-grow" data-th="">
+                <div *ngIf="!i.product.image">
+                  <div class="h-avatar is-medium">
+                    <span class="avatar is-fake is-primary">
+                      <span>
+                        {{getFakeAvatar(i.product.name)}}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <div *ngIf="i.product.image">
+                  <div class="h-avatar is-medium">
+                    <span class="avatar is-fake is-primary">
+                      <img class="avatar" [src]="apiUrl + i.product.image">
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <span class="item-name light-text">{{i.description}}</span>
+                  <span class="item-meta">
+                    <span class="light-text">SKU: {{i.product.sku}}</span>
+                  </span>
+                </div>
+              </div>
+              <div class="flex-table-cell cell-end" data-th="Cantidad">
+                <span class="light-text">{{i.quantity}}
+                  <span *ngIf="operation.document.typedocument.inventory == 'ENTRADA'"
+                    style="font-style: oblique;">{{i.product.entryUnit.symbol}}</span>
+                  <span *ngIf="operation.document.typedocument.inventory == 'SALIDA'"
+                    style="font-style: oblique;">{{i.product.unit.symbol}}</span>
+                </span>
+              </div>
+              <div *ngIf="operation.document.typedocument.inventory == 'SALIDA'" class="flex-table-cell"
+                data-th="Precio" [ngClass]="{'is-hidden': !operation.document.typedocument.totals}">
+                <span class="light-text">{{getCurrency()}}{{i.price}}</span>
+              </div>
+              <div *ngIf="operation.document.typedocument.inventory == 'ENTRADA'" class="flex-table-cell" data-th="Costo"
+                [ngClass]="{'is-hidden': !operation.document.typedocument.totals}">
+                <span class="light-text">{{getCurrency()}}{{i.cost}}</span>
+              </div>
+              <div *ngIf="operation.document.typedocument.totals" class="flex-table-cell" data-th="Descuento">
+                <span class="light-text">{{getCurrency()}}{{i.discount}}</span>
+              </div>
+              <div *ngIf="operation.document.typedocument.totals" class="flex-table-cell has-text-right"
+                data-th="Subtotal">
+                <span class="light-text">{{getCurrency()}}{{i.subtotal}}</span>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="flex-table sub-table" *ngIf="operation.document.typedocument.totals">
+
+            <div class="flex-table-item">
+              <div class="flex-table-cell is-grow is-vhidden" data-th=""></div>
+              <div class="flex-table-cell cell-end is-vhidden" data-th=""></div>
+              <div class="flex-table-cell is-vhidden" data-th=""></div>
+              <div class="flex-table-cell" data-th="">
+                <span class="table-label">Sub Total</span>
+              </div>
+              <div class="flex-table-cell has-text-right" data-th="">
+                <span class="table-total light-text">{{getCurrency()}}{{operation.subtotal}}</span>
+              </div>
+            </div>
+
+            <div class="flex-table-item">
+              <div class="flex-table-cell is-grow is-vhidden" data-th=""></div>
+              <div class="flex-table-cell cell-end is-vhidden" data-th=""></div>
+              <div class="flex-table-cell is-vhidden" data-th=""></div>
+              <div class="flex-table-cell" data-th="">
+                <span class="table-label">IVA</span>
+              </div>
+              <div class="flex-table-cell has-text-right" data-th="">
+                <span class="table-total light-text">{{getCurrency()}}{{operation.iva}}</span>
+              </div>
+            </div>
+
+            <div class="flex-table-item">
+              <div class="flex-table-cell is-grow is-vhidden" data-th=""></div>
+              <div class="flex-table-cell cell-end is-vhidden" data-th=""></div>
+              <div class="flex-table-cell is-vhidden" data-th=""></div>
+              <div class="flex-table-cell" data-th="">
+                <span class="table-label">Descuento</span>
+              </div>
+              <div class="flex-table-cell has-text-right" data-th="">
+                <span class="table-total light-text">{{getCurrency()}}{{operation.discount}}</span>
+              </div>
+            </div>
+
+            <div class="flex-table-item">
+              <div class="flex-table-cell is-grow is-vhidden" data-th=""></div>
+              <div class="flex-table-cell cell-end is-vhidden" data-th=""></div>
+              <div class="flex-table-cell is-vhidden" data-th=""></div>
+              <div class="flex-table-cell" data-th="">
+                <span class="table-label">Total</span>
+              </div>
+              <div class="flex-table-cell has-text-right" data-th="">
+                <span class="table-total is-bigger light-text">{{getCurrency()}}{{operation.total}}</span>
+              </div>
+            </div>
+
+          </div>
+
+          <div *ngIf="notes.length" class="flex-table">
+
+            <hr>
+
+            <div class="flex-table-header">
+              <span class="is-grow">Referencia</span>
+              <span>Tipo</span>
+              <!-- <span>Subtotal</span>
+              <span>IVA</span> -->
+              <span>Total</span>
+            </div>
+
+            <div *ngFor="let i of notes; let u = index">
+
+              <div class="flex-table-item">
+                <div class="flex-table-cell is-media is-grow" data-th="">
+                  <div>
+                    <div *ngIf="i.document.typedocument.name" class="h-avatar is-medium avatar">
+                      <img class="avatar" [src]="apiUrl + i.document.image">
+                    </div>
+                  </div>
+                  <div>
+                    <span class="item-name dark-text">
+                      ({{i.serie}}-{{i.correlative}})</span>
+                    <span class="item-meta">
+                      <span class="dark-text">{{i.date | date: 'dd-MM-yyyy, HH:mm'}}</span>
+                    </span>
+                  </div>
+                </div>
+                <div class="flex-table-cell" data-th="Tipo">
+                  <span class="light-text">{{i.document.typedocument.name}}</span>
+                </div>
+                <!-- <div class="flex-table-cell" data-th="Subtotal">
+                  <span class="light-text">{{getCurrency()}}{{i.subtotal}}</span>
+                </div>
+                <div class="flex-table-cell" data-th="IVA">
+                  <span class="dark-inverted">{{getCurrency()}}{{i.iva}}</span>
+                </div> -->
+                <div class="flex-table-cell has-text-right" data-th="Total">
+                  <span class="dark-inverted">
+                    <span *ngIf="i.document.typedocument.name == 'NOTA DE CREDITO'">-</span>
+                    <span *ngIf="i.document.typedocument.name == 'NOTA DE DEBITO'">+</span>
+                    <span *ngIf="i.document.typedocument.name == 'NOTA DE ABONO'">-</span>
+                    <span *ngIf="i.document.typedocument.name == 'ABONO'">-</span>
+                    {{getCurrency()}}{{i.total}}
+                  </span>
+                </div>
+              </div>
+
+              <div class="flex-table sub-table">
+                <div class="flex-table-item">
+                  <div class="flex-table-cell is-grow" data-th=""></div>
+                  <div class="flex-table-cell" data-th="">
+                    <span class="table-label">Total</span>
+                  </div>
+                  <div class="flex-table-cell has-text-right" data-th="">
+                    <span class="table-total is-bigger dark-inverted">{{getCurrency()}}{{totalNotes(u)}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div *ngIf="operation.document.typedocument.certification" class="invoice-section"
+          style="text-align: center; color: #a2a5b9;">
+          <span>Certificación: <b>{{operation.autorizacionFel}}</b></span>
+          <br>
+          <span>Serie: <b>{{operation.serieFel}}</b></span>
+          <br>
+          <span>Número: <b>{{operation.numberFel}}</b></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

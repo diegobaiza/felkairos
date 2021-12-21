@@ -1,0 +1,39 @@
+@media only screen and (min-width: 767px) {
+    .right-panel-wrapper .right-panel {
+        width: 30%;
+    }
+    .button {
+        padding: 5px 35px;
+        margin-right: 2rem;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .button {
+        padding: 5px 20px;
+    }
+    .buttons2 .button:not(:last-child):not(.is-fullwidth) {
+        margin-right: 1rem !important;
+    }
+}
+
+.account-wrapper .account-box.is-form.is-footerless {
+    padding-bottom: 0px;
+}
+
+.form-head, .stuck-header {
+    padding: 0 !important;
+}
+
+.account-box .is-stuck {
+    padding: 15px 12px !important;
+}
+
+.account-box {
+    background: transparent !important;
+    border-color: transparent !important;
+}
+
+.account-wrapper .account-box.is-form .form-head, .account-wrapper .account-box.is-form .form-foot {
+    border-color: transparent !important;
+}

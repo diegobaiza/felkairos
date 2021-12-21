@@ -1,0 +1,97 @@
+@media only screen and (min-width: 767px) {
+    .right-panel-wrapper .right-panel {
+        width: 30%;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+  .sidebar-panel.is-generic .inner ul {
+    padding: 0px 0;
+  }
+}
+
+.felavatar {
+    text-align: center;
+    margin: auto;
+    max-width: 200px;
+}
+
+.actives {
+    color: var(--color) !important;
+}
+
+.displays {
+    display: block !important;
+}
+
+.menu-desktop {
+    margin-top: 62px;
+}
+
+a {
+    color: #a2a5b9;
+}
+
+.is-selected a {
+    color: var(--color);
+}
+
+.fa-2x {
+    font-size: 1.5em;
+}
+
+.is-selected i {
+    color: var(--color) !important;
+}
+
+.is-selected {
+    color: var(--color) !important;
+}
+
+.avatar2 {
+    width: 45px !important;
+    height: 45px !important;
+    border-radius: 50%;
+}
+
+.mobile-navbar .navbar-brand .user-dropdown .is-trigger svg {
+    width: 40px;
+    height: 50px;
+    min-height: none;
+    min-width: none;
+    max-height: none;
+    max-width: none;
+}
+
+.mobile-main-sidebar {
+  width: 50px;
+}
+
+.mobile-main-sidebar .inner .icon-side-menu li, .mobile-main-sidebar .inner .bottom-icon-side-menu li {
+  width: 50px;
+  height: 50px;
+}
+
+.mobile-subsidebar .inner .submenu {
+  margin-top: 3px;
+  padding: 0 20px 20px 0px;
+}
+
+.mobile-subsidebar .inner .submenu li.has-children {
+  margin-bottom: 0 !important;
+  height: 50px !important
+}
+
+/* Desltop */
+
+.main-sidebar .sidebar-inner .naver { 
+  height: 50px  !important
+}
+
+.main-sidebar .sidebar-inner .icon-menu li, .main-sidebar .sidebar-inner .bottom-menu li {
+  height: 50px  !important
+}
+
+.sidebar-panel.is-generic .inner li.has-children {
+  min-height: 50px 
+}

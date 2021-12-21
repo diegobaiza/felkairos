@@ -1,0 +1,30 @@
+{
+  "name": "felkairos-api",
+  "version": "1.0.0",
+  "description": "FelKairos API",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/app.js"
+  },
+  "keywords": [],
+  "author": "KairosSoft",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-formidable": "^1.2.0",
+    "fs": "0.0.1-security",
+    "handlebars": "^4.7.7",
+    "html-pdf": "^2.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.1",
+    "mysql2": "^2.2.5",
+    "nodemailer": "^6.6.3",
+    "nodemon": "^2.0.7",
+    "password-hash": "^1.2.2",
+    "path": "^0.12.7",
+    "request": "^2.88.2",
+    "sequelize": "^6.5.0"
+  }
+}

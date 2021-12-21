@@ -1,0 +1,324 @@
+<div class="page-content-inner">
+
+  <div class="account-wrapper">
+    <div class="account-box is-form is-footerless">
+      <div class="form-head stuck-header">
+        <div class="form-head-inner">
+          <div class="left">
+            <button (click)="reset()" class="button add h-button is-primary right-panel-trigger"
+              data-panel="add-user-panel">
+              <span class="icon">
+                <i class="fal fa-plus"></i>
+              </span>
+              <span>Agregar</span>
+            </button>
+          </div>
+          <div class="right">
+            <div class="buttons">
+              <button (click)="reset()" class="button add h-button is-primary right-panel-trigger is-hidden-desktop"
+                data-panel="add-user-panel">
+                <span class="icon">
+                  <i class="fal fa-plus"></i>
+                </span>
+              </button>
+              <div class="control search has-icon">
+                <input class="input custom-text-filter" placeholder="Buscar..." data-filter-target=".list-view-item">
+                <div class="form-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="page-content-inner">
+
+  <div class="card-grid card-grid-v3">
+
+    <div id="active-items-tab" class="tab-content is-active">
+
+      <div class="columns is-multiline">
+
+        <div *ngFor="let i of attributes; let u = index" class="column list-view-item is-3">
+          <div class="card-grid-item">
+            <!-- <div *ngIf="i.image" class="h-avatar is-large">
+                <img class="avatar" [src]="apiUrl + '/media/attributes/' + i.id + '/' + i.image" alt="">
+              </div> -->
+            <div *ngIf="!i.image" class="h-avatar is-large">
+              <span class="avatar is-fake is-primary">
+                <span data-filter-match>{{i.symbol}}</span>
+              </span>
+            </div>
+            <h3 class="dark-inverted" data-filter-match>{{i.name}}</h3>
+            <div class="description">
+              
+            </div>
+            <div class="buttons buttons2">
+              <a (click)="setData(i, u)" data-panel="edit-user-panel" style="width: 24%;"
+                class="button is-warning is-elevated right-panel-trigger">
+                <i style="color: white;" class="fal fa-pencil-alt"></i>
+              </a>
+              <a (click)="setData(i, u)" data-panel="delete-user-panel" style="width: 24%;"
+                class="button is-danger is-elevated right-panel-trigger">
+                <i style="color: white;" class="fal fa-trash-alt"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="list-view-item has-loader loader-list">
+        <div class="list-view-item-inner">
+          <div class="h-loader-wrapper">
+            <div class="loader is-big is-loading"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="page-placeholder custom-text-filter-placeholder is-hidden">
+      <div class="placeholder-content">
+        <img class="light-image" src="assets/img/illustrations/placeholders/search-6.svg" alt="" />
+        <img class="dark-image" src="assets/img/illustrations/placeholders/search-6-dark.svg" alt="" />
+        <h3>¡Oh Vaya!</h3>
+        <p class="is-larger">No hemos encontrado registros de tu busqueda</p>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div id="add-user-panel" class="right-panel-wrapper is-languages is-left">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3>Agregar Atributo</h3>
+      <a class="close-panel">
+        <i data-feather="x"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <form [formGroup]="attributeForm" (ngSubmit)="postAttribute($event)" class="panel-form">
+
+        <div class="inner-content">
+          <div class="section-placeholder">
+            <div class="placeholder-content">
+
+              <div class="form-body">
+                <div class="fieldset">
+                  <div id="edit-profile" class="h-avatar profile-h-avatar is-xl">
+                    <!-- <img *ngIf="image" class="avatar" [src]="apiUrl + '/media/attributes/' + userId + '/' + image"> -->
+                    <div class="h-avatar is-large avatar">
+                      <span class="avatar is-fake is-primary">
+                        <span>
+                          {{attributeForm.controls['symbol'].value}}
+                        </span>
+                      </span>
+                    </div>
+                    <h3 class="dark-inverted">
+                      {{attributeForm.controls['name'].value}}
+                    </h3>
+                    <!-- <div class="filepond-profile-wrap is-hidden">
+                        <input (change)="postImage()" type="file" class="profile-filepond" name="profile_filepond"
+                          accept="image/png, image/jpeg, image/gif">
+                      </div>
+                      <button class="button is-circle edit-button is-edit">
+                        <span class="icon is-small">
+                          <i data-feather="edit-2"></i>
+                        </span>
+                      </button>
+                      <button class="button is-circle edit-button is-back is-hidden">
+                        <span class="icon is-small">
+                          <i data-feather="arrow-left"></i>
+                        </span>
+                      </button> -->
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="columns is-multiline">
+
+          <div class="column is-6">
+            <div class="field">
+              <label>Nombre <span class="req">*</span></label>
+              <div class="control">
+                <input formControlName="name" type="text" class="input" placeholder="Nombre">
+              </div>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="field">
+              <label>Símbolo <span class="req">*</span></label>
+              <div class="control">
+                <input formControlName="symbol" type="text" class="input" placeholder="Símbolo">
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="buttons is-right">
+          <button id="bt-add-attribute" [ngClass]="{ 'is-disabled': attributeForm.invalid }"
+            class="button h-button is-primary is-elevated">
+            Guardar
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<div id="edit-user-panel" class="right-panel-wrapper is-languages">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3>Editar Atributo</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <form [formGroup]="attributeForm" (ngSubmit)="putAttribute($event)" class="panel-form">
+
+        <div class="inner-content">
+          <div class="section-placeholder">
+            <div class="placeholder-content">
+
+              <div class="form-body">
+                <div class="fieldset">
+                  <div id="edit-profile" class="h-avatar profile-h-avatar is-xl">
+                    <!-- <img *ngIf="image" class="avatar" [src]="apiUrl + '/media/attributes/' + userId + '/' + image"> -->
+                    <div class="h-avatar is-large avatar">
+                      <span class="avatar is-fake is-primary">
+                        <span>
+                          {{attributeForm.controls['symbol'].value}}
+                        </span>
+                      </span>
+                    </div>
+                    <h3 class="dark-inverted">
+                      {{attributeForm.controls['name'].value}}
+                    </h3>
+                    <!-- <div class="filepond-profile-wrap is-hidden">
+                        <input (change)="postImage()" type="file" class="profile-filepond" name="profile_filepond"
+                          accept="image/png, image/jpeg, image/gif">
+                      </div>
+                      <button class="button is-circle edit-button is-edit">
+                        <span class="icon is-small">
+                          <i data-feather="edit-2"></i>
+                        </span>
+                      </button>
+                      <button class="button is-circle edit-button is-back is-hidden">
+                        <span class="icon is-small">
+                          <i data-feather="arrow-left"></i>
+                        </span>
+                      </button> -->
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="columns is-multiline">
+
+          <div class="column is-6">
+            <div class="field">
+              <label>Nombre <span class="req">*</span></label>
+              <div class="control">
+                <input formControlName="name" type="text" class="input" placeholder="Nombre">
+              </div>
+            </div>
+          </div>
+          <div class="column is-6">
+            <div class="field">
+              <label>Símbolo <span class="req">*</span></label>
+              <div class="control">
+                <input formControlName="symbol" type="text" class="input" placeholder="Símbolo">
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="buttons is-right">
+          <button id="bt-edit-attribute" [ngClass]="{ 'is-disabled': attributeForm.invalid }" type="submit"
+            class="button h-button is-warning is-elevated">
+            Actualizar
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<div id="delete-user-panel" class="right-panel-wrapper is-languages">
+  <div class="panel-overlay"></div>
+
+  <div class="right-panel">
+    <div class="right-panel-head">
+      <h3>Eliminar Atributo</h3>
+      <a class="close-panel">
+        <i data-feather="chevron-right"></i>
+      </a>
+    </div>
+    <div class="right-panel-body has-slimscroll">
+
+      <form [formGroup]="attributeForm" (ngSubmit)="deleteAttribute($event)" class="panel-form">
+        <div class="inner-content">
+          <div class="section-placeholder">
+            <div class="placeholder-content">
+
+              <div class="form-body">
+                <div class="fieldset">
+                  <div id="edit-profile" class="h-avatar profile-h-avatar is-xl">
+                    <!-- <img *ngIf="image" class="avatar delete-img" [src]="apiUrl +  '/media/attributes/' + userId + '/' + image"
+                  alt=""> -->
+                    <div class="h-avatar is-large avatar">
+                      <span class="avatar is-fake is-primary">
+                        <span>
+                          {{getFakeAvatar(attributeForm.controls['name'].value)}}
+                        </span>
+                      </span>
+                    </div>
+                    <h3 class="dark-inverted">
+                      {{attributeForm.controls['name'].value}}
+                    </h3>
+                    <p>¿Estas seguro de eliminarlo?</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="buttons is-centered">
+          <button id="bt-delete-attribute" [ngClass]="{ 'is-disabled': attributeForm.invalid }"
+            class="button h-button is-danger is-elevated">
+            Eliminar
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>

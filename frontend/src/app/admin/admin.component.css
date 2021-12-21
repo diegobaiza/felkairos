@@ -1,0 +1,31 @@
+.actives {
+    color: var(--color) !important;
+}
+
+.displays {
+    display: block !important;
+}
+
+.menu-desktop {
+    margin-top: 62px;
+}
+
+a {
+    color: #a2a5b9;
+}
+
+.is-selected a {
+    color: var(--color);
+}
+
+.fa-2x {
+    font-size: 1.5em;
+}
+
+.is-selected i {
+    color: var(--color) !important;
+}
+
+.is-selected {
+    color: var(--color) !important;
+}
