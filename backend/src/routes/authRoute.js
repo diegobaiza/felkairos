@@ -46,7 +46,7 @@ function authRoute(app) {
     Admin.findOne({ where: { username: req.body.username } }).then(user => {
       if (user) {
         if (hash.verify(req.body.password, user.password)) {
-          const token = jwt.sign({ data: user, companyId: 1, type: 'admin' }, key, { expiresIn: '15m' });
+          const token = jwt.sign({ data: user, companyId: 1, type: 'admin' }, key, { expiresIn: '24h' });
           res.status(200).json({
             result: true,
             message: 'Bienvenido ' + user.name,

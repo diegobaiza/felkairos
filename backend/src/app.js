@@ -3,6 +3,7 @@ import cors from 'cors';
 
 import companyRoute from './routes/companyRoute.js';
 import authRoute from './routes/authRoute.js';
+import roleRoute from './routes/roleRoute.js';
 import userRoute from './routes/userRoute.js';
 import branchRoute from './routes/branchRoute.js';
 import warehouseRoute from './routes/warehouseRoute.js';
@@ -40,6 +41,7 @@ app.use('/docs', express.static('src/docs'));
 // Routes
 companyRoute(app);
 authRoute(app);
+roleRoute(app);
 userRoute(app);
 branchRoute(app);
 warehouseRoute(app);

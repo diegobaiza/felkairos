@@ -41,7 +41,7 @@ function userRoute(app) {
 
   app.put('/users/:id', auth, (req, res) => {
     if (req.body.password) {
-      req.body.password = hash.generate(req.body.password);  
+      req.body.password = hash.generate(req.body.password);
     }
     User(token(req.headers.authorization)).update(req.body, { where: { id: req.params.id } }).then(data => {
       if (data[0] == 1) {
