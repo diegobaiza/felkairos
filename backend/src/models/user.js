@@ -1,5 +1,6 @@
 import db from '../database/db.js';
 import Sequelize from 'sequelize';
+import Role from './role.js'
 
 function User(database) {
   const Model = db(database).define('users', {
@@ -8,11 +9,16 @@ function User(database) {
     username: Sequelize.STRING,
     password: Sequelize.STRING,
     color: Sequelize.STRING,
-    access: Sequelize.BOOLEAN
+    access: Sequelize.BOOLEAN,
+    roleId: Sequelize.INTEGER
   }, {
     createdAt: false,
     updatedAt: false,
   });
+
+  Model.belongsTo(Role(database));
+  Role(database).hasMany(Model);
+
   return Model;
 }
 

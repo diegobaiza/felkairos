@@ -1,13 +1,22 @@
+CREATE TABLE `roles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `name` varchar(60) NOT NULL
+);
+
+INSERT INTO `roles` VALUES (1, 'Administrador');
+
 CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `name` varchar(60) NOT NULL,
   `username` varchar(60) NOT NULL,
   `password` varchar(60) NOT NULL,
   `color` varchar(60) NOT NULL,
-  `access` tinyint(1) NOT NULL
+  `access` tinyint(1) NOT NULL,
+  `roleId` int(11) NOT NULL,
+  CONSTRAINT `fk_users_roles` FOREIGN KEY (`roleId`) REFERENCES `roles` (id) ON DELETE RESTRICT ON UPDATE RESTRICT 
 );
 
-INSERT INTO `users` VALUES (1, 'Super Administrador', 'admin', 'sha1$9d7e2064$1$89e707b9d8f6f25e452146ad4f2b79a544fd1da3', '#3978af', 1);
+INSERT INTO `users` VALUES (1, 'Super Administrador', 'admin', 'sha1$9d7e2064$1$89e707b9d8f6f25e452146ad4f2b79a544fd1da3', '#3978af', 1, 1);
 
 CREATE TABLE `customers` (
   `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
