@@ -75,6 +75,7 @@ export class PosComponent implements OnInit {
     this.menu = [
       { name: 'Dashboard', url: '/pos/dashboard', icon: 'fa-chart-line', view: true },
       { name: 'Usuarios', url: '/pos/users', icon: 'fa-user', view: true },
+      { name: 'Roles', url: '/pos/roles', icon: 'fad fa-user-crown', view: true },
       { name: 'Clientes', url: '/pos/customers', icon: 'fa-user-tag', view: true },
       { name: 'Proveedores', url: '/pos/suppliers', icon: 'fa-truck-loading', view: true },
       { name: 'Sucursales', url: '/pos/branches', icon: 'fa-warehouse', view: true },

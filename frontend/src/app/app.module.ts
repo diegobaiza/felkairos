@@ -11,6 +11,7 @@ import { LoginAdminComponent } from './login-admin/login-admin.component';
 import { AuthGuardLoginService } from './services/auth-guard-login.service';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { RolesComponent } from './pos/roles/roles.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
@@ -25,7 +26,7 @@ const routes: Routes = [
   declarations: [
     AppComponent,
     LoginComponent,
-    LoginAdminComponent
+    LoginAdminComponent,
   ],
   imports: [
     BrowserModule,

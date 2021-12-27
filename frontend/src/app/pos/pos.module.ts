@@ -17,6 +17,7 @@ import { PosComponent } from './pos.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AccountComponent } from './account/account.component';
 import { UsersComponent } from './users/users.component';
+import { RolesComponent } from './roles/roles.component';
 import { CustomersComponent } from './customers/customers.component';
 import { SuppliersComponent } from './suppliers/suppliers.component';
 import { BranchesComponent } from './branches/branches.component';
@@ -39,6 +40,7 @@ const routes: Routes = [
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'operations' },
       { path: 'users', component: UsersComponent },
+      { path: 'roles', component: RolesComponent },
       { path: 'customers', component: CustomersComponent },
       { path: 'suppliers', component: SuppliersComponent },
       { path: 'branches', component: BranchesComponent },
@@ -67,6 +69,7 @@ const routes: Routes = [
     PosComponent,
     AccountComponent,
     UsersComponent,
+    RolesComponent,
     DocumentsComponent,
     CustomersComponent,
     SuppliersComponent,
