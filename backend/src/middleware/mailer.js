@@ -1,13 +1,13 @@
 import nodemailer from 'nodemailer';
 
 const Mailer = nodemailer.createTransport({
-  name: 'mail.creativodigital.com.gt',
-  host: 'mail.creativodigital.com.gt',
+  name: '',
+  host: '',
   port: 465,
   secure: true,
   auth: {
-    user: 'support@creativodigital.com.gt',
-    pass: 'fytydd-eghgsh-adwser'
+    user: '',
+    pass: ''
   },
   tls: {
     rejectUnauthorized: false,
