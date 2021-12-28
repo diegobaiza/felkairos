@@ -38593,7 +38593,7 @@
     }/* line 418, src/assets/scss/pages/generic/_forms.scss */.form-layout .form-outer {
       padding: 0;
     }/* line 423, src/assets/scss/pages/generic/_forms.scss */.form-layout .form-outer .form-header {
-      padding: 12px 20px;
+      padding: 15px 20px !important;
       border-bottom: 1px solid #e5e5e5;
       -webkit-transition: all .3s;
       transition: all .3s;
