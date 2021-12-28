@@ -1,9 +1,9 @@
 import db from '../database/db.js';
 import Sequelize from 'sequelize';
-import Role from './role.js'
+import Role from './role.js';
 
-function User(database) {
-  const Model = db(database).define('users', {
+function User(req) {
+  const Model = db(req).define('users', {
     id: { type: Sequelize.SMALLINT, primaryKey: true },
     name: Sequelize.STRING,
     username: Sequelize.STRING,
@@ -16,8 +16,8 @@ function User(database) {
     updatedAt: false,
   });
 
-  Model.belongsTo(Role(database));
-  Role(database).hasMany(Model);
+  Model.belongsTo(Role(req));
+  Role(req).hasMany(Model);
 
   return Model;
 }

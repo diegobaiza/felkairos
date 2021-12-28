@@ -265,3 +265,49 @@ CREATE TABLE `coupons` (
 );
 
 INSERT INTO `coupons` VALUES (1, 'Cupon Mayorista', '1234', 25);
+
+CREATE TABLE `nomenclatures` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `accountNumber` int NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `level` int NOT NULL,
+  `type` varchar(60) NOT NULL,
+  `operationType` varchar(60) NOT NULL
+);
+
+CREATE TABLE `costcenters` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `accountNumber` int NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `level` int NOT NULL,
+  `operationType` varchar(60) NOT NULL
+);
+
+CREATE TABLE `bookkeepings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `name` varchar(255) NOT NULL
+);
+
+CREATE TABLE `detailbookkeepings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `credit` decimal(10, 2) NOT NULL,
+  `debit` decimal(10, 2) NOT NULL,
+  `percentage` decimal(10, 2) NOT NULL,
+  `nomenclatureId` int NOT NULL,
+  `costCenterId` int NOT NULL,
+  `bookKeepingId` int NOT NULL,
+  CONSTRAINT `fk_detailbookkeepings_nomenclatures` FOREIGN KEY (`nomenclatureId`) REFERENCES `nomenclatures` (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fk_detailbookkeepings_costcenters` FOREIGN KEY (`costCenterId`) REFERENCES `costcenters` (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fk_detailbookkeepings_bookkeepings` FOREIGN KEY (`bookKeepingId`) REFERENCES `bookkeepings` (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE `bookkeepingsconfig` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `name` varchar(255) NOT NULL
+);
+
+
+CREATE TABLE `bookkeepingsconfigdetails` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `name` varchar(255) NOT NULL
+);

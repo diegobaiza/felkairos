@@ -1,8 +1,8 @@
 import db from '../database/db.js';
 import Sequelize from 'sequelize';
 
-function Customer(database) {
-  const Model = db(database).define('customers', {
+function Customer(req) {
+  const Model = db(req).define('customers', {
     id: { type: Sequelize.SMALLINT, primaryKey: true },
     nit: Sequelize.STRING,
     name: Sequelize.STRING,

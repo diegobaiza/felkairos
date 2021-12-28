@@ -1,14 +1,13 @@
-import Variation from "../models/variation.js";
 import auth from '../middleware/auth.js';
-import token from '../middleware/token.js';
+import Variation from "../models/variation.js";
 import Attribute from "../models/attribute.js";
 
 function variationRoute(app) {
 
   app.get('/variations', auth, (req, res) => {
-    Variation(token(req.headers.authorization)).findAll({
+    Variation(req).findAll({
       include: [
-        { model: Attribute(token(req.headers.authorization)) }
+        { model: Attribute(req) }
       ]
     }).then(data => {
       res.status(200).json({ result: true, data: data });
@@ -18,12 +17,12 @@ function variationRoute(app) {
   });
 
   app.get('/variations/:productId', auth, (req, res) => {
-    Variation(token(req.headers.authorization)).findAll({
+    Variation(req).findAll({
       where: {
         productId: req.params.productId
       },
       include: [
-        { model: Attribute(token(req.headers.authorization)) }
+        { model: Attribute(req) }
       ]
     }).then(data => {
       res.status(200).json({ result: true, data: data });
@@ -33,7 +32,7 @@ function variationRoute(app) {
   });
 
   app.post('/variations', auth, (req, res) => {
-    Variation(token(req.headers.authorization)).create(req.body).then(data => {
+    Variation(req).create(req.body).then(data => {
       data.id = data.null;
       res.status(200).json({ result: true, message: 'Variacion Agregada', data: data });
     }).catch(err => {
@@ -42,7 +41,7 @@ function variationRoute(app) {
   });
 
   app.put('/variations/:id', auth, (req, res) => {
-    Variation(token(req.headers.authorization)).update(req.body, { where: { id: req.params.id } }).then(data => {
+    Variation(req).update(req.body, { where: { id: req.params.id } }).then(data => {
       if (data[0] == 1) {
         res.status(200).json({ result: true, message: 'Variacion Actualizada' });
       } else {
@@ -54,7 +53,7 @@ function variationRoute(app) {
   });
 
   app.delete('/variations/:id', auth, (req, res) => {
-    Variation(token(req.headers.authorization)).destroy({ where: { id: req.params.id } }).then(data => {
+    Variation(req).destroy({ where: { id: req.params.id } }).then(data => {
       if (data == 1) {
         res.status(200).json({ result: true, message: 'Variacion Eliminada' });
       } else {

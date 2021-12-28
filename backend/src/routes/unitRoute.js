@@ -1,11 +1,10 @@
-import Unit from "../models/unit.js";
 import auth from '../middleware/auth.js';
-import token from '../middleware/token.js';
+import Unit from "../models/unit.js";
 
 function unitRoute(app) {
 
   app.get('/units', auth, (req, res) => {
-    Unit(token(req.headers.authorization)).findAll().then(data => {
+    Unit(req).findAll().then(data => {
       res.status(200).json({ result: true, data: data });
     }).catch(err => {
       res.status(200).json({ result: false, message: err });
@@ -13,7 +12,7 @@ function unitRoute(app) {
   });
 
   app.get('/units/:id', auth, (req, res) => {
-    Unit(token(req.headers.authorization)).findOne({ where: { id: req.params.id } }).then(data => {
+    Unit(req).findOne({ where: { id: req.params.id } }).then(data => {
       res.status(200).json({ result: true, data: data });
     }).catch(err => {
       res.status(200).json({ result: false, message: err });
@@ -21,11 +20,11 @@ function unitRoute(app) {
   });
 
   app.post('/units', auth, (req, res) => {
-    Unit(token(req.headers.authorization)).findOne({ where: { symbol: req.body.symbol } }).then(data => {
+    Unit(req).findOne({ where: { symbol: req.body.symbol } }).then(data => {
       if (data) {
         res.status(200).json({ result: false, message: 'Medida ya registrada' });
       } else {
-        Unit(token(req.headers.authorization)).create(req.body).then(data => {
+        Unit(req).create(req.body).then(data => {
           data.id = data.null;
           res.status(200).json({ result: true, message: 'Medida Agregada', data: data });
         }).catch(err => {
@@ -36,7 +35,7 @@ function unitRoute(app) {
   });
 
   app.put('/units/:id', auth, (req, res) => {
-    Unit(token(req.headers.authorization)).update(req.body, { where: { id: req.params.id } }).then(data => {
+    Unit(req).update(req.body, { where: { id: req.params.id } }).then(data => {
       if (data[0] == 1) {
         res.status(200).json({ result: true, message: 'Medida Actualizada' });
       } else {
@@ -48,7 +47,7 @@ function unitRoute(app) {
   });
 
   app.delete('/units/:id', auth, (req, res) => {
-    Unit(token(req.headers.authorization)).destroy({ where: { id: req.params.id } }).then(data => {
+    Unit(req).destroy({ where: { id: req.params.id } }).then(data => {
       if (data == 1) {
         res.status(200).json({ result: true, message: 'Medida Eliminada' });
       } else {

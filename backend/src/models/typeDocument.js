@@ -1,8 +1,8 @@
 import db from '../database/db.js';
 import Sequelize from 'sequelize';
 
-function TypeDocument(database) {
-  const Model = db(database).define('typedocuments', {
+function TypeDocument(req) {
+  const Model = db(req).define('typedocuments', {
     id: { type: Sequelize.SMALLINT, primaryKey: true },
     name: Sequelize.STRING,
     inventory: Sequelize.STRING,

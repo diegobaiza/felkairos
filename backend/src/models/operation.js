@@ -9,8 +9,8 @@ import Warehouse from './warehouse.js';
 import DetailOperation from './detailOperation.js';
 import PaymentOperation from './paymentOperation.js';
 
-function Operation(database) {
-  const Model = db(database).define('operations', {
+function Operation(req) {
+  const Model = db(req).define('operations', {
     id: { type: Sequelize.SMALLINT, primaryKey: true },
     serie: Sequelize.STRING,
     correlative: Sequelize.STRING,
@@ -42,34 +42,34 @@ function Operation(database) {
     updatedAt: false,
   });
 
-  Model.belongsTo(Customer(database));
-  Customer(database).hasMany(Model);
+  Model.belongsTo(Customer(req));
+  Customer(req).hasMany(Model);
 
-  Model.belongsTo(Supplier(database));
-  Supplier(database).hasMany(Model);
+  Model.belongsTo(Supplier(req));
+  Supplier(req).hasMany(Model);
 
-  Model.belongsTo(Document(database));
-  Document(database).hasMany(Model);
+  Model.belongsTo(Document(req));
+  Document(req).hasMany(Model);
 
-  Model.belongsTo(User(database));
-  User(database).hasMany(Model);
+  Model.belongsTo(User(req));
+  User(req).hasMany(Model);
 
-  Model.belongsTo(Branch(database));
-  Branch(database).hasMany(Model);
+  Model.belongsTo(Branch(req));
+  Branch(req).hasMany(Model);
 
-  Model.belongsTo(Warehouse(database));
-  Warehouse(database).hasMany(Model);
+  Model.belongsTo(Warehouse(req));
+  Warehouse(req).hasMany(Model);
 
   Model.belongsTo(Model);
   Model.hasMany(Model, {
     as: 'notes'
   });
 
-  DetailOperation(database).belongsTo(Model);
-  Model.hasMany(DetailOperation(database));
+  DetailOperation(req).belongsTo(Model);
+  Model.hasMany(DetailOperation(req));
 
-  PaymentOperation(database).belongsTo(Model);
-  Model.hasMany(PaymentOperation(database));
+  PaymentOperation(req).belongsTo(Model);
+  Model.hasMany(PaymentOperation(req));
 
   return Model;
 }

@@ -8,20 +8,19 @@ import TypeDocument from '../models/typeDocument.js';
 import User from '../models/user.js';
 import Branch from '../models/branch.js';
 import auth from '../middleware/auth.js';
-import token from '../middleware/token.js';
 import Product from '../models/product.js';
 import Sequelize from 'sequelize';
 
 function dashboardRoute(app) {
 
   app.get('/dashboard/counters', auth, async (req, res) => {
-    const users = await User(token(req.headers.authorization)).count();
-    const customers = await Customer(token(req.headers.authorization)).count();
-    const suppliers = await Supplier(token(req.headers.authorization)).count();
-    const branches = await Branch(token(req.headers.authorization)).count();
-    const products = await Product(token(req.headers.authorization)).count();
-    const documents = await Document(token(req.headers.authorization)).count();
-    const operations = await Operation(token(req.headers.authorization)).count();
+    const users = await User(req).count();
+    const customers = await Customer(req).count();
+    const suppliers = await Supplier(req).count();
+    const branches = await Branch(req).count();
+    const products = await Product(req).count();
+    const documents = await Document(req).count();
+    const operations = await Operation(req).count();
     res.status(200).json({
       result: true, data: { users, customers, suppliers, branches, products, documents, operations }
     });
@@ -31,11 +30,11 @@ function dashboardRoute(app) {
     let ops = [];
     for (let i = 0; i < 12; i++) {
       const range = { [Sequelize.Op.between]: [`${req.params.year}-${i + 1}-01`, `${req.params.year}-${i + 2}-01`] };
-      const operations = await Operation(token(req.headers.authorization)).count({
+      const operations = await Operation(req).count({
         where: { date: range },
         include: [{
-          model: Document(token(req.headers.authorization)), required: true, include: [
-            { model: TypeDocument(token(req.headers.authorization)), required: true, where: { name: req.params.type } }
+          model: Document(req), required: true, include: [
+            { model: TypeDocument(req), required: true, where: { name: req.params.type } }
           ]
         }]
       });
@@ -48,24 +47,24 @@ function dashboardRoute(app) {
 
   app.get('/dashboard/:startDate/:endDate', auth, (req, res) => {
     const range = { [Sequelize.Op.between]: [req.params.startDate + ' 00:00', req.params.endDate + ' 23:59'] };
-    Operation(token(req.headers.authorization)).findAll({
+    Operation(req).findAll({
       where: { date: range },
       include: [
-        { model: Customer(token(req.headers.authorization)) },
-        { model: Supplier(token(req.headers.authorization)) },
+        { model: Customer(req) },
+        { model: Supplier(req) },
         {
-          model: Document(token(req.headers.authorization)), include: [
-            { model: TypeDocument(token(req.headers.authorization)) }
+          model: Document(req), include: [
+            { model: TypeDocument(req) }
           ]
         },
         {
-          model: DetailOperation(token(req.headers.authorization)),
+          model: DetailOperation(req),
           include: [
-            { model: Product(token(req.headers.authorization)) }
+            { model: Product(req) }
           ]
         },
         {
-          model: PaymentOperation(token(req.headers.authorization))
+          model: PaymentOperation(req)
         }
       ],
       order: [
@@ -95,11 +94,11 @@ function dashboardRoute(app) {
       { name: 'TRASLADO', count: null }
     ];
     for (let i = 0; i < operations.length; i++) {
-      operations[i].count = await Operation(token(req.headers.authorization)).count({
+      operations[i].count = await Operation(req).count({
         where: { date: range },
         include: [{
-          model: Document(token(req.headers.authorization)), required: true, include: [
-            { model: TypeDocument(token(req.headers.authorization)), required: true, where: { name: operations[i].name } }
+          model: Document(req), required: true, include: [
+            { model: TypeDocument(req), required: true, where: { name: operations[i].name } }
           ]
         }]
       });

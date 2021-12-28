@@ -4,8 +4,8 @@ import TypeDocument from './typeDocument.js';
 import Branch from './branch.js';
 import Warehouse from './warehouse.js';
 
-function Document(database) {
-  const Model = db(database).define('documents', {
+function Document(req) {
+  const Model = db(req).define('documents', {
     id: { type: Sequelize.SMALLINT, primaryKey: true },
     name: Sequelize.STRING,
     image: Sequelize.STRING,
@@ -21,14 +21,14 @@ function Document(database) {
     updatedAt: false,
   });
 
-  Model.belongsTo(TypeDocument(database));
-  TypeDocument(database).hasMany(Model);
+  Model.belongsTo(TypeDocument(req));
+  TypeDocument(req).hasMany(Model);
 
-  Model.belongsTo(Branch(database));
-  Branch(database).hasMany(Model);
+  Model.belongsTo(Branch(req));
+  Branch(req).hasMany(Model);
 
-  Model.belongsTo(Warehouse(database));
-  Warehouse(database).hasMany(Model);
+  Model.belongsTo(Warehouse(req));
+  Warehouse(req).hasMany(Model);
 
   return Model;
 }
