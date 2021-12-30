@@ -50,7 +50,7 @@
               </p>
             </div>
             <form [formGroup]="loginForm" id="login-form" class="login-wrapper">
-              <div class="control has-validation">
+              <div *ngIf="!companyId || !company" class="control has-validation">
                 <input formControlName="company" type="text" class="input" placeholder="Empresa">
                 <div class="auth-label">Empresa</div>
                 <div class="auth-icon">

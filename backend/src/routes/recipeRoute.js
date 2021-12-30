@@ -1,12 +1,10 @@
-import Recipe from "../models/recipe.js";
 import auth from '../middleware/auth.js';
-import token from '../middleware/token.js';
-import Product from "../models/product.js";
+import Recipe from "../models/recipe.js";
 
 function recipeRoute(app) {
 
   app.get('/recipes', auth, (req, res) => {
-    Recipe(token(req.headers.authorization)).findAll().then(data => {
+    Recipe(req).findAll().then(data => {
       res.status(200).json({ result: true, data: data });
     }).catch(err => {
       res.status(200).json({ result: false, message: err });
@@ -14,7 +12,7 @@ function recipeRoute(app) {
   });
 
   app.get('/recipes/:productId', auth, (req, res) => {
-    Recipe(token(req.headers.authorization)).findAll({
+    Recipe(req).findAll({
       where: {
         productId: req.params.productId
       }
@@ -26,7 +24,7 @@ function recipeRoute(app) {
   });
 
   app.post('/recipes', auth, (req, res) => {
-    Recipe(token(req.headers.authorization)).create(req.body).then(data => {
+    Recipe(req).create(req.body).then(data => {
       data.id = data.null;
       res.status(200).json({ result: true, message: 'Receta Agregada', data: data });
     }).catch(err => {
@@ -35,7 +33,7 @@ function recipeRoute(app) {
   });
 
   app.put('/recipes/:id', auth, (req, res) => {
-    Recipe(token(req.headers.authorization)).update(req.body, { where: { id: req.params.id } }).then(data => {
+    Recipe(req).update(req.body, { where: { id: req.params.id } }).then(data => {
       if (data[0] == 1) {
         res.status(200).json({ result: true, message: 'Receta Actualizada' });
       } else {
@@ -47,7 +45,7 @@ function recipeRoute(app) {
   });
 
   app.delete('/recipes/:id', auth, (req, res) => {
-    Recipe(token(req.headers.authorization)).destroy({ where: { id: req.params.id } }).then(data => {
+    Recipe(req).destroy({ where: { id: req.params.id } }).then(data => {
       if (data == 1) {
         res.status(200).json({ result: true, message: 'Receta Eliminada' });
       } else {

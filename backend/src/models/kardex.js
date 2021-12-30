@@ -6,8 +6,8 @@ import Branch from './branch.js';
 import Warehouse from './warehouse.js';
 import Variation from './variation.js';
 
-function Kardex(database) {
-  const Model = db(database).define('kardex', {
+function Kardex(req) {
+  const Model = db(req).define('kardex', {
     id: { type: Sequelize.SMALLINT, primaryKey: true },
     date: Sequelize.DATE,
     type: Sequelize.STRING,
@@ -26,20 +26,20 @@ function Kardex(database) {
     freezeTableName: true
   });
 
-  Model.belongsTo(Product(database));
-  Product(database).hasMany(Model);
+  Model.belongsTo(Product(req));
+  Product(req).hasMany(Model);
 
-  Model.belongsTo(Variation(database));
-  Variation(database).hasMany(Model);
+  Model.belongsTo(Variation(req));
+  Variation(req).hasMany(Model);
 
-  Model.belongsTo(Branch(database));
-  Branch(database).hasMany(Model);
+  Model.belongsTo(Branch(req));
+  Branch(req).hasMany(Model);
 
-  Model.belongsTo(Warehouse(database));
-  Warehouse(database).hasMany(Model);
+  Model.belongsTo(Warehouse(req));
+  Warehouse(req).hasMany(Model);
 
-  Model.belongsTo(Operation(database));
-  Operation(database).hasMany(Model);
+  Model.belongsTo(Operation(req));
+  Operation(req).hasMany(Model);
 
   return Model;
 }

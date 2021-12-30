@@ -1,14 +1,13 @@
 import DetailOperation from '../models/detailOperation.js';
 import Product from '../models/product.js';
 import auth from '../middleware/auth.js';
-import token from '../middleware/token.js';
 
 function detailOperationRoute(app) {
 
   app.get('/detailOperations', auth, (req, res) => {
-    DetailOperation(token(req.headers.authorization)).findAll({
+    DetailOperation(req).findAll({
       include: [
-        { model: Product(token(req.headers.authorization)) }
+        { model: Product(req) }
       ]
     }).then(data => {
       res.status(200).json({ result: true, data: data });
@@ -18,10 +17,10 @@ function detailOperationRoute(app) {
   });
 
   app.get('/detailOperations/:id', auth, (req, res) => {
-    DetailOperation(token(req.headers.authorization)).findOne({
+    DetailOperation(req).findOne({
       where: { id: req.params.id },
       include: [
-        { model: Product(token(req.headers.authorization)) }
+        { model: Product(req) }
       ]
     }).then(data => {
       res.status(200).json({ result: true, data: data });
@@ -31,7 +30,7 @@ function detailOperationRoute(app) {
   });
 
   app.post('/detailOperations', auth, (req, res) => {
-    DetailOperation(token(req.headers.authorization)).create(req.body).then(data => {
+    DetailOperation(req).create(req.body).then(data => {
       data.id = data.null;
       res.status(200).json({ result: true, message: 'Detalle de Operacion Agregado', data: data });
     }).catch(err => {
@@ -40,7 +39,7 @@ function detailOperationRoute(app) {
   });
 
   app.put('/detailOperations/:id', auth, (req, res) => {
-    DetailOperation(token(req.headers.authorization)).update(req.body, { where: { id: req.params.id } }).then(data => {
+    DetailOperation(req).update(req.body, { where: { id: req.params.id } }).then(data => {
       if (data[0] == 1) {
         res.status(200).json({ result: true, message: 'Detalle de Operacion Actualizado' });
       } else {
@@ -52,7 +51,7 @@ function detailOperationRoute(app) {
   });
 
   app.delete('/detailOperations/:id', auth, (req, res) => {
-    DetailOperation(token(req.headers.authorization)).destroy({ where: { id: req.params.id } }).then(data => {
+    DetailOperation(req).destroy({ where: { id: req.params.id } }).then(data => {
       if (data == 1) {
         res.status(200).json({ result: true, message: 'Detalle de Operacion Eliminado' });
       } else {

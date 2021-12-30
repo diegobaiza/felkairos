@@ -1,7 +1,7 @@
-import Kardex from '../models/kardex.js';
-import auth from '../middleware/auth.js';
-import token from '../middleware/token.js';
 import Sequelize from 'sequelize';
+import auth from '../middleware/auth.js';
+import moment from 'moment';
+import Kardex from '../models/kardex.js';
 import Operation from '../models/operation.js';
 import Product from '../models/product.js';
 import Branch from '../models/branch.js';
@@ -12,7 +12,6 @@ import Unit from '../models/unit.js';
 import Variation from '../models/variation.js';
 import Attribute from '../models/attribute.js';
 import Cost from '../models/cost.js';
-import moment from 'moment';
 
 function kardexRoute(app) {
 
@@ -21,31 +20,31 @@ function kardexRoute(app) {
     let warehouses = [];
     let products = [];
     if (req.params.product == 'null') {
-      products = await Product(token(req.headers.authorization)).findAll({
+      products = await Product(req).findAll({
         include: [
-          { model: Unit(token(req.headers.authorization)) },
-          { model: Unit(token(req.headers.authorization)), as: 'entryUnit' }
+          { model: Unit(req) },
+          { model: Unit(req), as: 'entryUnit' }
         ]
       });
     } else {
-      products[0] = await Product(token(req.headers.authorization)).findOne({
+      products[0] = await Product(req).findOne({
         where: { id: parseInt(req.params.product) },
         include: [
-          { model: Unit(token(req.headers.authorization)) },
-          { model: Unit(token(req.headers.authorization)), as: 'entryUnit' }
+          { model: Unit(req) },
+          { model: Unit(req), as: 'entryUnit' }
         ]
       });
     }
     if (req.params.branch == 'null') {
-      branches = await Branch(token(req.headers.authorization)).findAll({ attributes: ['id', 'name'] });
+      branches = await Branch(req).findAll({ attributes: ['id', 'name'] });
     } else {
-      branches[0] = await Branch(token(req.headers.authorization)).findOne({ where: { id: req.params.branch }, attributes: ['id', 'name'] });
+      branches[0] = await Branch(req).findOne({ where: { id: req.params.branch }, attributes: ['id', 'name'] });
     }
 
     if (req.params.warehouse == 'null') {
-      warehouses = await Warehouse(token(req.headers.authorization)).findAll({ attributes: ['id', 'name'] });
+      warehouses = await Warehouse(req).findAll({ attributes: ['id', 'name'] });
     } else {
-      warehouses[0] = await Warehouse(token(req.headers.authorization)).findOne({ where: { id: req.params.warehouse }, attributes: ['id', 'name'] });
+      warehouses[0] = await Warehouse(req).findOne({ where: { id: req.params.warehouse }, attributes: ['id', 'name'] });
     }
 
     let stocks = [];
@@ -68,7 +67,7 @@ function kardexRoute(app) {
           products: []
         })
         for (let p = 0; p < products.length; p++) {
-          let costProm = await Cost(token(req.headers.authorization)).findOne({
+          let costProm = await Cost(req).findOne({
             where: {
               productId: products[p].id,
               date: { [Sequelize.Op.lte]: moment(req.params.date).format('YYYY-MM-DD HH:mm:ss') }
@@ -82,11 +81,11 @@ function kardexRoute(app) {
             costProm: costProm ? costProm : { cost: 0 },
             data: []
           });
-          let variations = await Variation(token(req.headers.authorization)).findAll({
+          let variations = await Variation(req).findAll({
             where: { productId: products[p].id },
             include: [
               {
-                model: Attribute(token(req.headers.authorization)), required: false,
+                model: Attribute(req), required: false,
               }
             ]
           });
@@ -97,14 +96,14 @@ function kardexRoute(app) {
               warehouseId: warehouses[w].id,
               date: { [Sequelize.Op.lte]: moment(req.params.date).format('YYYY-MM-DD HH:mm:ss') }
             }
-            let stock = await Kardex(token(req.headers.authorization)).findOne({
+            let stock = await Kardex(req).findOne({
               where: where,
               include: [
                 {
-                  model: Operation(token(req.headers.authorization)), attributes: ['date'], required: false,
+                  model: Operation(req), attributes: ['date'], required: false,
                 }
               ],
-              order: [[Operation(token(req.headers.authorization)), "date", "DESC"]]
+              order: [[Operation(req), "date", "DESC"]]
             });
             if (stock) {
               total_stock = total_stock + parseFloat(stock.stock);
@@ -124,20 +123,20 @@ function kardexRoute(app) {
                   variationId: variations[v].id,
                   date: { [Sequelize.Op.lte]: moment(req.params.date).format('YYYY-MM-DD HH:mm:ss') }
                 }
-                let stock = await Kardex(token(req.headers.authorization)).findOne({
+                let stock = await Kardex(req).findOne({
                   where: where,
                   include: [
                     {
-                      model: Operation(token(req.headers.authorization)), attributes: ['date'], required: false,
+                      model: Operation(req), attributes: ['date'], required: false,
                     },
                     {
-                      model: Variation(token(req.headers.authorization)), required: false,
+                      model: Variation(req), required: false,
                       include: [
-                        { model: Attribute(token(req.headers.authorization)) }
+                        { model: Attribute(req) }
                       ]
                     }
                   ],
-                  order: [[Operation(token(req.headers.authorization)), "date", "DESC"]]
+                  order: [[Operation(req), "date", "DESC"]]
                 });
                 if (stock) {
                   total_stock = total_stock + parseFloat(stock.stock);
@@ -158,20 +157,20 @@ function kardexRoute(app) {
                 variationId: req.params.variation,
                 date: { [Sequelize.Op.lte]: moment(req.params.date).format('YYYY-MM-DD HH:mm:ss') }
               }
-              let stock = await Kardex(token(req.headers.authorization)).findOne({
+              let stock = await Kardex(req).findOne({
                 where: where,
                 include: [
                   {
-                    model: Operation(token(req.headers.authorization)), attributes: ['date'], required: false,
+                    model: Operation(req), attributes: ['date'], required: false,
                   },
                   {
-                    model: Variation(token(req.headers.authorization)), required: false,
+                    model: Variation(req), required: false,
                     include: [
-                      { model: Attribute(token(req.headers.authorization)) }
+                      { model: Attribute(req) }
                     ]
                   }
                 ],
-                order: [[Operation(token(req.headers.authorization)), "date", "DESC"]]
+                order: [[Operation(req), "date", "DESC"]]
               });
               if (stock) {
                 total_stock = total_stock + parseFloat(stock.stock);
@@ -180,9 +179,9 @@ function kardexRoute(app) {
                 stocks[b].warehouses[w].products[p].data.push({
                   stock: 0,
                   variationId: req.params.variation,
-                  variation: await Variation(token(req.headers.authorization)).findOne({
+                  variation: await Variation(req).findOne({
                     where: { id: req.params.variation }, include: [
-                      { model: Attribute(token(req.headers.authorization)) }
+                      { model: Attribute(req) }
                     ]
                   })
                 });
@@ -224,37 +223,37 @@ function kardexRoute(app) {
       delete where.warehouseId
       // where.warehouseId = { [Sequelize.Op.ne]: null };
     }
-    Kardex(token(req.headers.authorization)).findAll({
+    Kardex(req).findAll({
       where: where,
       include: [
         {
-          model: Product(token(req.headers.authorization)), required: false,
+          model: Product(req), required: false,
           include: [
-            { model: Unit(token(req.headers.authorization)) },
-            { model: Unit(token(req.headers.authorization)), as: 'entryUnit' }
+            { model: Unit(req) },
+            { model: Unit(req), as: 'entryUnit' }
           ]
         },
-        { model: Branch(token(req.headers.authorization)), required: false },
-        { model: Warehouse(token(req.headers.authorization)), required: false },
+        { model: Branch(req), required: false },
+        { model: Warehouse(req), required: false },
         {
-          model: Operation(token(req.headers.authorization)), required: false,
+          model: Operation(req), required: false,
           include: [
             {
-              model: Document(token(req.headers.authorization)),
+              model: Document(req),
               include: [
-                { model: TypeDocument(token(req.headers.authorization)) }
+                { model: TypeDocument(req) }
               ]
             }
           ]
         },
         {
-          model: Variation(token(req.headers.authorization)), required: false,
+          model: Variation(req), required: false,
           include: [
-            { model: Attribute(token(req.headers.authorization)) }
+            { model: Attribute(req) }
           ]
         }
       ],
-      order: [[Operation(token(req.headers.authorization)), "date", "DESC"]]
+      order: [[Operation(req), "date", "DESC"]]
     }).then(data => {
       res.status(200).json({ result: true, data: data });
     }).catch(err => {
@@ -263,7 +262,7 @@ function kardexRoute(app) {
   });
 
   app.post('/kardex', auth, (req, res) => {
-    Kardex(token(req.headers.authorization)).create(req.body).then(data => {
+    Kardex(req).create(req.body).then(data => {
       data.id = data.null;
       res.status(200).json({ result: true, message: 'Kardex Agregado', data: data });
     }).catch(err => {
@@ -272,7 +271,7 @@ function kardexRoute(app) {
   });
 
   app.put('/kardex/:id', auth, (req, res) => {
-    Kardex(token(req.headers.authorization)).update(req.body, { where: { id: req.params.id } }).then(data => {
+    Kardex(req).update(req.body, { where: { id: req.params.id } }).then(data => {
       if (data[0] == 1) {
         res.status(200).json({ result: true, message: 'Kardex Actualizado' });
       } else {
@@ -284,7 +283,7 @@ function kardexRoute(app) {
   });
 
   app.delete('/kardex/:id', auth, (req, res) => {
-    Kardex(token(req.headers.authorization)).destroy({ where: { id: req.params.id } }).then(data => {
+    Kardex(req).destroy({ where: { id: req.params.id } }).then(data => {
       if (data == 1) {
         res.status(200).json({ result: true, message: 'Kardex Eliminado' });
       } else {

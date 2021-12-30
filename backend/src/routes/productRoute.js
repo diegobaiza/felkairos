@@ -1,27 +1,26 @@
+import auth from '../middleware/auth.js';
+import fs from 'fs';
 import Product from "../models/product.js";
 import Kardex from '../models/kardex.js';
-import auth from '../middleware/auth.js';
-import token from '../middleware/token.js';
 import Unit from "../models/unit.js";
 import Recipe from "../models/recipe.js";
 import Variation from "../models/variation.js";
 import Attribute from "../models/attribute.js";
-import fs from 'fs';
 
 function productRoute(app) {
 
   let dirname = 'src/docs';
 
   app.get('/products', auth, (req, res) => {
-    Product(token(req.headers.authorization)).findAll({
+    Product(req).findAll({
       include: [
-        { model: Unit(token(req.headers.authorization)) },
-        { model: Unit(token(req.headers.authorization)), as: 'entryUnit' },
-        { model: Recipe(token(req.headers.authorization)) },
+        { model: Unit(req) },
+        { model: Unit(req), as: 'entryUnit' },
+        { model: Recipe(req) },
         {
-          model: Variation(token(req.headers.authorization)),
+          model: Variation(req),
           include: [
-            { model: Attribute(token(req.headers.authorization)) }
+            { model: Attribute(req) }
           ]
         }
       ],
@@ -36,18 +35,18 @@ function productRoute(app) {
   });
 
   app.get('/products/:id', auth, (req, res) => {
-    Product(token(req.headers.authorization)).findOne({
+    Product(req).findOne({
       where: {
         id: req.params.id
       },
       include: [
-        { model: Unit(token(req.headers.authorization)) },
-        { model: Unit(token(req.headers.authorization)), as: 'entryUnit' },
-        { model: Recipe(token(req.headers.authorization)) },
+        { model: Unit(req) },
+        { model: Unit(req), as: 'entryUnit' },
+        { model: Recipe(req) },
         {
-          model: Variation(token(req.headers.authorization)),
+          model: Variation(req),
           include: [
-            { model: Attribute(token(req.headers.authorization)) }
+            { model: Attribute(req) }
           ]
         }
       ]
@@ -77,14 +76,14 @@ function productRoute(app) {
     if (req.params.warehouse == 'null') {
       delete where.warehouseId
     }
-    Kardex(token(req.headers.authorization)).findOne({
+    Kardex(req).findOne({
       where: where,
       include: [
         {
-          model: Product(token(req.headers.authorization)), required: false,
+          model: Product(req), required: false,
           include: [
-            { model: Unit(token(req.headers.authorization)) },
-            { model: Unit(token(req.headers.authorization)), as: 'entryUnit' }
+            { model: Unit(req) },
+            { model: Unit(req), as: 'entryUnit' }
           ]
         }
       ],
@@ -97,13 +96,13 @@ function productRoute(app) {
   });
 
   app.post('/products', auth, (req, res) => {
-    Product(token(req.headers.authorization)).create(req.body).then(async data => {
+    Product(req).create(req.body).then(async data => {
       data.id = data.null;
       if (req.body.recipes) {
         if (req.body.recipes.length > 0) {
           let recipes = req.body.recipes[r];
           for (let r = 0; r < recipes.length; r++) {
-            await Recipe(token(req.headers.authorization)).create({
+            await Recipe(req).create({
               quantity: recipes[r].quantity,
               productId: data.id,
               variationId: recipes[r].variationId,
@@ -116,7 +115,7 @@ function productRoute(app) {
         if (req.body.variations.length > 0) {
           let variations = req.body.variations;
           for (let v = 0; v < variations.length; v++) {
-            await Variation(token(req.headers.authorization)).create({
+            await Variation(req).create({
               productId: data.id,
               attributeId: variations[v].attributeId
             });
@@ -130,22 +129,22 @@ function productRoute(app) {
   });
 
   app.put('/products/:id', auth, (req, res) => {
-    Product(token(req.headers.authorization)).update(req.body, { where: { id: req.params.id } }).then(async data => {
+    Product(req).update(req.body, { where: { id: req.params.id } }).then(async data => {
       if (req.body.recipes) {
         if (req.body.recipes.length > 0) {
           let recipes = req.body.recipes;
           for (let r = 0; r < recipes.length; r++) {
-            let rec = await Recipe(token(req.headers.authorization)).findOne({
+            let rec = await Recipe(req).findOne({
               where: {
                 id: recipes[r].id
               }
             });
             if (rec) {
-              await Recipe(token(req.headers.authorization)).update({
+              await Recipe(req).update({
                 quantity: recipes[r].quantity
               }, { where: { id: rec.id } });
             } else {
-              await Recipe(token(req.headers.authorization)).create({
+              await Recipe(req).create({
                 quantity: recipes[r].quantity,
                 productId: req.params.id,
                 variationId: recipes[r].variationId,
@@ -160,7 +159,7 @@ function productRoute(app) {
           let variations = req.body.variations;
           for (let v = 0; v < variations.length; v++) {
             if (variations[v].id == null) {
-              await Variation(token(req.headers.authorization)).create({
+              await Variation(req).create({
                 productId: req.params.id,
                 attributeId: variations[v].attributeId
               });
@@ -179,9 +178,9 @@ function productRoute(app) {
   });
 
   app.delete('/products/:id', auth, (req, res) => {
-    Product(token(req.headers.authorization)).destroy({ where: { id: req.params.id } }).then(data => {
+    Product(req).destroy({ where: { id: req.params.id } }).then(data => {
       if (data == 1) {
-        let folder = `${dirname}/${token(req.headers.authorization)}/products/${req.params.id}`;
+        let folder = `${dirname}/${req}/products/${req.params.id}`;
         if (fs.existsSync(folder)) {
           fs.rmSync(folder, { recursive: true });
         }

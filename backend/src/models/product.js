@@ -4,8 +4,8 @@ import Unit from './unit.js';
 import Recipe from './recipe.js';
 import Variation from './variation.js';
 
-function Product(database) {
-  const Model = db(database).define('products', {
+function Product(req) {
+  const Model = db(req).define('products', {
     id: { type: Sequelize.SMALLINT, primaryKey: true },
     name: Sequelize.STRING,
     image: Sequelize.STRING,
@@ -21,18 +21,18 @@ function Product(database) {
     updatedAt: false,
   });
 
-  Model.belongsTo(Unit(database));
-  Unit(database).hasMany(Model);
+  Model.belongsTo(Unit(req));
+  Unit(req).hasMany(Model);
 
-  Model.belongsTo(Unit(database), {
+  Model.belongsTo(Unit(req), {
     foreignKey: 'entryUnitId', as: 'entryUnit'
   });
 
-  Recipe(database).belongsTo(Model);
-  Model.hasMany(Recipe(database));
+  Recipe(req).belongsTo(Model);
+  Model.hasMany(Recipe(req));
 
-  Variation(database).belongsTo(Model);
-  Model.hasMany(Variation(database));
+  Variation(req).belongsTo(Model);
+  Model.hasMany(Variation(req));
 
   return Model;
 }

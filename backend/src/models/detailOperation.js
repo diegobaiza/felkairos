@@ -2,8 +2,8 @@ import db from '../database/db.js';
 import Sequelize from 'sequelize';
 import Product from './product.js';
 
-function DetailOperation(database) {
-  const Model = db(database).define('detailoperations', {
+function DetailOperation(req) {
+  const Model = db(req).define('detailoperations', {
     id: { type: Sequelize.SMALLINT, primaryKey: true },
     quantity: Sequelize.DECIMAL,
     cost: Sequelize.DECIMAL,
@@ -18,8 +18,8 @@ function DetailOperation(database) {
     updatedAt: false,
   });
 
-  Model.belongsTo(Product(database));
-  Product(database).hasMany(Model);
+  Model.belongsTo(Product(req));
+  Product(req).hasMany(Model);
 
   return Model;
 }

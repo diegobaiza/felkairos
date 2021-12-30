@@ -3,8 +3,8 @@ import Sequelize from 'sequelize';
 import Product from './product.js';
 import Operation from './operation.js';
 
-function Cost(database) {
-  const Model = db(database).define('costs', {
+function Cost(req) {
+  const Model = db(req).define('costs', {
     id: { type: Sequelize.SMALLINT, primaryKey: true },
     date: Sequelize.DATE,
     cost: Sequelize.DECIMAL,
@@ -16,13 +16,13 @@ function Cost(database) {
     updatedAt: false
   });
 
-  Model.belongsTo(Product(database));
-  Product(database).hasMany(Model, {
+  Model.belongsTo(Product(req));
+  Product(req).hasMany(Model, {
     foreignKey: 'productId', as: 'costProm'
   });
 
-  Model.belongsTo(Operation(database));
-  Operation(database).hasMany(Model);
+  Model.belongsTo(Operation(req));
+  Operation(req).hasMany(Model);
 
   return Model;
 }

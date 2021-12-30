@@ -1,3 +1,9 @@
+import Sequelize from 'sequelize';
+import moment from 'moment';
+import fs from 'fs';
+import path from 'path';
+import handlebars from 'handlebars';
+
 import Operation from '../models/operation.js';
 import DetailOperation from '../models/detailOperation.js';
 import PaymentOperation from '../models/paymentOperation.js';
@@ -9,47 +15,40 @@ import User from '../models/user.js';
 import Branch from '../models/branch.js';
 import Warehouse from '../models/warehouse.js';
 import auth from '../middleware/auth.js';
-import token from '../middleware/token.js';
 import Product from '../models/product.js';
 import Cost from '../models/cost.js';
 import Kardex from '../models/kardex.js';
 import Company from "../models/company.js";
-import Sequelize from 'sequelize';
-import moment from 'moment';
 import Mailer from '../middleware/mailer.js';
 import Unit from '../models/unit.js';
 import Recipe from '../models/recipe.js';
 
-import fs from 'fs';
-import path from 'path';
-import handlebars from 'handlebars';
-
 function operationRoute(app) {
 
   app.get('/operations', auth, (req, res) => {
-    Operation(token(req.headers.authorization)).findAll({
+    Operation(req).findAll({
       include: [
-        { model: Customer(token(req.headers.authorization)) },
-        { model: Supplier(token(req.headers.authorization)) },
+        { model: Customer(req) },
+        { model: Supplier(req) },
         {
-          model: Document(token(req.headers.authorization)), include: [
-            { model: TypeDocument(token(req.headers.authorization)) }
+          model: Document(req), include: [
+            { model: TypeDocument(req) }
           ]
         },
         {
-          model: DetailOperation(token(req.headers.authorization)),
+          model: DetailOperation(req),
           include: [
             {
-              model: Product(token(req.headers.authorization)),
+              model: Product(req),
               include: [
-                { model: Unit(token(req.headers.authorization)) },
-                { model: Unit(token(req.headers.authorization)), as: 'entryUnit' }
+                { model: Unit(req) },
+                { model: Unit(req), as: 'entryUnit' }
               ]
             }
           ]
         },
         {
-          model: PaymentOperation(token(req.headers.authorization))
+          model: PaymentOperation(req)
         }
       ],
       order: [
@@ -64,30 +63,30 @@ function operationRoute(app) {
 
   app.get('/operations/range/:startDate/:endDate', auth, (req, res) => {
     const range = { [Sequelize.Op.between]: [req.params.startDate + ' 00:00', req.params.endDate + ' 23:59'] };
-    Operation(token(req.headers.authorization)).findAll({
+    Operation(req).findAll({
       where: { date: range },
       include: [
-        { model: Customer(token(req.headers.authorization)) },
-        { model: Supplier(token(req.headers.authorization)) },
+        { model: Customer(req) },
+        { model: Supplier(req) },
         {
-          model: Document(token(req.headers.authorization)), include: [
-            { model: TypeDocument(token(req.headers.authorization)) }
+          model: Document(req), include: [
+            { model: TypeDocument(req) }
           ]
         },
         {
-          model: DetailOperation(token(req.headers.authorization)),
+          model: DetailOperation(req),
           include: [
             {
-              model: Product(token(req.headers.authorization)),
+              model: Product(req),
               include: [
-                { model: Unit(token(req.headers.authorization)) },
-                { model: Unit(token(req.headers.authorization)), as: 'entryUnit' }
+                { model: Unit(req) },
+                { model: Unit(req), as: 'entryUnit' }
               ]
             }
           ]
         },
         {
-          model: PaymentOperation(token(req.headers.authorization))
+          model: PaymentOperation(req)
         }
       ],
       order: [
@@ -101,29 +100,29 @@ function operationRoute(app) {
   });
 
   app.get('/operations/type/:type', auth, (req, res) => {
-    Operation(token(req.headers.authorization)).findAll({
+    Operation(req).findAll({
       include: [
-        { model: Customer(token(req.headers.authorization)) },
-        { model: Supplier(token(req.headers.authorization)) },
+        { model: Customer(req) },
+        { model: Supplier(req) },
         {
-          model: Document(token(req.headers.authorization)), include: [
-            { model: TypeDocument(token(req.headers.authorization)), required: true, where: { name: req.params.type } }
+          model: Document(req), include: [
+            { model: TypeDocument(req), required: true, where: { name: req.params.type } }
           ]
         },
         {
-          model: DetailOperation(token(req.headers.authorization)),
+          model: DetailOperation(req),
           include: [
             {
-              model: Product(token(req.headers.authorization)),
+              model: Product(req),
               include: [
-                { model: Unit(token(req.headers.authorization)) },
-                { model: Unit(token(req.headers.authorization)), as: 'entryUnit' }
+                { model: Unit(req) },
+                { model: Unit(req), as: 'entryUnit' }
               ]
             }
           ]
         },
         {
-          model: PaymentOperation(token(req.headers.authorization))
+          model: PaymentOperation(req)
         }
       ],
       order: [
@@ -137,44 +136,44 @@ function operationRoute(app) {
   });
 
   app.get('/operations/:id', auth, (req, res) => {
-    Operation(token(req.headers.authorization)).findOne({
+    Operation(req).findOne({
       where: { id: req.params.id },
       include: [
-        { model: Customer(token(req.headers.authorization)) },
-        { model: Supplier(token(req.headers.authorization)) },
+        { model: Customer(req) },
+        { model: Supplier(req) },
         {
-          model: Document(token(req.headers.authorization)), include: [
-            { model: TypeDocument(token(req.headers.authorization)) }
+          model: Document(req), include: [
+            { model: TypeDocument(req) }
           ]
         },
-        { model: User(token(req.headers.authorization)) },
-        { model: Branch(token(req.headers.authorization)) },
-        { model: Warehouse(token(req.headers.authorization)) },
+        { model: User(req) },
+        { model: Branch(req) },
+        { model: Warehouse(req) },
         {
-          model: DetailOperation(token(req.headers.authorization)),
+          model: DetailOperation(req),
           include: [
             {
-              model: Product(token(req.headers.authorization)),
+              model: Product(req),
               include: [
-                { model: Unit(token(req.headers.authorization)) },
-                { model: Unit(token(req.headers.authorization)), as: 'entryUnit' }
+                { model: Unit(req) },
+                { model: Unit(req), as: 'entryUnit' }
               ]
             }
           ]
         },
         {
-          model: PaymentOperation(token(req.headers.authorization))
+          model: PaymentOperation(req)
         },
         {
-          model: Operation(token(req.headers.authorization)),
+          model: Operation(req),
           required: false,
           as: 'notes',
           where: { status: 'CERTIFICADA' },
           include: [
             {
-              model: Document(token(req.headers.authorization)),
+              model: Document(req),
               include: [
-                { model: TypeDocument(token(req.headers.authorization)) }
+                { model: TypeDocument(req) }
               ]
             },
           ]
@@ -188,44 +187,44 @@ function operationRoute(app) {
   });
 
   app.get('/operations/serieFel/:serieFel', auth, (req, res) => {
-    Operation(token(req.headers.authorization)).findAll({
+    Operation(req).findAll({
       where: { serieFel: req.params.serieFel },
       include: [
-        { model: Customer(token(req.headers.authorization)) },
-        { model: Supplier(token(req.headers.authorization)) },
+        { model: Customer(req) },
+        { model: Supplier(req) },
         {
-          model: Document(token(req.headers.authorization)), include: [
-            { model: TypeDocument(token(req.headers.authorization)) }
+          model: Document(req), include: [
+            { model: TypeDocument(req) }
           ]
         },
-        { model: User(token(req.headers.authorization)) },
-        { model: Branch(token(req.headers.authorization)) },
-        { model: Warehouse(token(req.headers.authorization)) },
+        { model: User(req) },
+        { model: Branch(req) },
+        { model: Warehouse(req) },
         {
-          model: DetailOperation(token(req.headers.authorization)),
+          model: DetailOperation(req),
           include: [
             {
-              model: Product(token(req.headers.authorization)),
+              model: Product(req),
               include: [
-                { model: Unit(token(req.headers.authorization)) },
-                { model: Unit(token(req.headers.authorization)), as: 'entryUnit' }
+                { model: Unit(req) },
+                { model: Unit(req), as: 'entryUnit' }
               ]
             }
           ]
         },
         {
-          model: PaymentOperation(token(req.headers.authorization))
+          model: PaymentOperation(req)
         },
         {
-          model: Operation(token(req.headers.authorization)),
+          model: Operation(req),
           required: false,
           as: 'notes',
           where: { status: 'CERTIFICADA' },
           include: [
             {
-              model: Document(token(req.headers.authorization)),
+              model: Document(req),
               include: [
-                { model: TypeDocument(token(req.headers.authorization)) }
+                { model: TypeDocument(req) }
               ]
             },
           ]
@@ -239,44 +238,44 @@ function operationRoute(app) {
   });
 
   app.get('/operations/numberFel/:numberFel', auth, (req, res) => {
-    Operation(token(req.headers.authorization)).findAll({
+    Operation(req).findAll({
       where: { numberFel: req.params.numberFel },
       include: [
-        { model: Customer(token(req.headers.authorization)) },
-        { model: Supplier(token(req.headers.authorization)) },
+        { model: Customer(req) },
+        { model: Supplier(req) },
         {
-          model: Document(token(req.headers.authorization)), include: [
-            { model: TypeDocument(token(req.headers.authorization)) }
+          model: Document(req), include: [
+            { model: TypeDocument(req) }
           ]
         },
-        { model: User(token(req.headers.authorization)) },
-        { model: Branch(token(req.headers.authorization)) },
-        { model: Warehouse(token(req.headers.authorization)) },
+        { model: User(req) },
+        { model: Branch(req) },
+        { model: Warehouse(req) },
         {
-          model: DetailOperation(token(req.headers.authorization)),
+          model: DetailOperation(req),
           include: [
             {
-              model: Product(token(req.headers.authorization)),
+              model: Product(req),
               include: [
-                { model: Unit(token(req.headers.authorization)) },
-                { model: Unit(token(req.headers.authorization)), as: 'entryUnit' }
+                { model: Unit(req) },
+                { model: Unit(req), as: 'entryUnit' }
               ]
             }
           ]
         },
         {
-          model: PaymentOperation(token(req.headers.authorization))
+          model: PaymentOperation(req)
         },
         {
-          model: Operation(token(req.headers.authorization)),
+          model: Operation(req),
           required: false,
           as: 'notes',
           where: { status: 'CERTIFICADA' },
           include: [
             {
-              model: Document(token(req.headers.authorization)),
+              model: Document(req),
               include: [
-                { model: TypeDocument(token(req.headers.authorization)) }
+                { model: TypeDocument(req) }
               ]
             },
           ]
@@ -290,25 +289,25 @@ function operationRoute(app) {
   });
 
   app.post('/operations', auth, async (req, res) => {
-    let document = await Document(token(req.headers.authorization)).findOne({
+    let document = await Document(req).findOne({
       where: { id: req.body.documentId }, include: [
-        { model: TypeDocument(token(req.headers.authorization)) }
+        { model: TypeDocument(req) }
       ]
     });
     if (document) {
       req.body.serie = document.serie;
       req.body.correlative = document.correlative;
-      let operation = await Operation(token(req.headers.authorization)).findOne({ where: { serie: req.body.serie, correlative: req.body.correlative, documentId: document.id } });
+      let operation = await Operation(req).findOne({ where: { serie: req.body.serie, correlative: req.body.correlative, documentId: document.id } });
       if (operation) {
         res.status(200).json({ result: false, message: 'Serie y Correlativo Existentes' });
       } else {
-        let data = await Operation(token(req.headers.authorization)).create(req.body).catch(err => {
+        let data = await Operation(req).create(req.body).catch(err => {
           res.status(200).json({ result: false, message: err });
         });
 
         if (data) {
           data.id = data.null;
-          await Document(token(req.headers.authorization)).update({ correlative: increase(document.correlative) }, { where: { id: req.body.documentId } });
+          await Document(req).update({ correlative: increase(document.correlative) }, { where: { id: req.body.documentId } });
 
           let details = [];
           let details2 = [];
@@ -346,9 +345,9 @@ function operationRoute(app) {
               productId: details[i].productId,
               operationId: data.id,
             };
-            await DetailOperation(token(req.headers.authorization)).create(params);
+            await DetailOperation(req).create(params);
 
-            let prod = await Product(token(req.headers.authorization)).findOne({ where: { id: details[i].productId } });
+            let prod = await Product(req).findOne({ where: { id: details[i].productId } });
 
             if (prod && prod.type == 'BIEN') {
               let type = '';
@@ -383,7 +382,7 @@ function operationRoute(app) {
                 warehouseId: req.body.warehouseId,
                 operationId: data.id,
               }
-              await Kardex(token(req.headers.authorization)).create(params2);
+              await Kardex(req).create(params2);
 
               if (document.typedocument.name == 'TRASLADO') {
                 stock = 0;
@@ -401,7 +400,7 @@ function operationRoute(app) {
                 if (!req.body.warehouse_end.id) {
                   delete where.warehouseId
                 }
-                let kardex = await Kardex(token(req.headers.authorization)).findOne({
+                let kardex = await Kardex(req).findOne({
                   where: where,
                   order: [["id", "DESC"]]
                 });
@@ -422,7 +421,7 @@ function operationRoute(app) {
                   warehouseId: req.body.warehouse_end.id,
                   operationId: data.id,
                 }
-                await Kardex(token(req.headers.authorization)).create(params3);
+                await Kardex(req).create(params3);
               }
               if (req.body.auto_date == false) {
                 let where = {
@@ -441,14 +440,14 @@ function operationRoute(app) {
                   delete where.warehouseId
                   // where.warehouseId = { [Sequelize.Op.ne]: null };
                 }
-                let kardex = await Kardex(token(req.headers.authorization)).findAll({
+                let kardex = await Kardex(req).findAll({
                   where: where,
                   include: [
                     {
-                      model: Operation(token(req.headers.authorization)), required: false
+                      model: Operation(req), required: false
                     }
                   ],
-                  order: [[Operation(token(req.headers.authorization)), "date", "ASC"]]
+                  order: [[Operation(req), "date", "ASC"]]
                 });
                 for (let k = 0; k < kardex.length; k++) {
                   if (k == kardex.length - 1) {
@@ -472,7 +471,7 @@ function operationRoute(app) {
                       stock = stock - parseFloat(quantity);
                     }
                   }
-                  await Kardex(token(req.headers.authorization)).update(
+                  await Kardex(req).update(
                     { stock: stock },
                     { where: { id: kardex[k].id } }
                   );
@@ -481,7 +480,7 @@ function operationRoute(app) {
             }
 
             if (prod && prod.type == 'COMBO') {
-              let recipes = await Recipe(token(req.headers.authorization)).findAll({ where: { productId: details[i].productId } });
+              let recipes = await Recipe(req).findAll({ where: { productId: details[i].productId } });
               for (let r = 0; r < recipes.length; r++) {
                 let stock = 0;
                 let where = {
@@ -498,7 +497,7 @@ function operationRoute(app) {
                 if (!req.body.warehouseId) {
                   delete where.warehouseId
                 }
-                let kardex = await Kardex(token(req.headers.authorization)).findOne({
+                let kardex = await Kardex(req).findOne({
                   where: where,
                   order: [["id", "DESC"]]
                 });
@@ -521,7 +520,7 @@ function operationRoute(app) {
                   warehouseId: req.body.warehouseId,
                   operationId: data.id,
                 }
-                await Kardex(token(req.headers.authorization)).create(params2);
+                await Kardex(req).create(params2);
               }
             }
 
@@ -536,22 +535,22 @@ function operationRoute(app) {
               total: methods[i].total,
               operationId: data.id,
             };
-            await PaymentOperation(token(req.headers.authorization)).create(params);
+            await PaymentOperation(req).create(params);
           }
 
           if (document.typedocument.inventory == 'SALIDA') {
             if (data.customerId) {
-              await Customer(token(req.headers.authorization)).update({ email: req.body.customer.email }, { where: { id: data.customerId } });
+              await Customer(req).update({ email: req.body.customer.email }, { where: { id: data.customerId } });
             }
             if (data.supplierId) {
-              await Supplier(token(req.headers.authorization)).update({ email: req.body.supplier.email }, { where: { id: data.supplierId } });
+              await Supplier(req).update({ email: req.body.supplier.email }, { where: { id: data.supplierId } });
             }
           }
 
           // Costo Promedio Producto
           if (document.typedocument.inventory == 'ENTRADA') {
-            let branches = await Branch(token(req.headers.authorization)).findAll({ attributes: ['id', 'name'] });
-            let warehouses = await Warehouse(token(req.headers.authorization)).findAll({ attributes: ['id', 'name'] });
+            let branches = await Branch(req).findAll({ attributes: ['id', 'name'] });
+            let warehouses = await Warehouse(req).findAll({ attributes: ['id', 'name'] });
 
             for (let i = 0; i < details2.length; i++) {
               let total_stock = 0;
@@ -576,21 +575,21 @@ function operationRoute(app) {
                       if (!req.body.warehouseId) {
                         delete where.warehouseId
                       }
-                      let stock = await Kardex(token(req.headers.authorization)).findOne({
+                      let stock = await Kardex(req).findOne({
                         where: where,
                         include: [
                           {
-                            model: Operation(token(req.headers.authorization)), attributes: ['date'], required: false,
+                            model: Operation(req), attributes: ['date'], required: false,
                           }
                         ],
-                        order: [[Operation(token(req.headers.authorization)), "date", "DESC"]]
+                        order: [[Operation(req), "date", "DESC"]]
                       });
                       if (stock) {
                         total_quantity = total_quantity + parseFloat(stock.quantity);
                         total_stock = total_stock + parseFloat(stock.stock);
                       }
 
-                      // await Kardex(token(req.headers.authorization)).update(
+                      // await Kardex(req).update(
                       //   { costProm: costProm / stock },
                       //   { where: { id: kardex.id } }
                       // );
@@ -603,11 +602,11 @@ function operationRoute(app) {
                 let cost_prom = ((total_stock - total_quantity) * (details2[i].product.cost)) + (total_quantity * ((details2[i].cost / details2[i].product.equivalence) / 1.12));
                 cost_prom = cost_prom / total_stock;
 
-                await Product(token(req.headers.authorization)).update(
+                await Product(req).update(
                   { cost: cost_prom },
                   { where: { id: details2[i].productId } }
                 );
-                await Cost(token(req.headers.authorization)).create({
+                await Cost(req).create({
                   date: moment().format('YYYY-MM-DD HH:mm:ss'),
                   cost: cost_prom,
                   price: details2[i].product.price,
@@ -624,14 +623,14 @@ function operationRoute(app) {
                       warehouseId: warehouses[w].id,
                       date: { [Sequelize.Op.lte]: moment().format('YYYY-MM-DD HH:mm:ss') }
                     }
-                    let stock = await Kardex(token(req.headers.authorization)).findOne({
+                    let stock = await Kardex(req).findOne({
                       where: where,
                       include: [
                         {
-                          model: Operation(token(req.headers.authorization)), attributes: ['date'], required: false,
+                          model: Operation(req), attributes: ['date'], required: false,
                         }
                       ],
-                      order: [[Operation(token(req.headers.authorization)), "date", "DESC"]]
+                      order: [[Operation(req), "date", "DESC"]]
                     });
                     if (stock) {
                       total_quantity = total_quantity + parseFloat(stock.quantity);
@@ -645,11 +644,11 @@ function operationRoute(app) {
                 let cost_prom = ((total_stock - total_quantity) * (details2[i].product.cost)) + (total_quantity * ((details2[i].cost / details2[i].product.equivalence) / 1.12));
                 cost_prom = cost_prom / total_stock;
 
-                await Product(token(req.headers.authorization)).update(
+                await Product(req).update(
                   { cost: cost_prom },
                   { where: { id: details2[i].productId } }
                 );
-                await Cost(token(req.headers.authorization)).create({
+                await Cost(req).create({
                   date: moment().format('YYYY-MM-DD HH:mm:ss'),
                   cost: cost_prom,
                   price: details2[i].product.price,
@@ -670,51 +669,51 @@ function operationRoute(app) {
   });
 
   app.post('/operations/email/:id', auth, (req, res) => {
-    Operation(token(req.headers.authorization)).findOne({
+    Operation(req).findOne({
       where: { id: req.params.id },
       include: [
-        { model: Customer(token(req.headers.authorization)) },
-        { model: Supplier(token(req.headers.authorization)) },
+        { model: Customer(req) },
+        { model: Supplier(req) },
         {
-          model: Document(token(req.headers.authorization)), include: [
-            { model: TypeDocument(token(req.headers.authorization)) }
+          model: Document(req), include: [
+            { model: TypeDocument(req) }
           ]
         },
-        { model: User(token(req.headers.authorization)) },
-        { model: Branch(token(req.headers.authorization)) },
-        { model: Warehouse(token(req.headers.authorization)) },
+        { model: User(req) },
+        { model: Branch(req) },
+        { model: Warehouse(req) },
         {
-          model: DetailOperation(token(req.headers.authorization)),
+          model: DetailOperation(req),
           include: [
             {
-              model: Product(token(req.headers.authorization)),
+              model: Product(req),
               include: [
-                { model: Unit(token(req.headers.authorization)) },
-                { model: Unit(token(req.headers.authorization)), as: 'entryUnit' }
+                { model: Unit(req) },
+                { model: Unit(req), as: 'entryUnit' }
               ]
             }
           ]
         },
         {
-          model: PaymentOperation(token(req.headers.authorization))
+          model: PaymentOperation(req)
         },
         {
-          model: Operation(token(req.headers.authorization)),
+          model: Operation(req),
           required: false,
           as: 'notes',
           where: { status: 'CERTIFICADA' },
           include: [
             {
-              model: Document(token(req.headers.authorization)),
+              model: Document(req),
               include: [
-                { model: TypeDocument(token(req.headers.authorization)) }
+                { model: TypeDocument(req) }
               ]
             },
           ]
         },
       ]
     }).then(async data => {
-      let company = await Company.findOne({ where: { database: token(req.headers.authorization) } });
+      let company = await Company.findOne({ where: { database: req } });
 
       const pdfData = {
         image: `${req.protocol}://${req.get('host')}${company.image}`,
@@ -777,7 +776,7 @@ function operationRoute(app) {
   });
 
   app.put('/operations/:id', auth, (req, res) => {
-    Operation(token(req.headers.authorization)).update(req.body, { where: { id: req.params.id } }).then(data => {
+    Operation(req).update(req.body, { where: { id: req.params.id } }).then(data => {
       if (data[0] == 1) {
         res.status(200).json({ result: true, message: 'Operacion Actualizada' });
       } else {
@@ -789,7 +788,7 @@ function operationRoute(app) {
   });
 
   app.delete('/operations/:id', auth, (req, res) => {
-    Operation(token(req.headers.authorization)).destroy({ where: { id: req.params.id } }).then(data => {
+    Operation(req).destroy({ where: { id: req.params.id } }).then(data => {
       if (data == 1) {
         res.status(200).json({ result: true, message: 'Operacion Eliminada' });
       } else {

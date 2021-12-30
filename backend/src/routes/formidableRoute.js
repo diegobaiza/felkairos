@@ -2,7 +2,6 @@ import pkg from 'express-formidable';
 import fs from 'fs';
 import moment from 'moment';
 import auth from '../middleware/auth.js';
-import token from '../middleware/token.js';
 import Company from "../models/company.js";
 import Document from '../models/document.js';
 import Product from "../models/product.js";
@@ -37,7 +36,7 @@ function formidableRoute(app) {
         // let fileName = new Date().getTime() + '.' + req.files.image.name.split('.').pop();
         let fileName = moment().unix() + '.svg';
         fs.writeFileSync(`${folder}/${fileName}`, data);
-        Document(token(req.headers.authorization)).update({ image: `${url}/${fileName}` }, { where: { id: req.body.documentId } });
+        Document(req).update({ image: `${url}/${fileName}` }, { where: { id: req.body.documentId } });
         res.status(200).json({ result: true, message: 'Imagen Actualizada', image: `${url}/${fileName}` });
     });
 
@@ -75,7 +74,7 @@ function formidableRoute(app) {
         // let fileName = new Date().getTime() + '.' + req.files.image.name.split('.').pop();
         let fileName = moment().unix() + '.jpg';
         fs.writeFileSync(`${folder}/${fileName}`, data);
-        Product(token(req.headers.authorization)).update({ image: `${url}/${fileName}` }, { where: { id: req.fields.productId } });
+        Product(req).update({ image: `${url}/${fileName}` }, { where: { id: req.fields.productId } });
         res.status(200).json({ result: true, message: 'Imagen Actualizada', image: `${url}/${fileName}` });
     });
 
@@ -95,7 +94,7 @@ function formidableRoute(app) {
         if (fs.existsSync(folder)) {
             fs.rmSync(folder, { recursive: true });
         }
-        Product(token(req.headers.authorization)).update({ image: null }, { where: { id: req.params.id } });
+        Product(req).update({ image: null }, { where: { id: req.params.id } });
         res.status(200).json({ result: true, message: 'Imagen Eliminada' });
     });
 

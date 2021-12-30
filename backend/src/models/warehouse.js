@@ -2,8 +2,8 @@ import db from '../database/db.js';
 import Sequelize from 'sequelize';
 import Branch from './branch.js';
 
-function Warehouse(database) {
-  const Model = db(database).define('warehouses', {
+function Warehouse(req) {
+  const Model = db(req).define('warehouses', {
     id: { type: Sequelize.SMALLINT, primaryKey: true },
     name: Sequelize.STRING,
     number: Sequelize.INTEGER,
@@ -15,8 +15,8 @@ function Warehouse(database) {
     updatedAt: false,
   });
 
-  Model.belongsTo(Branch(database));
-  Branch(database).hasMany(Model);
+  Model.belongsTo(Branch(req));
+  Branch(req).hasMany(Model);
 
   return Model;
 }

@@ -72,3 +72,78 @@ circle {
 label {
   font-size: 14px !important;
 }
+
+@media only screen and (min-width: 767px) {
+  .right-panel-wrapper .right-panel {
+      width: 30%  !important;
+  }
+  .button {
+      padding: 5px 35px !important;
+      margin-right: 1rem !important;
+      margin-left: 1rem !important;
+  }
+  .button2 {
+      padding: 5px 35px !important;
+      margin-right: 1rem !important;
+      margin-left: 0rem !important;
+  }
+  .section-placeholder .placeholder-content .edit-button {
+      min-width: 0px !important;
+      left: 50px !important;
+      bottom: 40px !important;
+      padding: 5px 15px !important;
+  }
+  .section-placeholder .placeholder-content .edit-button2 {
+      min-width: 0px !important;
+      right: 20px !important;
+      bottom: 75px !important;
+      padding: 5px 15px !important;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .button {
+      padding: 5px 20px !important;
+  }
+  .buttons2 .button:not(:last-child):not(.is-fullwidth) {
+      margin-right: 1rem !important;
+      margin-left: 1rem !important;
+  }
+  .section-placeholder .placeholder-content .edit-button {
+      min-width: 0px !important;
+      left: 55px !important;
+      bottom: 30px !important;
+      padding: 5px 15px !important;
+  }
+  .section-placeholder .placeholder-content .edit-button2 {
+      min-width: 0px !important;
+      right: 50px !important;
+      bottom: 30px !important;
+      padding: 5px 15px !important;
+  }
+}
+
+.account-wrapper .account-box.is-form.is-footerless {
+  padding-bottom: 0px !important;
+}
+
+.form-head, .stuck-header {
+  padding: 0 !important;
+}
+
+.account-box .is-stuck {
+  padding: 15px 12px !important;
+}
+
+.account-box {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+.account-wrapper .account-box.is-form .form-head, .account-wrapper .account-box.is-form .form-foot {
+  border-color: transparent !important;
+}
+
+.is-success {
+  color: white !important;
+}

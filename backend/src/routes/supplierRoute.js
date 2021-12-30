@@ -1,6 +1,5 @@
-import Supplier from "../models/supplier.js";
 import auth from '../middleware/auth.js';
-import token from '../middleware/token.js';
+import Supplier from "../models/supplier.js";
 import Operation from "../models/operation.js";
 import Document from "../models/document.js";
 import TypeDocument from "../models/typeDocument.js";
@@ -8,7 +7,7 @@ import TypeDocument from "../models/typeDocument.js";
 function supplierRoute(app) {
 
   app.get('/suppliers', auth, (req, res) => {
-    Supplier(token(req.headers.authorization)).findAll().then(data => {
+    Supplier(req).findAll().then(data => {
       res.status(200).json({ result: true, data: data });
     }).catch(err => {
       res.status(200).json({ result: false, message: err });
@@ -16,7 +15,7 @@ function supplierRoute(app) {
   });
 
   app.get('/suppliers/:id', auth, (req, res) => {
-    Supplier(token(req.headers.authorization)).findOne({ where: { id: req.params.id } }).then(data => {
+    Supplier(req).findOne({ where: { id: req.params.id } }).then(data => {
       res.status(200).json({ result: true, data: data });
     }).catch(err => {
       res.status(200).json({ result: false, message: err });
@@ -24,25 +23,25 @@ function supplierRoute(app) {
   });
 
   app.get('/suppliers/cxp/:id', auth, (req, res) => {
-    Operation(token(req.headers.authorization)).findAll({
+    Operation(req).findAll({
       where: {
         supplierId: req.params.id,
         payment: 'CREDITO'
       },
       include: [
         {
-          model: Document(token(req.headers.authorization)),
+          model: Document(req),
           include: [
-            { model: TypeDocument(token(req.headers.authorization)) }
+            { model: TypeDocument(req) }
           ]
         },
         {
-          model: Operation(token(req.headers.authorization)),
+          model: Operation(req),
           include: [
             {
-              model: Document(token(req.headers.authorization)),
+              model: Document(req),
               include: [
-                { model: TypeDocument(token(req.headers.authorization)) }
+                { model: TypeDocument(req) }
               ]
             }
           ]
@@ -56,11 +55,11 @@ function supplierRoute(app) {
   });
 
   app.post('/suppliers', auth, (req, res) => {
-    Supplier(token(req.headers.authorization)).findOne({ where: { nit: req.body.nit } }).then(data => {
+    Supplier(req).findOne({ where: { nit: req.body.nit } }).then(data => {
       if (data) {
         res.status(200).json({ result: false, message: 'NIT ya registrado' });
       } else {
-        Supplier(token(req.headers.authorization)).create(req.body).then(data => {
+        Supplier(req).create(req.body).then(data => {
           data.id = data.null;
           res.status(200).json({ result: true, message: 'Proveedor Agregado', data: data });
         }).catch(err => {
@@ -71,7 +70,7 @@ function supplierRoute(app) {
   });
 
   app.put('/suppliers/:id', auth, (req, res) => {
-    Supplier(token(req.headers.authorization)).update(req.body, { where: { id: req.params.id } }).then(data => {
+    Supplier(req).update(req.body, { where: { id: req.params.id } }).then(data => {
       if (data[0] == 1) {
         res.status(200).json({ result: true, message: 'Proveedor Actualizado' });
       } else {
@@ -83,7 +82,7 @@ function supplierRoute(app) {
   });
 
   app.delete('/suppliers/:id', auth, (req, res) => {
-    Supplier(token(req.headers.authorization)).destroy({ where: { id: req.params.id } }).then(data => {
+    Supplier(req).destroy({ where: { id: req.params.id } }).then(data => {
       if (data == 1) {
         res.status(200).json({ result: true, message: 'Proveedor Eliminado' });
       } else {

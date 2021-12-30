@@ -1,8 +1,8 @@
 import db from '../database/db.js';
 import Sequelize from 'sequelize';
 
-function Supplier(database) {
-  const Model = db(database).define('suppliers', {
+function Supplier(req) {
+  const Model = db(req).define('suppliers', {
     id: { type: Sequelize.SMALLINT, primaryKey: true },
     nit: Sequelize.STRING,
     name: Sequelize.STRING,

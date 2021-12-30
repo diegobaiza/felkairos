@@ -3,7 +3,6 @@ import TypeDocument from '../models/typeDocument.js';
 import Branch from '../models/branch.js';
 import Warehouse from '../models/warehouse.js';
 import auth from '../middleware/auth.js';
-import token from '../middleware/token.js';
 import fs from 'fs';
 
 function documentRoute(app) {
@@ -11,11 +10,11 @@ function documentRoute(app) {
     let dirname = 'src/docs';
 
     app.get('/documents', auth, (req, res) => {
-        Document(token(req.headers.authorization)).findAll({
+        Document(req).findAll({
             include: [
-                { model: TypeDocument(token(req.headers.authorization)) },
-                { model: Branch(token(req.headers.authorization)) },
-                { model: Warehouse(token(req.headers.authorization)) }
+                { model: TypeDocument(req) },
+                { model: Branch(req) },
+                { model: Warehouse(req) }
             ]
         }).then(data => {
             res.status(200).json({ result: true, data: data });
@@ -25,12 +24,12 @@ function documentRoute(app) {
     });
 
     app.get('/documents/:id', auth, (req, res) => {
-        Document(token(req.headers.authorization)).findOne({
+        Document(req).findOne({
             where: { id: req.params.id },
             include: [
-                { model: TypeDocument(token(req.headers.authorization)) },
-                { model: Branch(token(req.headers.authorization)) },
-                { model: Warehouse(token(req.headers.authorization)) }
+                { model: TypeDocument(req) },
+                { model: Branch(req) },
+                { model: Warehouse(req) }
             ]
         }).then(data => {
             res.status(200).json({ result: true, data: data });
@@ -40,7 +39,7 @@ function documentRoute(app) {
     });
 
     app.post('/documents', auth, (req, res) => {
-        Document(token(req.headers.authorization)).create(req.body).then(data => {
+        Document(req).create(req.body).then(data => {
             data.id = data.null;
             res.status(200).json({ result: true, message: 'Documento Agregado', data: data });
         }).catch(err => {
@@ -49,7 +48,7 @@ function documentRoute(app) {
     });
 
     app.put('/documents/:id', auth, (req, res) => {
-        Document(token(req.headers.authorization)).update(req.body, { where: { id: req.params.id } }).then(data => {
+        Document(req).update(req.body, { where: { id: req.params.id } }).then(data => {
             if (data[0] == 1) {
                 res.status(200).json({ result: true, message: 'Documento Actualizado' });
             } else {
@@ -61,9 +60,9 @@ function documentRoute(app) {
     });
 
     app.delete('/documents/:id', auth, (req, res) => {
-        Document(token(req.headers.authorization)).destroy({ where: { id: req.params.id } }).then(data => {
+        Document(req).destroy({ where: { id: req.params.id } }).then(data => {
             if (data == 1) {
-                let folder = `${dirname}/${token(req.headers.authorization)}/documents/${req.params.id}`;
+                let folder = `${dirname}/${req}/documents/${req.params.id}`;
                 if (fs.existsSync(folder)) {
                     fs.rmSync(folder, { recursive: true });
                 }

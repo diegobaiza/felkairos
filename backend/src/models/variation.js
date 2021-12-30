@@ -2,8 +2,8 @@ import db from '../database/db.js';
 import Sequelize from 'sequelize';
 import Attribute from './attribute.js';
 
-function Variation(database) {
-  const Model = db(database).define('variations', {
+function Variation(req) {
+  const Model = db(req).define('variations', {
     id: { type: Sequelize.SMALLINT, primaryKey: true },
     productId: Sequelize.INTEGER,
     attributeId: Sequelize.INTEGER
@@ -12,8 +12,8 @@ function Variation(database) {
     updatedAt: false,
   });
 
-  Model.belongsTo(Attribute(database));
-  Attribute(database).hasMany(Model);
+  Model.belongsTo(Attribute(req));
+  Attribute(req).hasMany(Model);
 
   return Model;
 }

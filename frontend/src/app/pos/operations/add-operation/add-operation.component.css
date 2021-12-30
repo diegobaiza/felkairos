@@ -58,3 +58,13 @@ h3:first-letter {
 .is-combo {
   background-color: #525354 !important;
 }
+
+.button {
+  padding: 5px 15px !important;
+  margin-right: 0rem !important;
+  margin-left: 0rem !important;
+}
+
+.liquidar {
+  margin-left: 15px !important;
+}
