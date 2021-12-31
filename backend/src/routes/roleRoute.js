@@ -1,9 +1,11 @@
 import auth from '../middleware/auth.js';
+import token from '../middleware/token.js';
 import Role from "../models/role.js";
 
 function roleRoute(app) {
 
   app.get('/roles', auth, (req, res) => {
+    Role(token(req.headers.authorization)).findAll().then(data => {
     Role(req).findAll().then(data => {
       res.status(200).json({ result: true, data: data });
     }).catch(err => {
@@ -22,7 +24,11 @@ function roleRoute(app) {
   });
 
   app.post('/roles', auth, (req, res) => {
+
+    Role(token(req.headers.authorization)).findOne({ where: { name: req.body.name } }).then(data => {
+
     Role(req).findOne({ where: { name: req.body.name } }).then(data => {
+
       if (data) {
         res.status(200).json({ result: false, message: 'Rol ya registrado' });
       } else {

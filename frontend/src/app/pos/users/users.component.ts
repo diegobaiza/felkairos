@@ -4,6 +4,7 @@ import { UsersService } from 'src/app/services/users.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import * as $ from 'jquery';
+import { RolesService } from 'src/app/services/roles.service';
 
 declare var notyf: any;
 
@@ -15,6 +16,7 @@ declare var notyf: any;
 export class UsersComponent implements OnInit {
 
   users: any = [];
+  roles: any = [];
 
   userForm: FormGroup;
   id: number = 0;
@@ -23,18 +25,29 @@ export class UsersComponent implements OnInit {
   apiUrl: string = environment.api;
 
   constructor(
-    private usersService: UsersService
+    private usersService: UsersService,
+    private rolesService: RolesService
   ) {
     this.userForm = new FormGroup({
       name: new FormControl(null, Validators.required),
       username: new FormControl(null, Validators.required),
       password: new FormControl(null, Validators.required),
-      access: new FormControl(true, Validators.required)
+      access: new FormControl(true, Validators.required),
+      roleId: new FormControl(true)
     });
   }
 
   ngOnInit(): void {
     this.getUsers();
+    this.getRoles();
+  }
+
+  getRoles() {
+    this.rolesService.getRoles().then(role => {
+      if (role.result) {
+        this.roles = role.data;
+      }
+    });
   }
 
   getUsers() {

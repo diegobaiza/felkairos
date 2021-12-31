@@ -45,7 +45,8 @@
 
       <div class="columns is-multiline">
 
-        <div *ngFor="let i of users; let u = index" [ngClass]="{'is-hidden': i.username == 'admin'}" class="column list-view-item is-3">
+        <div *ngFor="let i of users; let u = index" [ngClass]="{'is-hidden': i.username == 'admin'}"
+          class="column list-view-item is-3">
           <div class="card-grid-item">
             <label class="h-toggle">
               <input (change)="updateAccess(i)" [(ngModel)]="i.access" checked type="checkbox">
@@ -68,7 +69,9 @@
             </div>
             <h3 class="dark-inverted" data-filter-match>{{i.name}}</h3>
             <div class="description">
-              <p data-filter-match>Username: {{i.username}}</p>
+              <!-- <p data-filter-match>Username: {{i.username}}</p> -->
+              <!-- <p *ngFor ="let i of roles" > Rol: {{i.name}}</p> -->
+
             </div>
             <div class="buttons buttons2">
               <a (click)="setData(i, u)" data-panel="edit-user-panel" style="width: 24%;"
@@ -172,6 +175,7 @@
               </div>
             </div>
           </div>
+          
           <div class="column is-6">
             <div class="field">
               <label>Usuario <span class="req">*</span></label>
@@ -180,6 +184,7 @@
               </div>
             </div>
           </div>
+
           <div class="column is-6">
             <div class="field">
               <label>Contraseña <span class="req">*</span></label>
@@ -189,6 +194,7 @@
               </div>
             </div>
           </div>
+
           <div class="column is-6">
             <div class="field">
               <label>Acceso <span class="req">*</span></label>
@@ -197,6 +203,19 @@
                   <input formControlName="access" type="checkbox" class="is-switch">
                   <i></i>
                 </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="column is-6">
+            <div class="field">
+              <label>Rol <span class="req">*</span></label>
+              <div class="control">
+                <div class="select">
+                  <select formControlName="roleId">
+                    <option *ngFor="let i of roles" [value]="i.id">{{i.name}}</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
