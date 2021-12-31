@@ -33,7 +33,7 @@ export class UsersComponent implements OnInit {
       username: new FormControl(null, Validators.required),
       password: new FormControl(null, Validators.required),
       access: new FormControl(true, Validators.required),
-      roleId: new FormControl(true)
+      roleId: new FormControl(true, Validators.required)
     });
   }
 
@@ -43,9 +43,9 @@ export class UsersComponent implements OnInit {
   }
 
   getRoles() {
-    this.rolesService.getRoles().then(role => {
-      if (role.result) {
-        this.roles = role.data;
+    this.rolesService.getRoles().then(roles => {
+      if (roles.result) {
+        this.roles = roles.data;
       }
     });
   }
@@ -153,6 +153,7 @@ export class UsersComponent implements OnInit {
     this.userForm.controls['access'].setValue(i.access);
     this.userForm.controls['password'].setValidators([]);
     this.userForm.controls['password'].updateValueAndValidity();
+    this.userForm.controls['roleId'].setValue(i.roleId);
   }
 
   reset() {

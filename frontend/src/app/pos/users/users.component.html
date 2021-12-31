@@ -326,6 +326,19 @@
               </div>
             </div>
           </div>
+          
+          <div class="column is-6">
+            <div class="field">
+              <label>Rol <span class="req">*</span></label>
+              <div class="control">
+                <div class="select">
+                  <select formControlName="roleId">
+                    <option *ngFor="let i of roles" [value]="i.id">{{i.name}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
 
         </div>
         <div class="buttons is-right">
