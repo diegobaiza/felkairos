@@ -9,6 +9,7 @@ import { UnitsService } from 'src/app/services/units.service';
 import { RecipesService } from 'src/app/services/recipes.service';
 import { AttributesService } from 'src/app/services/attributes.service';
 import { VariationsService } from 'src/app/services/variations.service';
+import { ProductsCategoriesService } from 'src/app/services/productsCategories.service';
 import Swal from 'sweetalert2';
 
 declare var notyf: any;
@@ -25,6 +26,7 @@ export class ProductsComponent implements OnInit {
   recipes: any = [];
   variations: any = [];
   attributes: any = [];
+  productsCategories: any = [];
 
   variationId: number = 0;
   variations2: any = [];
@@ -34,17 +36,21 @@ export class ProductsComponent implements OnInit {
   productForm: FormGroup;
   id: number = 0;
   index: number = 0;
+  companyId: number = 0;
+  company: any;
 
   apiUrl: string = environment.api;
 
   database: any = localStorage.getItem('database');
+  productCategoryForm: any;
 
   constructor(
     private productsService: ProductsService,
     private unitsService: UnitsService,
     private recipesService: RecipesService,
     private attributesService: AttributesService,
-    private variationService: VariationsService
+    private variationService: VariationsService,
+    private productsCategoriesService: ProductsCategoriesService,
   ) {
     this.productForm = new FormGroup({
       image: new FormControl(null),
@@ -57,14 +63,16 @@ export class ProductsComponent implements OnInit {
       equivalence: new FormControl(1, [Validators.required]),
       entryUnitId: new FormControl(1, [Validators.required]),
       recipes: new FormControl([]),
-      variations: new FormControl([])
+      variations: new FormControl([]),
+      productCategoryId: new FormControl(1, [Validators.required])
     });
-  }
 
+  }
   ngOnInit(): void {
     this.getProducts();
     this.getUnits();
     this.getAttributes();
+    this.getProductsCategories();
   }
 
   getProducts() {
@@ -93,6 +101,15 @@ export class ProductsComponent implements OnInit {
     this.attributesService.getAttributes().then(attributes => {
       if (attributes.result) {
         this.attributes = attributes.data;
+        this.list();
+      }
+    });
+  }
+
+  getProductsCategories() {
+    this.productsCategoriesService.getProductsCategories().then(productsCategories => {
+      if (productsCategories.result) {
+        this.productsCategories = productsCategories.data;
         this.list();
       }
     });
@@ -131,6 +148,7 @@ export class ProductsComponent implements OnInit {
           this.products[this.index].unitId = this.productForm.controls['unitId'].value;
           this.products[this.index].equivalence = this.productForm.controls['equivalence'].value;
           this.products[this.index].entryUnitId = this.productForm.controls['entryUnitId'].value;
+          this.products[this.index].productCategoryId = this.productForm.controls['productCategoryId'].value;
           this.list();
           notyf.open({ type: 'success', message: product.message });
           $('#edit-product-panel').removeClass('is-active');
@@ -324,6 +342,7 @@ export class ProductsComponent implements OnInit {
         productRecipeId: i.id,
         unit: prod.data.unit,
         variationId: this.variationId,
+        productCategoryId: i.productCategoryId,
         equivalence: i.equivalence
       });
     } else {
@@ -416,6 +435,7 @@ export class ProductsComponent implements OnInit {
       this.productForm.controls['unitId'].setValue(product.unitId);
       this.productForm.controls['equivalence'].setValue(product.equivalence);
       this.productForm.controls['entryUnitId'].setValue(product.entryUnitId);
+      this.productCategoryForm.controls['name'].setValue(i.name);
       this.recipes = [];
       this.variations = [];
       this.products.forEach(async (prod: any) => {
@@ -433,6 +453,7 @@ export class ProductsComponent implements OnInit {
               productRecipeId: recipe.productRecipeId,
               unit: rec.data.unit,
               variationId: recipe.variationId,
+              productCategoryId: recipe.productCategoryId,
               equivalence: prod.equivalence
             });
           }
@@ -459,6 +480,7 @@ export class ProductsComponent implements OnInit {
     this.productForm.controls['unitId'].setValue(1);
     this.productForm.controls['equivalence'].setValue(1);
     this.productForm.controls['entryUnitId'].setValue(1);
+    this.productCategoryForm.controls['productCategoryId'].setValue(1);
     this.variations = [];
   }
 

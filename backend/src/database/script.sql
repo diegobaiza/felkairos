@@ -13,7 +13,7 @@ CREATE TABLE `users` (
   `color` varchar(60) NOT NULL,
   `access` tinyint(1) NOT NULL,
   `roleId` int(11) NOT NULL,
-  CONSTRAINT `fk_users_roles` FOREIGN KEY (`roleId`) REFERENCES `roles` (id) ON DELETE RESTRICT ON UPDATE RESTRICT 
+  CONSTRAINT `fk_users_roles` FOREIGN KEY (`roleId`) REFERENCES `roles` (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
 INSERT INTO `users` VALUES (1, 'Super Administrador', 'admin', 'sha1$9d7e2064$1$89e707b9d8f6f25e452146ad4f2b79a544fd1da3', '#3978af', 1, 1);
@@ -83,6 +83,15 @@ INSERT INTO `attributes` VALUES (3, 'Talla M', 'M');
 INSERT INTO `attributes` VALUES (4, 'Talla L', 'L');
 INSERT INTO `attributes` VALUES (5, 'Talla XL', 'XL');
 
+CREATE TABLE `productsCategories` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `name` varchar(60) NOT NULL
+);
+
+INSERT INTO `productsCategories` VALUES (1, 'Alcohol');
+INSERT INTO `productsCategories` VALUES (2, 'Bebidas');
+INSERT INTO `productsCategories` VALUES (3, 'Limpieza');
+
 CREATE TABLE `products` (
   `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `name` varchar(255) NOT NULL,
@@ -94,8 +103,10 @@ CREATE TABLE `products` (
   `unitId` int(11) NOT NULL,
   `equivalence` decimal(10, 2) NOT NULL,
   `entryUnitId` int(11) NOT NULL,
+  `productCategoryId` int(11) NOT NULL,
   CONSTRAINT `fk_products_units` FOREIGN KEY (`unitId`) REFERENCES `units` (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `fk_products_entry_units` FOREIGN KEY (`entryUnitId`) REFERENCES `units` (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `fk_products_entry_units` FOREIGN KEY (`entryUnitId`) REFERENCES `units` (id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `fk_products_productsCategories` FOREIGN KEY (`productCategoryId`) REFERENCES `productsCategories` (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
 CREATE TABLE `variations` (

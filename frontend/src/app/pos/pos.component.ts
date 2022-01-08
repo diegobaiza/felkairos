@@ -81,6 +81,7 @@ export class PosComponent implements OnInit {
       { name: 'Sucursales', url: '/pos/branches', icon: 'fa-warehouse', view: true },
       { name: 'Bodegas', url: '/pos/warehouses', icon: 'fa-store', view: true },
       { name: 'Productos', url: '/pos/products', icon: 'fa-box-full', view: true },
+      { name: 'Categorías', url: '/pos/products-categories', icon: 'fa-boxes', view: true },
       { name: 'Unidades de Medida', url: '/pos/units', icon: 'fa-balance-scale', view: true },
       { name: 'Atributos', url: '/pos/attributes', icon: 'fa-network-wired', view: true },
       { name: 'Cupones', url: '/pos/coupons', icon: 'fa-percent', view: true },

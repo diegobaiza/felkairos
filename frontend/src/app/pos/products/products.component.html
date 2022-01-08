@@ -226,7 +226,22 @@
             </div>
           </div>
 
-          <div *ngIf="productForm.controls['type'].value != 'COMBO'" class="column is-12"
+          <div class="column is-5">
+            <div class="field" [ngClass]="{'is-hidden': productForm.controls['type'].value == 'COMBO'}">
+              <label>Categoría<span class="req">*</span></label>
+              <div class="control">
+                <div class="select">
+                  <select formControlName="productCategoryId">
+                    <option [value]="null" hidden></option>
+                    <option *ngFor="let i of productsCategories" [value]="i.id">{{i.name}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- <div *ngIf="productForm.controls['type'].value != 'COMBO'" class="column is-12"
             style="text-align: right !important;">
             <a class="button h-button is-primary" (click)="panelVariation()">
               <span class="icon">
@@ -276,7 +291,7 @@
 
             </div>
 
-          </div>
+          </div> -->
 
           <div *ngIf="productForm.controls['type'].value == 'COMBO'" class="column is-12"
             style="text-align: right !important;">
@@ -343,7 +358,7 @@
 
 
         </div>
-        <div class="buttons is-right">
+        <div class="buttons is-centered">
           <button id="bt-add-product" [ngClass]="{ 'is-disabled': productForm.invalid }"
             class="button h-button is-primary is-elevated">
             Guardar
@@ -512,7 +527,21 @@
             </div>
           </div>
 
-          <div *ngIf="productForm.controls['type'].value != 'COMBO'" class="column is-12"
+          <div class="column is-5">
+            <div class="field" [ngClass]="{'is-hidden': productForm.controls['type'].value == 'COMBO'}">
+              <label>Categoría<span class="req">*</span></label>
+              <div class="control">
+                <div class="select">
+                  <select formControlName="productCategoryId">
+                    <option [value]="null" hidden></option>
+                    <option *ngFor="let i of productsCategories" [value]="i.id">{{i.name}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div *ngIf="productForm.controls['type'].value != 'COMBO'" class="column is-12"
             style="text-align: right !important;">
             <a class="button h-button is-primary" (click)="panelVariation()">
               <span class="icon">
@@ -562,7 +591,7 @@
 
             </div>
 
-          </div>
+          </div> -->
 
           <div *ngIf="productForm.controls['type'].value == 'COMBO'" class="column is-12"
             style="text-align: right !important;">
@@ -629,7 +658,7 @@
 
 
         </div>
-        <div class="buttons is-right">
+        <div class="buttons is-centered">
           <button id="bt-edit-product" [ngClass]="{ 'is-disabled': productForm.invalid }" type="submit"
             class="button h-button is-warning is-elevated">
             Actualizar
@@ -674,7 +703,7 @@
                     <h3 class="dark-inverted">
                       {{productForm.controls['name'].value}}
                     </h3>
-                    <p>¿Estas seguro de eliminarlo?</p>
+                    <p>¿Estás seguro de eliminarlo?</p>
                   </div>
                 </div>
               </div>

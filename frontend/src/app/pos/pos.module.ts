@@ -33,6 +33,7 @@ import { UnitsComponent } from './units/units.component';
 import { AttributesComponent } from './attributes/attributes.component';
 import { CouponsComponent } from './coupons/coupons.component';
 import { StocksComponent } from './stocks/stocks.component';
+import { ProductsCategoriesComponent } from './products-categories/products-categories.component';
 
 const routes: Routes = [
   {
@@ -46,6 +47,7 @@ const routes: Routes = [
       { path: 'branches', component: BranchesComponent },
       { path: 'warehouses', component: WarehousesComponent },
       { path: 'products', component: ProductsComponent },
+      { path: 'products-categories', component: ProductsCategoriesComponent },
       { path: 'documents', component: DocumentsComponent },
       { path: 'operations', component: OperationsComponent },
       { path: 'operations/add/:documentId', component: AddOperationComponent },
@@ -75,6 +77,7 @@ const routes: Routes = [
     SuppliersComponent,
     BranchesComponent,
     ProductsComponent,
+    ProductsCategoriesComponent,
     OperationsComponent,
     DashboardComponent,
     AddOperationComponent,

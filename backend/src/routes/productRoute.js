@@ -6,6 +6,7 @@ import Unit from "../models/unit.js";
 import Recipe from "../models/recipe.js";
 import Variation from "../models/variation.js";
 import Attribute from "../models/attribute.js";
+import ProductCategory from '../models/productCategory.js';
 
 function productRoute(app) {
 
@@ -18,11 +19,14 @@ function productRoute(app) {
         { model: Unit(req), as: 'entryUnit' },
         { model: Recipe(req) },
         {
+          model: ProductCategory(req),
           model: Variation(req),
           include: [
-            { model: Attribute(req) }
-          ]
-        }
+            { model: Attribute(req) },
+          ],
+          // include: [
+          // ],
+        },
       ],
       order: [
         ['id', 'ASC']
@@ -47,6 +51,11 @@ function productRoute(app) {
           model: Variation(req),
           include: [
             { model: Attribute(req) }
+          ]
+        },
+        {
+          include: [
+            { model: ProductCategory(req) }
           ]
         }
       ]

@@ -10,6 +10,7 @@ import warehouseRoute from './routes/warehouseRoute.js';
 import customerRoute from './routes/customerRoute.js';
 import supplierRoute from './routes/supplierRoute.js';
 import productRoute from './routes/productRoute.js';
+import productCategoryRoute from './routes/productCategoryroute.js';
 import recipeRoute from './routes/recipeRoute.js';
 import variationRoute from './routes/variationRoute.js'
 import kardexRoute from './routes/kardexRoute.js';
@@ -48,6 +49,7 @@ warehouseRoute(app);
 customerRoute(app);
 supplierRoute(app);
 productRoute(app);
+productCategoryRoute(app);
 recipeRoute(app);
 variationRoute(app);
 kardexRoute(app);

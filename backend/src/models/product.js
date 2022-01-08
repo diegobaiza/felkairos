@@ -3,6 +3,7 @@ import Sequelize from 'sequelize';
 import Unit from './unit.js';
 import Recipe from './recipe.js';
 import Variation from './variation.js';
+import ProductCategory from './productCategory.js';
 
 function Product(req) {
   const Model = db(req).define('products', {
@@ -15,7 +16,8 @@ function Product(req) {
     price: Sequelize.DECIMAL,
     unitId: Sequelize.INTEGER,
     equivalence: Sequelize.DECIMAL,
-    entryUnitId: Sequelize.INTEGER
+    entryUnitId: Sequelize.INTEGER,
+    productCategoryId: Sequelize.INTEGER
   }, {
     createdAt: false,
     updatedAt: false,
@@ -33,6 +35,9 @@ function Product(req) {
 
   Variation(req).belongsTo(Model);
   Model.hasMany(Variation(req));
+
+  ProductCategory(req).belongsTo(Model);
+  Model.hasMany(ProductCategory(req));
 
   return Model;
 }
